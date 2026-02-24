@@ -1,8 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
-import { Sparkles, Send, ArrowRight, BarChart3 } from 'lucide-react';
+import { Sparkles, Send, ArrowRight, BarChart3, Check, Loader2, Clock } from 'lucide-react';
 import { copilotConversations, copilotQuickPrompts } from '../data/mockData';
 
 const mockResponses = [
+  {
+    type: 'steps',
+    content: "Got it! Here's your TikTok launch plan for **Interactive Pet Toy**:",
+    steps: [
+      { label: 'Generate product images & video brief with AI',        status: 'done'   },
+      { label: 'Create TikTok-optimized listing copy',                 status: 'done'   },
+      { label: 'Publish listing to TikTok Shop',                      status: 'active' },
+      { label: 'Match & invite 5 pet creators (AI recommended)',       status: 'pending' },
+      { label: 'Set up performance alerts & 7-day review',             status: 'pending' },
+    ],
+    actions: [{ label: 'Run Full Launch Workflow', type: 'action' }, { label: 'View Matched Creators', type: 'insight' }],
+  },
   {
     content: "I've analyzed your product catalog and identified several growth opportunities:\n\n**Quick Wins:**\n1. 4 SKUs have high-performing TikTok content but aren't listed on TikTok Shop yet\n2. Your top 3 creators haven't received updated product briefs in 30+ days\n3. 6 product listings are missing optimized keywords\n\n**Biggest Impact:**\n• Expanding 'Interactive Pet Toy' to Shopify could add ~$8k/month based on category trends",
     actions: [{ label: 'Expand to New Channels', type: 'action' }, { label: 'Update Creator Briefs', type: 'action' }, { label: 'View Full Analysis', type: 'insight' }],
@@ -32,7 +44,7 @@ export default function AICopilot() {
     setMessages((prev) => [
       ...prev,
       { id: `u-${Date.now()}`, role: 'user',      content: msg },
-      { id: `a-${Date.now()}`, role: 'assistant', content: resp.content, actions: resp.actions },
+      { id: `a-${Date.now()}`, role: 'assistant', content: resp.content, actions: resp.actions, steps: resp.steps },
     ]);
     setInput('');
     setResponseIdx((v) => v + 1);
@@ -64,6 +76,34 @@ export default function AICopilot() {
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
                 <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
+                {/* Stepper rendering */}
+                {msg.steps && (
+                  <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                    {msg.steps.map((step, i) => {
+                      const isDone    = step.status === 'done';
+                      const isActive  = step.status === 'active';
+                      const isPending = step.status === 'pending';
+                      return (
+                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, position: 'relative' }}>
+                          {i < msg.steps.length - 1 && (
+                            <div style={{ position: 'absolute', left: 10, top: 24, width: 1, height: 'calc(100% - 6px)', background: isDone ? 'rgba(16,185,129,0.4)' : 'rgba(148,163,184,0.3)', zIndex: 0 }} />
+                          )}
+                          <div style={{ width: 22, height: 22, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(99,102,241,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(99,102,241,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
+                            {isDone    && <Check size={11} style={{ color: 'var(--success)' }} />}
+                            {isActive  && <Loader2 size={11} style={{ color: 'var(--brand)', animation: 'spin 1s linear infinite' }} />}
+                            {isPending && <Clock size={10} style={{ color: 'var(--text-3)' }} />}
+                          </div>
+                          <div style={{ paddingBottom: 14, flex: 1 }}>
+                            <span style={{ fontSize: 13, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400, textDecoration: isDone ? 'line-through' : 'none' }}>
+                              {step.label}
+                            </span>
+                            {isActive && <span style={{ display: 'inline-block', marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--brand)' }}>In progress…</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 {msg.actions && (
                   <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {msg.actions.map((action, i) => (

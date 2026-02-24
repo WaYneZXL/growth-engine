@@ -4,6 +4,7 @@ import {
   ArrowLeft, TrendingUp, TrendingDown, Sparkles,
   Play, Image, FileText, File, Users, Eye,
   ChevronRight, RefreshCw, BarChart3, Check, AlertTriangle,
+  X, Loader2, ChevronDown,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
@@ -52,6 +53,7 @@ export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const [aigcModal, setAigcModal] = useState(null); // { skuId } when open
 
   const product = products.find((p) => p.id === id);
   if (!product) return (
@@ -100,10 +102,13 @@ export default function ProductDetail() {
       {/* Tab content */}
       <div className="animate-fade-in-up">
         {activeTab === 0 && <GrowthOverview product={product} benchmark={benchmark} />}
-        {activeTab === 1 && <ContentHubTab content={productContent} />}
+        {activeTab === 1 && <ContentHubTab content={productContent} onGenerate={() => setAigcModal({ skuId: product.id })} />}
         {activeTab === 2 && <CreatorTab product={product} creatorsList={productCreatorsList} />}
         {activeTab === 3 && <ChannelPerformance product={product} benchmark={benchmark} />}
       </div>
+
+      {/* AIGC Modal */}
+      {aigcModal && <AigcModal onClose={() => setAigcModal(null)} product={product} />}
     </div>
   );
 }
@@ -134,6 +139,28 @@ function GrowthOverview({ product, benchmark }) {
           })}
         </div>
       </div>
+
+      {/* Cross-Product Insights */}
+      {product.crossInsights && product.crossInsights.length > 0 && (
+        <div className="card" style={{ padding: 20, background: 'rgba(99,102,241,0.04)', border: '1px dashed rgba(99,102,241,0.25)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <Sparkles size={14} style={{ color: 'var(--brand)' }} />
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)', margin: 0 }}>Cross-Product Insights</h3>
+            <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', color: 'var(--brand)' }}>AI-powered</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {product.crossInsights.map((ins, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
+                <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{ins.icon}</span>
+                <p style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.6, flex: 1, margin: 0 }}>{ins.text}</p>
+                <button style={{ fontSize: 11, fontWeight: 600, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  {ins.action} →
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Channel cards */}
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${product.channels.length}, 1fr)`, gap: 12 }}>
@@ -184,7 +211,7 @@ function GrowthOverview({ product, benchmark }) {
 }
 
 /* ── Tab 2: Content Hub ── */
-function ContentHubTab({ content }) {
+function ContentHubTab({ content, onGenerate }) {
   const groups = {
     image: content.filter((c) => c.type === 'image'),
     video: content.filter((c) => c.type === 'video'),
@@ -199,15 +226,15 @@ function ContentHubTab({ content }) {
   };
 
   const sections = [
-    { key: 'image', label: 'Product Images',   Icon: Image,    aiLabel: 'Generate with AI' },
-    { key: 'video', label: 'Video Assets',      Icon: Play,     aiLabel: 'Generate with AI' },
-    { key: 'copy',  label: 'Listing Copy',      Icon: FileText, aiLabel: 'Regenerate Copy'  },
-    { key: 'brief', label: 'Creator Briefs',    Icon: File,     aiLabel: 'New Brief'        },
+    { key: 'image', label: 'Product Images',   Icon: Image,    aiLabel: 'Generate with AI', isVisual: true  },
+    { key: 'video', label: 'Video Assets',      Icon: Play,     aiLabel: 'Generate with AI', isVisual: true  },
+    { key: 'copy',  label: 'Listing Copy',      Icon: FileText, aiLabel: 'Regenerate Copy',  isVisual: false },
+    { key: 'brief', label: 'Creator Briefs',    Icon: File,     aiLabel: 'New Brief',        isVisual: false },
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {sections.map(({ key, label, Icon, aiLabel }) => {
+      {sections.map(({ key, label, Icon, aiLabel, isVisual }) => {
         const items = groups[key];
         if (!items.length) return null;
         return (
@@ -216,13 +243,36 @@ function ContentHubTab({ content }) {
               <h3 style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>
                 <Icon size={14} style={{ color: 'var(--text-3)' }} /> {label} ({items.length})
               </h3>
-              <button style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 500, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer' }}>
+              <button onClick={onGenerate} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 500, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer' }}>
                 <Sparkles size={13} /> {aiLabel}
               </button>
             </div>
-            <div className="content-grid-4">
+            <div className={isVisual ? 'content-grid-4' : undefined} style={isVisual ? undefined : { display: 'flex', flexDirection: 'column', gap: 8 }}>
               {items.map((asset) => {
                 const sb = sourceBadge(asset.source);
+                if (!isVisual) {
+                  // Text preview card for copy / brief
+                  return (
+                    <div key={asset.id} className="card card-hover" style={{ padding: '14px 16px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 8, background: `${asset.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Icon size={16} style={{ color: asset.color }} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)' }}>{asset.name}</span>
+                          <span style={{ fontSize: 10, fontWeight: 500, padding: '1px 6px', borderRadius: 999, background: sb.bg, color: sb.color, flexShrink: 0 }}>{sb.text}</span>
+                        </div>
+                        {asset.preview && (
+                          <p style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.55, margin: 0, whiteSpace: 'pre-line' }}>{asset.preview}</p>
+                        )}
+                        <div style={{ display: 'flex', gap: 4, marginTop: 6, flexWrap: 'wrap' }}>
+                          {asset.channels.map((c) => <ChannelBadge key={c} channelId={c} />)}
+                        </div>
+                      </div>
+                      <button style={{ fontSize: 11, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0, fontWeight: 500 }}>Edit</button>
+                    </div>
+                  );
+                }
                 return (
                   <div key={asset.id} className="card card-hover" style={{ overflow: 'hidden' }}>
                     <div style={{ height: 120, background: `${asset.color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
@@ -243,6 +293,155 @@ function ContentHubTab({ content }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+/* ── AIGC Generation Modal ── */
+const AIGC_TYPES = [
+  { id: 'image',   label: 'Product Image',  icon: '🖼️',  desc: 'High-quality AI product photos' },
+  { id: 'video',   label: 'Video Brief',    icon: '🎬',  desc: 'Script & creative direction for creators' },
+  { id: 'copy',    label: 'Listing Copy',   icon: '✍️',  desc: 'Optimized titles & descriptions' },
+  { id: 'brief',   label: 'Creator Brief',  icon: '📋',  desc: 'Ready-to-send creator outreach brief' },
+];
+const AIGC_CHANNELS = [
+  { id: 'tiktok',  label: 'TikTok Shop', color: '#ff0050' },
+  { id: 'shopify', label: 'Shopify',     color: '#96bf48' },
+  { id: 'amazon',  label: 'Amazon',      color: '#ff9900' },
+];
+const AIGC_MOCK_RESULTS = {
+  image:  ['Lifestyle hero shot on white background', 'Hands-on detail close-up', 'Lifestyle scene with props'],
+  video:  ['30s unboxing & first impression script', '15s TikTok hook: "POV you just got..."', '60s feature walkthrough brief'],
+  copy:   ['TikTok Shop listing title (A/B variant)', 'Amazon bullet points (5-pack)', 'Shopify SEO description'],
+  brief:  ['TikTok creator brief with talking points', 'Instagram reel brief with visual guidelines', 'YouTube shorts brief with CTA'],
+};
+
+function AigcModal({ onClose, product }) {
+  const [step, setStep] = useState(0); // 0=type, 1=channel, 2=results
+  const [selectedType, setSelectedType] = useState(null);
+  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleTypeSelect = (id) => setSelectedType(id);
+  const handleChannelNext = (ch) => {
+    setSelectedChannel(ch);
+    setLoading(true);
+    setTimeout(() => { setLoading(false); setStep(2); }, 1600);
+    setStep(1.5); // transitional loading state
+  };
+
+  const stepLabels = ['Select Type', 'Select Channel', 'Results'];
+  const currentStep = step === 1.5 ? 2 : Math.floor(step);
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={onClose}>
+      <div style={{ background: '#fff', borderRadius: 16, width: 560, maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }} onClick={(e) => e.stopPropagation()}>
+        {/* Modal header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={15} style={{ color: 'var(--brand)' }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)' }}>Generate with AI</div>
+              <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{product.name}</div>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ width: 30, height: 30, borderRadius: 8, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Stepper */}
+        <div style={{ display: 'flex', alignItems: 'center', padding: '14px 24px', borderBottom: '1px solid var(--border)', gap: 0 }}>
+          {stepLabels.map((label, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < stepLabels.length - 1 ? 1 : undefined }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <div style={{ width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, background: i < currentStep ? 'var(--brand)' : i === currentStep ? 'rgba(99,102,241,0.12)' : 'var(--surface-2)', color: i < currentStep ? '#fff' : i === currentStep ? 'var(--brand)' : 'var(--text-3)', border: i === currentStep ? '2px solid var(--brand)' : 'none' }}>
+                  {i < currentStep ? '✓' : i + 1}
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 500, color: i <= currentStep ? 'var(--text-1)' : 'var(--text-3)' }}>{label}</span>
+              </div>
+              {i < stepLabels.length - 1 && <div style={{ flex: 1, height: 1, background: i < currentStep ? 'var(--brand)' : 'var(--border)', margin: '0 10px' }} />}
+            </div>
+          ))}
+        </div>
+
+        {/* Step content */}
+        <div style={{ padding: '20px 24px' }}>
+          {step === 0 && (
+            <div>
+              <p style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 16 }}>What type of content do you want to generate?</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {AIGC_TYPES.map((t) => (
+                  <button key={t.id} onClick={() => handleTypeSelect(t.id)}
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: 14, borderRadius: 10, border: `2px solid ${selectedType === t.id ? 'var(--brand)' : 'var(--border)'}`, background: selectedType === t.id ? 'rgba(99,102,241,0.05)' : 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                    <span style={{ fontSize: 20, lineHeight: 1 }}>{t.icon}</span>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', marginBottom: 2 }}>{t.label}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text-2)' }}>{t.desc}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+                <button disabled={!selectedType} onClick={() => setStep(1)} style={{ height: 36, padding: '0 20px', borderRadius: 8, border: 'none', background: selectedType ? 'var(--brand)' : 'var(--border)', color: selectedType ? '#fff' : 'var(--text-3)', fontSize: 13, fontWeight: 600, cursor: selectedType ? 'pointer' : 'default' }}>
+                  Next: Select Channel →
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 1 && (
+            <div>
+              <p style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 16 }}>Which channel is this content for?</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {AIGC_CHANNELS.filter((ch) => product.channels.includes(ch.id)).map((ch) => (
+                  <button key={ch.id} onClick={() => handleChannelNext(ch.id)}
+                    style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.border = `1px solid ${ch.color}`; e.currentTarget.style.background = `${ch.color}08`; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.border = '1px solid var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
+                  >
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: ch.color, flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-1)' }}>{ch.label}</span>
+                    <span style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--text-3)' }}>→</span>
+                  </button>
+                ))}
+              </div>
+              <button onClick={() => setStep(0)} style={{ marginTop: 16, fontSize: 12, color: 'var(--text-2)', background: 'none', border: 'none', cursor: 'pointer' }}>← Back</button>
+            </div>
+          )}
+
+          {(step === 1.5 || (step === 2 && loading)) && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 0', gap: 14 }}>
+              <Loader2 size={32} style={{ color: 'var(--brand)', animation: 'spin 1s linear infinite' }} />
+              <p style={{ fontSize: 13, color: 'var(--text-2)' }}>Generating your content with AI…</p>
+            </div>
+          )}
+
+          {step === 2 && !loading && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, padding: '8px 12px', borderRadius: 8, background: 'rgba(16,185,129,0.07)' }}>
+                <Check size={14} style={{ color: 'var(--success)' }} />
+                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--success)' }}>3 assets generated successfully</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {(AIGC_MOCK_RESULTS[selectedType] || []).map((result, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+                    <span style={{ fontSize: 16 }}>{AIGC_TYPES.find((t) => t.id === selectedType)?.icon}</span>
+                    <span style={{ fontSize: 13, color: 'var(--text-1)', flex: 1 }}>{result}</span>
+                    <button style={{ fontSize: 11, fontWeight: 600, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer' }}>Use</button>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
+                <button onClick={onClose} style={{ height: 36, padding: '0 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'none', color: 'var(--text-2)', fontSize: 13, cursor: 'pointer' }}>Close</button>
+                <button onClick={() => { setStep(0); setSelectedType(null); setSelectedChannel(null); }} style={{ height: 36, padding: '0 16px', borderRadius: 8, border: 'none', background: 'var(--brand)', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Generate More</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

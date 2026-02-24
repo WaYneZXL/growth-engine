@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, Package, Users, Image, TrendingUp, TrendingDown, ArrowRight, Sparkles } from 'lucide-react';
+import { DollarSign, Package, Users, Image, TrendingUp, TrendingDown, ArrowRight, Sparkles, Rocket, BarChart3, Wand2, UserPlus } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart, Pie, Cell, Legend,
@@ -56,24 +56,56 @@ export default function Dashboard() {
         <MetricCard title="Content Assets" value={dashboardMetrics.contentAssets.value.toLocaleString()} subtitle={`${dashboardMetrics.contentAssets.aiPercentage}% AI-generated`} icon={Image} iconColor="#8b5cf6" />
       </div>
 
+      {/* Quick Actions */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
+        {[
+          { icon: Rocket,    color: '#6366f1', label: 'Launch a new product',           sub: 'End-to-end launch workflow', path: '/workflows' },
+          { icon: BarChart3, color: '#ef4444', label: 'Fix a declining SKU',            sub: 'Diagnose & boost performance', path: '/products' },
+          { icon: Wand2,     color: '#10b981', label: 'Generate content for top SKUs',  sub: 'AI images, copy & briefs',    path: '/content' },
+          { icon: UserPlus,  color: '#f59e0b', label: 'Find creators for best sellers', sub: 'AI-matched creator recommendations', path: '/creators' },
+        ].map(({ icon: Icon, color, label, sub, path }) => (
+          <button key={label} onClick={() => navigate(path)}
+            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = color; e.currentTarget.style.background = `${color}06`; e.currentTarget.style.boxShadow = `0 2px 12px ${color}18`; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; e.currentTarget.style.boxShadow = 'none'; }}
+          >
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon size={16} style={{ color }} />
+            </div>
+            <div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)', lineHeight: 1.3 }}>{label}</div>
+              <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2 }}>{sub}</div>
+            </div>
+          </button>
+        ))}
+      </div>
+
       {/* Charts row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 14 }}>
         {/* GMV Attribution Donut */}
         <div className="card" style={{ padding: 20 }}>
           <h3 className="section-title">GMV Attribution</h3>
-          <div style={{ height: 220 }}>
+          <div style={{ height: 220, position: 'relative' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={gmvAttribution} cx="50%" cy="50%" innerRadius={52} outerRadius={78} paddingAngle={3} dataKey="value">
-                  {gmvAttribution.map((entry, i) => <Cell key={i} fill={entry.color} strokeWidth={0} />)}
+                <Pie data={gmvAttribution} cx="50%" cy="46%" innerRadius={52} outerRadius={78} paddingAngle={3} dataKey="value">
+                  {gmvAttribution.map((entry, i) => (
+                    <Cell key={i} fill={entry.influenced ? '#6366f1' : entry.color} opacity={entry.influenced ? 1 : 0.65} strokeWidth={0} />
+                  ))}
                 </Pie>
                 <Tooltip content={<PieTooltip />} />
                 <Legend verticalAlign="bottom" height={32} iconType="circle" iconSize={6} formatter={(v) => <span style={{ fontSize: 11, color: 'var(--text-2)' }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
+            {/* Center text overlay */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--brand)', lineHeight: 1 }}>~34%</div>
+              <div style={{ fontSize: 9, color: 'var(--text-3)', marginTop: 3, textAlign: 'center', lineHeight: 1.3 }}>influenced by<br />AfterShip</div>
+            </div>
           </div>
-          <div style={{ marginTop: 8, padding: '8px 12px', background: 'rgba(99,102,241,0.06)', borderRadius: 8 }}>
-            <p style={{ fontSize: 11, color: 'var(--text-2)', lineHeight: 1.5 }}>
+          <div style={{ marginTop: 8, padding: '8px 12px', background: 'rgba(99,102,241,0.06)', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <Sparkles size={12} style={{ color: 'var(--brand)', flexShrink: 0 }} />
+            <p style={{ fontSize: 11, color: 'var(--text-2)', lineHeight: 1.5, margin: 0 }}>
               <span style={{ color: 'var(--brand)', fontWeight: 600 }}>AfterShip influences ~34%</span> of your GMV via listing optimization & creator marketing.
             </p>
           </div>

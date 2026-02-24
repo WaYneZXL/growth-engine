@@ -15,7 +15,7 @@ export const products = [
     id: 'SKU-0042',
     name: 'Wireless Earbuds Pro',
     category: 'Electronics',
-    image: null,
+    image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&q=80',
     imageColor: '#6366f1',
     channels: ['tiktok', 'shopify', 'amazon'],
     listingScore: 92,
@@ -35,12 +35,16 @@ export const products = [
       title: 95, images: 90, description: 88, keywords: 94, price: 85,
     },
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
+    crossInsights: [
+      { icon: '🎯', text: 'Creator videos on TikTok are lifting Shopify search traffic by ~18% — your affiliate content is cross-channel influencing organic', action: 'View Attribution' },
+      { icon: '📸', text: 'SKUs with 5+ AI images convert 2.1x better — Earbuds Pro has only 2 images, generate 3 more for Amazon', action: 'Generate Images' },
+    ],
   },
   {
     id: 'SKU-0118',
     name: 'Hydrating Serum',
     category: 'Beauty',
-    image: null,
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80',
     imageColor: '#ec4899',
     channels: ['tiktok', 'shopify'],
     listingScore: 87,
@@ -57,6 +61,10 @@ export const products = [
     },
     listingScores: { title: 90, images: 85, description: 82, keywords: 88, price: 92 },
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '💡', text: '12 creators promoting Serum also post Beauty content — cross-promote with Vitamin C Cream for a bundle effect', action: 'View Creators' },
+      { icon: '🔥', text: 'Serum UGC drives 5.2% average conversion — AI-generated listing copy is underperforming vs creator copy', action: 'Refresh Copy' },
+    ],
   },
   {
     id: 'SKU-0205',
@@ -79,12 +87,16 @@ export const products = [
     },
     listingScores: { title: 82, images: 72, description: 75, keywords: 80, price: 78 },
     flywheel: { build: 'needs-attention', distribute: 'active', amplify: 'needs-attention', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '⚠️', text: 'Yoga Mat has zero TikTok presence — 4 fitness creators already active on your account could be onboarded', action: 'Find Creators' },
+      { icon: '📉', text: 'Amazon listing images score 72 vs category avg 75 — outdated photos may be hurting conversion', action: 'Refresh Images' },
+    ],
   },
   {
     id: 'SKU-0319',
     name: 'Smart Watch Ultra',
     category: 'Electronics',
-    image: null,
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80',
     imageColor: '#3b82f6',
     channels: ['tiktok', 'shopify', 'amazon'],
     listingScore: 94,
@@ -102,6 +114,10 @@ export const products = [
     },
     listingScores: { title: 96, images: 94, description: 92, keywords: 95, price: 88 },
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'complete' },
+    crossInsights: [
+      { icon: '🚀', text: 'Smart Watch is your top GMV SKU — TikTok creator content is driving Shopify search lift of 22%', action: 'Scale Creators' },
+      { icon: '📊', text: 'Watch + Earbuds bundle opportunity: 68% of Earbuds buyers also viewed Watch, consider cross-promotion', action: 'Create Bundle' },
+    ],
   },
   {
     id: 'SKU-0428',
@@ -124,12 +140,16 @@ export const products = [
     },
     listingScores: { title: 84, images: 78, description: 80, keywords: 82, price: 75 },
     flywheel: { build: 'active', distribute: 'active', amplify: 'needs-attention', learn: 'active' },
+    crossInsights: [
+      { icon: '☕', text: 'Coffee Machine has no creator affiliates on TikTok — Home & Kitchen creators generate 3.2x ROI vs paid ads', action: 'Recruit Creators' },
+      { icon: '💡', text: 'Amazon bullet points last updated 90+ days ago — AI rewrite could boost conversion by an estimated 12-18%', action: 'Rewrite Copy' },
+    ],
   },
   {
     id: 'SKU-0537',
     name: 'Interactive Pet Toy',
     category: 'Pets',
-    image: null,
+    image: 'https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?w=400&q=80',
     imageColor: '#f59e0b',
     channels: ['tiktok', 'amazon'],
     listingScore: 85,
@@ -146,6 +166,10 @@ export const products = [
     },
     listingScores: { title: 88, images: 84, description: 82, keywords: 86, price: 90 },
     flywheel: { build: 'complete', distribute: 'active', amplify: 'complete', learn: 'active' },
+    crossInsights: [
+      { icon: '🔥', text: 'Pet Toy viral video (680K views) drove 38% more search for your brand on Amazon — capitalize with keyword update', action: 'Update Keywords' },
+      { icon: '🐾', text: '9 creators promoting Pet Toy — 6 also cover Home & Kitchen, ideal for cross-SKU campaigns', action: 'Plan Campaign' },
+    ],
   },
   {
     id: 'SKU-0641',
@@ -168,6 +192,10 @@ export const products = [
     },
     listingScores: { title: 75, images: 68, description: 70, keywords: 72, price: 74 },
     flywheel: { build: 'needs-attention', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '⚠️', text: 'LED Lamp is the lowest-performing SKU — no TikTok, only 2 creators, listing score 72. Recommend running Boost Underperforming workflow', action: 'Run Workflow' },
+      { icon: '💡', text: 'Home Office category avg GMV is $12k — you are at $8.9k. Expanding to TikTok could add $4-6k/month', action: 'Add TikTok' },
+    ],
   },
   {
     id: 'SKU-0755',
@@ -191,6 +219,10 @@ export const products = [
     },
     listingScores: { title: 90, images: 86, description: 88, keywords: 90, price: 92 },
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
+    crossInsights: [
+      { icon: '💪', text: 'Resistance Bands + Yoga Mat cross-promotion opportunity — 4 creators cover both fitness products', action: 'Create Bundle' },
+      { icon: '📈', text: 'Bands TikTok conversion 5.5% vs Amazon 3.4% — shifting 20% of ad budget to TikTok creator seeding could increase total GMV by ~$3k', action: 'Rebalance Budget' },
+    ],
   },
   {
     id: 'SKU-0863',
@@ -213,6 +245,10 @@ export const products = [
     },
     listingScores: { title: 92, images: 90, description: 88, keywords: 91, price: 89 },
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'complete', learn: 'active' },
+    crossInsights: [
+      { icon: '🥤', text: 'Blender viral content is your #1 top-of-funnel driver — 11 creators reaching 3.2M combined followers this month', action: 'Scale Creators' },
+      { icon: '🔗', text: 'Blender + Coffee Machine audience overlap 41% — coordinate posting schedule for maximum reach', action: 'Coordinate Posts' },
+    ],
   },
   {
     id: 'SKU-0971',
@@ -234,6 +270,10 @@ export const products = [
     },
     listingScores: { title: 70, images: 62, description: 65, keywords: 72, price: 70 },
     flywheel: { build: 'needs-attention', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '🪵', text: 'Bamboo Board has zero creator coverage and Amazon-only presence — this SKU is invisible to discovery channels', action: 'Run Launch Workflow' },
+      { icon: '📦', text: 'Kitchen bundle opportunity: Board + Blender + Coffee Machine — buyers often purchase 2+ kitchen items within 30 days', action: 'Create Bundle' },
+    ],
   },
   {
     id: 'SKU-1089',
@@ -256,6 +296,10 @@ export const products = [
     },
     listingScores: { title: 85, images: 80, description: 82, keywords: 84, price: 86 },
     flywheel: { build: 'active', distribute: 'active', amplify: 'active', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '✨', text: 'Vitamin C Cream is new but already 5 creators — bundle with Hydrating Serum for a skincare routine campaign', action: 'Plan Campaign' },
+      { icon: '🧴', text: 'Beauty category conversion avg is 4.1% — Cream is at 4.2% already. Increasing creator count to 10 could push to 5%+', action: 'Recruit Creators' },
+    ],
   },
   {
     id: 'SKU-1192',
@@ -278,6 +322,10 @@ export const products = [
     },
     listingScores: { title: 78, images: 74, description: 72, keywords: 76, price: 80 },
     flywheel: { build: 'active', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
+    crossInsights: [
+      { icon: '🎧', text: 'Headphones + Earbuds — electronics buyers overlap 55%. Earbuds creators could cross-promote Headphones with minimal extra cost', action: 'Cross-Promote' },
+      { icon: '⚡', text: 'New SKU with Shopify+Amazon only — adding TikTok could 2-3x monthly GMV based on Earbuds benchmark', action: 'Add TikTok' },
+    ],
   },
 ];
 
@@ -337,12 +385,13 @@ export const gmvWeeklyTrend = [
 ];
 
 // --- GMV Attribution ---
+// influenced: true = this segment is driven/boosted by AfterShip (listing opt + creator marketing)
 export const gmvAttribution = [
-  { name: 'Organic Search', value: 35, color: '#94a3b8' },
-  { name: 'Affiliate/Creator', value: 22, color: '#6366f1' },
-  { name: 'Paid Ads', value: 25, color: '#94a3b8' },
-  { name: 'Listing SEO', value: 12, color: '#818cf8' },
-  { name: 'Other', value: 6, color: '#cbd5e1' },
+  { name: 'Organic Search',    value: 35, color: '#94a3b8', influenced: false },
+  { name: 'Affiliate/Creator', value: 22, color: '#6366f1', influenced: true  },
+  { name: 'Paid Ads',          value: 25, color: '#94a3b8', influenced: false },
+  { name: 'Listing SEO',       value: 12, color: '#818cf8', influenced: true  },
+  { name: 'Other',             value: 6,  color: '#cbd5e1', influenced: false },
 ];
 
 // --- Dashboard Metrics ---
@@ -391,6 +440,15 @@ export const aiInsights = [
     action: 'Scale Campaign',
     skuId: 'SKU-0537',
   },
+  {
+    id: 'INS-005',
+    type: 'opportunity',
+    icon: '🛍️',
+    title: 'Shopify write-back opportunity',
+    description: '8 SKUs have high-performing TikTok creator content that hasn\'t been synced to Shopify listings — auto-write-back could lift Shopify conversion by an estimated 15-22%.',
+    action: 'Sync to Shopify',
+    skuId: null,
+  },
 ];
 
 // --- Content Assets ---
@@ -399,12 +457,12 @@ export const contentAssets = [
   { id: 'CA-002', type: 'image', name: 'Earbuds Lifestyle', skuId: 'SKU-0042', source: 'creator', channels: ['tiktok'], color: '#818cf8', createdAt: '2026-02-15' },
   { id: 'CA-003', type: 'video', name: 'Earbuds Review 60s', skuId: 'SKU-0042', source: 'creator', channels: ['tiktok'], color: '#6366f1', views: 245000, createdAt: '2026-02-12' },
   { id: 'CA-004', type: 'video', name: 'Earbuds Unboxing', skuId: 'SKU-0042', source: 'creator', channels: ['tiktok'], color: '#4f46e5', views: 182000, createdAt: '2026-02-10' },
-  { id: 'CA-005', type: 'copy', name: 'TikTok Listing Title', skuId: 'SKU-0042', source: 'ai', channels: ['tiktok'], color: '#6366f1', createdAt: '2026-02-20' },
-  { id: 'CA-006', type: 'brief', name: 'Creator Brief v2', skuId: 'SKU-0042', source: 'ai', channels: ['tiktok'], color: '#818cf8', createdAt: '2026-02-22' },
+  { id: 'CA-005', type: 'copy', name: 'TikTok Listing Title', skuId: 'SKU-0042', source: 'ai', channels: ['tiktok'], color: '#6366f1', createdAt: '2026-02-20', preview: '🎧 Wireless Earbuds Pro | 36HR Battery | ANC | IPX5 Waterproof — Free Shipping + 30-Day Returns' },
+  { id: 'CA-006', type: 'brief', name: 'Creator Brief v2', skuId: 'SKU-0042', source: 'ai', channels: ['tiktok'], color: '#818cf8', createdAt: '2026-02-22', preview: 'Key message: Best earbuds under $80. Hook idea: "POV: you finally stopped borrowing headphones". CTA: Link in bio for 10% off.' },
   { id: 'CA-007', type: 'image', name: 'Serum Product Shot', skuId: 'SKU-0118', source: 'seller', channels: ['tiktok', 'shopify'], color: '#ec4899', createdAt: '2026-02-14' },
   { id: 'CA-008', type: 'image', name: 'Serum Before/After', skuId: 'SKU-0118', source: 'ai', channels: ['tiktok'], color: '#f472b6', createdAt: '2026-02-16' },
   { id: 'CA-009', type: 'video', name: 'Serum Application Tutorial', skuId: 'SKU-0118', source: 'creator', channels: ['tiktok'], color: '#ec4899', views: 340000, createdAt: '2026-02-08' },
-  { id: 'CA-010', type: 'copy', name: 'Shopify Description', skuId: 'SKU-0118', source: 'ai', channels: ['shopify'], color: '#ec4899', createdAt: '2026-02-19' },
+  { id: 'CA-010', type: 'copy', name: 'Shopify Description', skuId: 'SKU-0118', source: 'ai', channels: ['shopify'], color: '#ec4899', createdAt: '2026-02-19', preview: 'Deeply hydrate and brighten with our triple-action serum. Hyaluronic acid locks in moisture while vitamin C fades dark spots — dermatologist approved.' },
   { id: 'CA-011', type: 'image', name: 'Yoga Mat Flat Lay', skuId: 'SKU-0205', source: 'seller', channels: ['shopify', 'amazon'], color: '#10b981', createdAt: '2026-01-20' },
   { id: 'CA-012', type: 'video', name: 'Yoga Mat Review', skuId: 'SKU-0205', source: 'creator', channels: ['shopify'], color: '#10b981', views: 89000, createdAt: '2026-02-02' },
   { id: 'CA-013', type: 'image', name: 'Smart Watch Wrist Shot', skuId: 'SKU-0319', source: 'ai', channels: ['tiktok', 'shopify', 'amazon'], color: '#3b82f6', createdAt: '2026-02-20' },
@@ -412,10 +470,10 @@ export const contentAssets = [
   { id: 'CA-015', type: 'image', name: 'Coffee Machine Glamour', skuId: 'SKU-0428', source: 'seller', channels: ['shopify', 'amazon'], color: '#92400e', createdAt: '2026-02-05' },
   { id: 'CA-016', type: 'video', name: 'Pet Toy in Action', skuId: 'SKU-0537', source: 'creator', channels: ['tiktok'], color: '#f59e0b', views: 680000, createdAt: '2026-02-11' },
   { id: 'CA-017', type: 'image', name: 'Pet Toy Package', skuId: 'SKU-0537', source: 'ai', channels: ['tiktok', 'amazon'], color: '#fbbf24', createdAt: '2026-02-18' },
-  { id: 'CA-018', type: 'brief', name: 'Pet Creator Brief', skuId: 'SKU-0537', source: 'ai', channels: ['tiktok'], color: '#f59e0b', createdAt: '2026-02-21' },
+  { id: 'CA-018', type: 'brief', name: 'Pet Creator Brief', skuId: 'SKU-0537', source: 'ai', channels: ['tiktok'], color: '#f59e0b', createdAt: '2026-02-21', preview: 'Show your pet playing with the rolling ball — spontaneous reactions work best. Film in good lighting, horizontal or vertical OK. No scripted dialog needed.' },
   { id: 'CA-019', type: 'video', name: 'Blender Smoothie Recipe', skuId: 'SKU-0863', source: 'creator', channels: ['tiktok'], color: '#14b8a6', views: 520000, createdAt: '2026-02-13' },
   { id: 'CA-020', type: 'image', name: 'Blender All Colors', skuId: 'SKU-0863', source: 'ai', channels: ['tiktok', 'shopify'], color: '#2dd4bf', createdAt: '2026-02-19' },
-  { id: 'CA-021', type: 'copy', name: 'Amazon Bullet Points', skuId: 'SKU-0428', source: 'ai', channels: ['amazon'], color: '#92400e', createdAt: '2026-02-21' },
+  { id: 'CA-021', type: 'copy', name: 'Amazon Bullet Points', skuId: 'SKU-0428', source: 'ai', channels: ['amazon'], color: '#92400e', createdAt: '2026-02-21', preview: '• BARISTA-GRADE ESPRESSO at home — 15-bar pressure extracts full flavor\n• BUILT-IN CONICAL GRINDER with 5 grind settings for fresh beans every time\n• ONE-TOUCH MILK FROTHER creates silky microfoam for lattes and cappuccinos' },
   { id: 'CA-022', type: 'image', name: 'Resistance Bands Action', skuId: 'SKU-0755', source: 'creator', channels: ['tiktok'], color: '#ef4444', createdAt: '2026-02-16' },
   { id: 'CA-023', type: 'video', name: 'Full Body Band Workout', skuId: 'SKU-0755', source: 'creator', channels: ['tiktok'], color: '#ef4444', views: 295000, createdAt: '2026-02-09' },
   { id: 'CA-024', type: 'image', name: 'Vitamin C Cream Texture', skuId: 'SKU-1089', source: 'ai', channels: ['tiktok', 'shopify'], color: '#fb923c', createdAt: '2026-02-22' },
@@ -430,15 +488,18 @@ export const workflows = [
     steps: 5,
     estimatedTime: '~2 days',
     automation: 'Automated',
-    lastRun: '2026-02-20',
-    status: 'active',
+    lastRun: '2026-02-24',
+    status: 'running',
+    runningStep: 2,
+    progress: 45,
+    runningFor: 'Interactive Pet Toy — TikTok Launch',
     icon: '🚀',
     stepsDetail: [
-      { phase: 'Build', name: 'Generate product images & copy with AI', status: 'auto' },
-      { phase: 'Build', name: 'Create creator brief & outreach template', status: 'auto' },
-      { phase: 'Distribute', name: 'Publish listings to selected channels', status: 'auto' },
-      { phase: 'Amplify', name: 'Match & invite relevant creators', status: 'semi-auto' },
-      { phase: 'Learn', name: 'Set up performance tracking & alerts', status: 'auto' },
+      { phase: 'Build', name: 'Generate product images & copy with AI', status: 'auto', runState: 'done' },
+      { phase: 'Build', name: 'Create creator brief & outreach template', status: 'auto', runState: 'done' },
+      { phase: 'Distribute', name: 'Publish listings to selected channels', status: 'auto', runState: 'active' },
+      { phase: 'Amplify', name: 'Match & invite relevant creators', status: 'semi-auto', runState: 'pending' },
+      { phase: 'Learn', name: 'Set up performance tracking & alerts', status: 'auto', runState: 'pending' },
     ],
   },
   {
@@ -522,7 +583,7 @@ export const copilotConversations = [
 ];
 
 export const copilotQuickPrompts = [
-  'Help me launch a new product on TikTok',
+  'Launch Interactive Pet Toy on TikTok',
   "Why did this SKU's sales drop?",
   'Generate content for my top SKUs',
   'Find creators for my best sellers',

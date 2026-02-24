@@ -1,11 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Sparkles, Send, ArrowRight, BarChart3 } from 'lucide-react';
+import { X, Sparkles, Send, ArrowRight, BarChart3, Check, Loader2, Clock } from 'lucide-react';
 import { copilotConversations, copilotQuickPrompts } from '../../data/mockData';
 
 const mockResponses = [
   {
-    content: "Great question! Based on the last 30 days:\n\n• Your top 3 SKUs on TikTok have 5+ creators each\n• Conversion rates are 2.3x higher with linked creator videos\n• 4 SKUs aren't on TikTok yet — big opportunity",
-    actions: [{ label: 'Expand SKUs to TikTok', type: 'action' }, { label: 'View Creator Analysis', type: 'insight' }],
+    type: 'steps',
+    content: "Got it! Here's your TikTok launch plan for **Interactive Pet Toy**:",
+    steps: [
+      { label: 'Generate product images & video brief with AI',        status: 'done'   },
+      { label: 'Create TikTok-optimized listing copy',                 status: 'done'   },
+      { label: 'Publish listing to TikTok Shop',                      status: 'active' },
+      { label: 'Match & invite 5 pet creators (AI recommended)',       status: 'pending' },
+      { label: 'Set up performance alerts & 7-day review',             status: 'pending' },
+    ],
+    actions: [{ label: 'Run Full Launch Workflow', type: 'action' }, { label: 'View Matched Creators', type: 'insight' }],
   },
   {
     content: "Sales drop analysis:\n\n1. 3 SKUs haven't had listing updates in 45+ days\n2. Two top creators paused posting\n3. Competitors improved their listings significantly last month",
@@ -14,6 +22,10 @@ const mockResponses = [
   {
     content: "Top 5 SKUs for fresh content:\n\n1. Wireless Earbuds Pro — needs updated lifestyle images\n2. Smart Watch Ultra — video performing well, create more\n3. Portable Blender — trending on TikTok\n4. Hydrating Serum — strong UGC, add AI images\n5. Interactive Pet Toy — viral potential",
     actions: [{ label: 'Generate All Content', type: 'action' }, { label: 'Customize by SKU', type: 'action' }],
+  },
+  {
+    content: "Great question! Based on the last 30 days:\n\n• Your top 3 SKUs on TikTok have 5+ creators each\n• Conversion rates are 2.3x higher with linked creator videos\n• 4 SKUs aren't on TikTok yet — big opportunity",
+    actions: [{ label: 'Expand SKUs to TikTok', type: 'action' }, { label: 'View Creator Analysis', type: 'insight' }],
   },
 ];
 
@@ -34,7 +46,7 @@ export default function CopilotPanel({ isOpen, onClose }) {
     setMessages((prev) => [
       ...prev,
       { id: `u-${Date.now()}`, role: 'user',      content: msg },
-      { id: `a-${Date.now()}`, role: 'assistant', content: resp.content, actions: resp.actions },
+      { id: `a-${Date.now()}`, role: 'assistant', content: resp.content, actions: resp.actions, steps: resp.steps },
     ]);
     setInput('');
     setResponseIdx((v) => v + 1);
@@ -67,12 +79,42 @@ export default function CopilotPanel({ isOpen, onClose }) {
           {messages.map((msg) => (
             <div key={msg.id} style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
               <div style={{
-                maxWidth: '88%', borderRadius: msg.role === 'user' ? '14px 14px 3px 14px' : '14px 14px 14px 3px',
+                maxWidth: '92%', borderRadius: msg.role === 'user' ? '14px 14px 3px 14px' : '14px 14px 14px 3px',
                 padding: '10px 14px', fontSize: 13, lineHeight: 1.55,
                 background: msg.role === 'user' ? 'var(--brand)' : 'var(--surface-2)',
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
                 <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
+                {/* Stepper rendering */}
+                {msg.steps && (
+                  <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 0 }}>
+                    {msg.steps.map((step, i) => {
+                      const isDone   = step.status === 'done';
+                      const isActive = step.status === 'active';
+                      const isPending = step.status === 'pending';
+                      return (
+                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, position: 'relative' }}>
+                          {/* Vertical connector line */}
+                          {i < msg.steps.length - 1 && (
+                            <div style={{ position: 'absolute', left: 9, top: 22, width: 1, height: 'calc(100% - 4px)', background: isDone ? 'rgba(16,185,129,0.4)' : 'rgba(148,163,184,0.3)', zIndex: 0 }} />
+                          )}
+                          {/* Status icon */}
+                          <div style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(99,102,241,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(99,102,241,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
+                            {isDone   && <Check size={10} style={{ color: 'var(--success)' }} />}
+                            {isActive && <Loader2 size={10} style={{ color: 'var(--brand)', animation: 'spin 1s linear infinite' }} />}
+                            {isPending && <Clock size={9} style={{ color: 'var(--text-3)' }} />}
+                          </div>
+                          <div style={{ paddingBottom: 12, flex: 1 }}>
+                            <span style={{ fontSize: 12, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400, textDecoration: isDone ? 'line-through' : 'none' }}>
+                              {step.label}
+                            </span>
+                            {isActive && <span style={{ display: 'inline-block', marginLeft: 6, fontSize: 10, fontWeight: 600, color: 'var(--brand)' }}>● In progress</span>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 {msg.actions && (
                   <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 5 }}>
                     {msg.actions.map((action, i) => (

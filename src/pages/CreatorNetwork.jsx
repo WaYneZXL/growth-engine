@@ -1,6 +1,16 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Sparkles, TrendingUp, Users, DollarSign, Star, ChevronDown, ChevronUp } from 'lucide-react';
-import { creators, creatorPlatforms, formatNumber, formatCurrency } from '../data/mockData';
+import { creators, creatorPlatforms, productCreators, products, formatNumber, formatCurrency } from '../data/mockData';
+
+// Reverse-lookup: for each creator, which SKUs are they associated with?
+const creatorToSkus = {};
+Object.entries(productCreators).forEach(([skuId, creatorIds]) => {
+  creatorIds.forEach((cid) => {
+    if (!creatorToSkus[cid]) creatorToSkus[cid] = [];
+    creatorToSkus[cid].push(skuId);
+  });
+});
 
 // ── Platform chip ─────────────────────────────────────────────────────────────
 function PlatformChip({ platform }) {
@@ -62,12 +72,14 @@ const CHANNELS = [
 ];
 
 export default function CreatorNetwork() {
+  const navigate = useNavigate();
   const [search, setSearch]           = useState('');
   const [nicheFilter, setNicheFilter] = useState('all');
   const [platformFilter, setPlatformFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [sortKey, setSortKey]         = useState('gmv');
   const [sortDir, setSortDir]         = useState('desc');
+  const [expandedCreator, setExpandedCreator] = useState(null);
 
   const niches = [...new Set(creators.map((c) => c.niche))].sort();
 
@@ -212,71 +224,114 @@ export default function CreatorNetwork() {
           </thead>
           <tbody>
             {sorted.map((c, idx) => {
-              const totalGmv = c.gmvAttributed;
+              const totalGmv  = c.gmvAttributed;
+              const skuIds    = creatorToSkus[c.id] || [];
+              const isExpanded = expandedCreator === c.id;
               return (
-                <tr key={c.id}
-                  style={{ borderBottom: idx < sorted.length - 1 ? '1px solid var(--border)' : 'none', transition: 'background 0.12s' }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  {/* Creator */}
-                  <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <div style={{ width: 34, height: 34, borderRadius: '50%', background: c.avatarColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {c.name.split(' ').map((n) => n[0]).join('')}
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</div>
-                        <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.handle}</div>
-                      </div>
-                    </div>
-                  </td>
-
-                  {/* Platforms */}
-                  <td style={{ padding: '12px 14px' }}>
-                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
-                      {c.platforms.map((p) => <PlatformChip key={p} platform={p} />)}
-                    </div>
-                  </td>
-
-                  {/* Niche */}
-                  <td style={{ padding: '12px 14px', fontSize: 12, color: 'var(--text-2)', whiteSpace: 'nowrap' }}>{c.niche}</td>
-
-                  {/* Followers */}
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, color: 'var(--text-2)', fontWeight: 500 }}>
-                    {formatNumber(c.followers)}
-                  </td>
-
-                  {/* Channel GMV */}
-                  {CHANNELS.map((ch) => (
-                    <td key={ch.key} style={{ padding: '12px 14px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <GmvBar value={c.channelGmv[ch.key]} max={maxByChannel[ch.key]} color={ch.color} />
+                <>
+                  <tr key={c.id}
+                    style={{ borderBottom: (!isExpanded && idx < sorted.length - 1) ? '1px solid var(--border)' : 'none', transition: 'background 0.12s', cursor: 'pointer' }}
+                    onClick={() => setExpandedCreator(isExpanded ? null : c.id)}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  >
+                    {/* Creator */}
+                    <td style={{ padding: '12px 14px', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 34, height: 34, borderRadius: '50%', background: c.avatarColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                          {c.name.split(' ').map((n) => n[0]).join('')}
+                        </div>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</span>
+                            {skuIds.length > 0 && (
+                              <span style={{ fontSize: 9, fontWeight: 600, padding: '1px 5px', borderRadius: 999, background: 'rgba(99,102,241,0.1)', color: 'var(--brand)' }}>{skuIds.length} SKUs</span>
+                            )}
+                          </div>
+                          <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.handle}</div>
+                        </div>
+                        <div style={{ marginLeft: 'auto', color: 'var(--text-3)' }}>
+                          {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                        </div>
                       </div>
                     </td>
-                  ))}
 
-                  {/* Total GMV */}
-                  <td style={{ padding: '12px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>{formatCurrency(totalGmv)}</div>
-                    <div style={{ width: 64, height: 4, background: 'var(--surface-2)', borderRadius: 999, marginTop: 4, marginLeft: 'auto', border: '1px solid var(--border)' }}>
-                      <div style={{ width: `${Math.round((totalGmv / maxGmv) * 100)}%`, height: '100%', borderRadius: 999, background: 'var(--brand)' }} />
-                    </div>
-                  </td>
+                    {/* Platforms */}
+                    <td style={{ padding: '12px 14px' }}>
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                        {c.platforms.map((p) => <PlatformChip key={p} platform={p} />)}
+                      </div>
+                    </td>
 
-                  {/* Conv rate */}
-                  <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, fontWeight: 700, color: 'var(--success)', whiteSpace: 'nowrap' }}>
-                    {c.conversionRate}%
-                  </td>
+                    {/* Niche */}
+                    <td style={{ padding: '12px 14px', fontSize: 12, color: 'var(--text-2)', whiteSpace: 'nowrap' }}>{c.niche}</td>
 
-                  {/* Status */}
-                  <td style={{ padding: '12px 14px' }}>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 500, padding: '3px 9px', borderRadius: 999, background: c.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(148,163,184,0.12)', color: c.status === 'active' ? 'var(--success)' : 'var(--text-3)' }}>
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: c.status === 'active' ? 'var(--success)' : 'var(--text-3)' }} />
-                      {c.status === 'active' ? 'Active' : 'Paused'}
-                    </span>
-                  </td>
-                </tr>
+                    {/* Followers */}
+                    <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, color: 'var(--text-2)', fontWeight: 500 }}>
+                      {formatNumber(c.followers)}
+                    </td>
+
+                    {/* Channel GMV */}
+                    {CHANNELS.map((ch) => (
+                      <td key={ch.key} style={{ padding: '12px 14px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <GmvBar value={c.channelGmv[ch.key]} max={maxByChannel[ch.key]} color={ch.color} />
+                        </div>
+                      </td>
+                    ))}
+
+                    {/* Total GMV */}
+                    <td style={{ padding: '12px 14px', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>{formatCurrency(totalGmv)}</div>
+                      <div style={{ width: 64, height: 4, background: 'var(--surface-2)', borderRadius: 999, marginTop: 4, marginLeft: 'auto', border: '1px solid var(--border)' }}>
+                        <div style={{ width: `${Math.round((totalGmv / maxGmv) * 100)}%`, height: '100%', borderRadius: 999, background: 'var(--brand)' }} />
+                      </div>
+                    </td>
+
+                    {/* Conv rate */}
+                    <td style={{ padding: '12px 14px', textAlign: 'right', fontSize: 13, fontWeight: 700, color: 'var(--success)', whiteSpace: 'nowrap' }}>
+                      {c.conversionRate}%
+                    </td>
+
+                    {/* Status */}
+                    <td style={{ padding: '12px 14px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 500, padding: '3px 9px', borderRadius: 999, background: c.status === 'active' ? 'rgba(16,185,129,0.1)' : 'rgba(148,163,184,0.12)', color: c.status === 'active' ? 'var(--success)' : 'var(--text-3)' }}>
+                        <span style={{ width: 5, height: 5, borderRadius: '50%', background: c.status === 'active' ? 'var(--success)' : 'var(--text-3)' }} />
+                        {c.status === 'active' ? 'Active' : 'Paused'}
+                      </span>
+                    </td>
+                  </tr>
+                  {isExpanded && (
+                    <tr key={`${c.id}-expand`} style={{ borderBottom: idx < sorted.length - 1 ? '1px solid var(--border)' : 'none' }}>
+                      <td colSpan={9} style={{ padding: '0 14px 12px 58px', background: 'rgba(99,102,241,0.03)' }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+                          Promoting {skuIds.length} SKU{skuIds.length !== 1 ? 's' : ''}
+                        </div>
+                        {skuIds.length === 0 ? (
+                          <p style={{ fontSize: 12, color: 'var(--text-3)' }}>Not assigned to any products yet</p>
+                        ) : (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                            {skuIds.map((sid) => {
+                              const prod = products.find((p) => p.id === sid);
+                              if (!prod) return null;
+                              return (
+                                <button key={sid} onClick={(e) => { e.stopPropagation(); navigate(`/products/${sid}`); }}
+                                  style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', transition: 'all 0.12s' }}
+                                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
+                                >
+                                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: prod.imageColor, flexShrink: 0 }} />
+                                  <span style={{ fontSize: 12, color: 'var(--text-1)', fontWeight: 500 }}>{prod.name}</span>
+                                  <span style={{ fontSize: 10, color: 'var(--text-3)' }}>{sid}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </>
               );
             })}
           </tbody>

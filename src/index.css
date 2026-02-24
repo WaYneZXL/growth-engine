@@ -279,3 +279,8 @@ body {
   to   { transform: translateX(0); }
 }
 .animate-slide-in-right { animation: slide-in-right 0.25s ease-out forwards; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
