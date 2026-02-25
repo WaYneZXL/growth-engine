@@ -36,11 +36,11 @@ export default function TopBar({ onToggleCopilot }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
         {crumbs.map((crumb, i) => (
           <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {i > 0 && <span style={{ color: '#94a3b8' }}>/</span>}
+            {i > 0 && <span style={{ color: 'var(--text-3)' }}>/</span>}
             {i === crumbs.length - 1 ? (
-              <span style={{ color: '#0f172a', fontWeight: 600 }}>{crumb.label}</span>
+              <span style={{ color: 'var(--text-1)', fontWeight: 600 }}>{crumb.label}</span>
             ) : (
-              <Link to={crumb.path} style={{ color: '#64748b', textDecoration: 'none' }}>{crumb.label}</Link>
+              <Link to={crumb.path} style={{ color: 'var(--text-2)', textDecoration: 'none' }}>{crumb.label}</Link>
             )}
           </span>
         ))}
@@ -50,27 +50,27 @@ export default function TopBar({ onToggleCopilot }) {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         {/* Search */}
         <div style={{ position: 'relative' }}>
-          <Search size={15} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+          <Search size={15} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
           <input
             type="text"
             placeholder="Search SKUs, creators..."
             style={{
               width: 240, height: 36, paddingLeft: 32, paddingRight: 44,
-              borderRadius: 8, border: '1px solid #e2e8f0', background: '#f8fafc',
-              fontSize: 13, color: '#0f172a', outline: 'none',
+              borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface-2)',
+              fontSize: 13, color: 'var(--text-1)', outline: 'none',
             }}
           />
           <kbd style={{
             position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
-            fontSize: 10, color: '#94a3b8', background: '#fff', border: '1px solid #e2e8f0',
+            fontSize: 10, color: 'var(--text-3)', background: '#fff', border: '1px solid var(--border)',
             borderRadius: 4, padding: '2px 5px',
           }}>⌘K</kbd>
         </div>
 
         {/* Notifications */}
-        <button style={{ position: 'relative', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: 'none', background: 'none', cursor: 'pointer', color: '#64748b' }}>
+        <button style={{ position: 'relative', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-2)' }}>
           <Bell size={18} />
-          <span style={{ position: 'absolute', top: 6, right: 6, width: 8, height: 8, background: '#ef4444', borderRadius: '50%' }} />
+          <span style={{ position: 'absolute', top: 6, right: 6, width: 8, height: 8, background: 'var(--danger)', borderRadius: '50%' }} />
         </button>
 
         {/* Copilot toggle */}

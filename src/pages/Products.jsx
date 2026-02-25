@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Plus, LayoutGrid, List, TrendingUp, TrendingDown, Users } from 'lucide-react';
+import { Search, Plus, LayoutGrid, List, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { products, formatCurrency } from '../data/mockData';
 import ProductImage from '../components/shared/ProductImage';
 import ChannelBadge from '../components/shared/ChannelBadge';

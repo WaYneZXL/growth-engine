@@ -62,7 +62,7 @@ export default function AICopilot() {
           <Sparkles size={18} style={{ color: 'var(--ai)' }} />
         </div>
         <div>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Feed Copilot</h1>
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>AI Copilot</h1>
           <p style={{ fontSize: 13, color: 'var(--text-2)' }}>AI-powered assistant for your store</p>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default function AICopilot() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask Feed Copilot anything..."
+            placeholder="Ask AI Copilot anything..."
           />
           <button onClick={() => handleSend()} style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--ai)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}
             onMouseEnter={(e) => e.currentTarget.style.background = '#6a4de0'}

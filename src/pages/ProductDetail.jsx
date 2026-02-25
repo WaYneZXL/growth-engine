@@ -4,7 +4,7 @@ import {
   ArrowLeft, TrendingUp, TrendingDown, Sparkles,
   Play, Image, FileText, File, Users, Eye,
   ChevronRight, RefreshCw, BarChart3, Check, AlertTriangle,
-  X, Loader2, ChevronDown,
+  X, Loader2, Zap,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell,
@@ -17,13 +17,13 @@ import ProductImage from '../components/shared/ProductImage';
 import ChannelBadge from '../components/shared/ChannelBadge';
 import ListingScoreRing from '../components/shared/ListingScoreRing';
 
-const tabs = ['Growth Overview', 'Content Hub', 'Creator & Affiliate', 'Listing Quality', 'Channel Performance'];
+const tabs = ['Overview', 'Listings', 'Content', 'Creators', 'Channel Performance'];
 
 const flywheelPhases = [
-  { key: 'build',     label: 'Build',     desc: 'Content Creation'   },
-  { key: 'distribute', label: 'Distribute', desc: 'Channel Publishing' },
-  { key: 'amplify',   label: 'Amplify',   desc: 'Creator Marketing'  },
-  { key: 'learn',     label: 'Learn',     desc: 'Data & Insights'    },
+  { key: 'listings', label: 'Listings',  desc: 'Channel PDP readiness' },
+  { key: 'content',  label: 'Content',   desc: 'AIGC & creative assets' },
+  { key: 'creators', label: 'Creators',  desc: 'Creator partnerships' },
+  { key: 'insights', label: 'Insights',  desc: 'Attribution & optimization' },
 ];
 
 const flywheelStyle = (s) => {
@@ -100,10 +100,10 @@ export default function ProductDetail() {
 
       {/* Tab content */}
       <div className="animate-fade-in-up">
-        {activeTab === 0 && <GrowthOverview product={product} benchmark={benchmark} />}
-        {activeTab === 1 && <ContentHubTab content={productContent} onGenerate={() => setAigcModal({ skuId: product.id })} />}
-        {activeTab === 2 && <CreatorTab product={product} creatorsList={productCreatorsList} />}
-        {activeTab === 3 && <ListingQuality product={product} />}
+        {activeTab === 0 && <Overview product={product} benchmark={benchmark} onTabChange={setActiveTab} />}
+        {activeTab === 1 && <ListingsTab product={product} />}
+        {activeTab === 2 && <ContentTab content={productContent} onGenerate={() => setAigcModal({ skuId: product.id })} />}
+        {activeTab === 3 && <CreatorTab product={product} creatorsList={productCreatorsList} />}
         {activeTab === 4 && <ChannelPerformance product={product} benchmark={benchmark} />}
       </div>
 
@@ -113,8 +113,32 @@ export default function ProductDetail() {
   );
 }
 
-/* ── Tab 1: Growth Overview ── */
-function GrowthOverview({ product, benchmark }) {
+/* ── Overview ── */
+function Overview({ product, benchmark, onTabChange }) {
+  const flywheelDetail = (key) => {
+    if (key === 'listings') {
+      const chCount = product.channels.length;
+      const avgScore = product.listingScore;
+      return `${chCount} channel${chCount !== 1 ? 's' : ''}, avg score ${avgScore}`;
+    }
+    if (key === 'content') {
+      const count = contentAssets.filter(a => a.skuId === product.id).length;
+      const aiCount = contentAssets.filter(a => a.skuId === product.id && a.source === 'ai').length;
+      const pct = count > 0 ? Math.round(aiCount / count * 100) : 0;
+      return `${count} assets, ${pct}% AI-generated`;
+    }
+    if (key === 'creators') {
+      const creatorIds = productCreators[product.id] || [];
+      const activeCount = creatorIds.length;
+      return activeCount > 0 ? `${activeCount} active creator${activeCount !== 1 ? 's' : ''}` : 'No creators yet';
+    }
+    if (key === 'insights') {
+      const chCount = product.channels.length;
+      return chCount > 1 ? 'Cross-channel attribution active' : 'Single-channel data';
+    }
+    return '';
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Flywheel */}
@@ -132,6 +156,7 @@ function GrowthOverview({ product, benchmark }) {
                   </div>
                   <p style={{ fontSize: 11, color: 'var(--text-2)' }}>{phase.desc}</p>
                   <span style={{ display: 'inline-block', marginTop: 8, fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 999, background: s.badgeBg, color: s.badgeColor }}>{s.label}</span>
+                  <p style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 4, marginBottom: 0 }}>{flywheelDetail(phase.key)}</p>
                 </div>
                 {i < 3 && <div style={{ position: 'absolute', top: '50%', right: -10, transform: 'translateY(-50%)', zIndex: 1 }}><ChevronRight size={14} style={{ color: 'var(--text-3)' }} /></div>}
               </div>
@@ -234,25 +259,63 @@ function GrowthOverview({ product, benchmark }) {
         );
       })()}
 
-      {/* Cross-Product Insights */}
-      {product.crossInsights && product.crossInsights.length > 0 && (
-        <div className="card" style={{ padding: 20, background: 'rgba(124,92,252,0.04)', border: '1px dashed rgba(124,92,252,0.25)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <Sparkles size={14} style={{ color: 'var(--ai)' }} />
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--ai)', margin: 0 }}>Cross-Product Insights</h3>
-            <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(124,92,252,0.12)', color: 'var(--ai)' }}>AI-powered</span>
+      {/* Recommended Actions */}
+      {product.recommendedActions && product.recommendedActions.length > 0 && (
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Zap size={14} style={{ color: 'var(--brand)' }} />
+              <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>Recommended Actions</h3>
+            </div>
+            <span style={{ fontSize: 11, color: 'var(--text-3)' }}>{product.recommendedActions.length} actions</span>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {product.crossInsights.map((ins, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(124,92,252,0.1)' }}>
-                <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{ins.icon}</span>
-                <p style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.6, flex: 1, margin: 0 }}>{ins.text}</p>
-                <button style={{ fontSize: 11, fontWeight: 600, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  {ins.action} →
-                </button>
+          {product.recommendedActions.map((action, i) => {
+            const priorityDot = action.priority === 'high' ? '#ef4444' : action.priority === 'medium' ? '#f59e0b' : '#10b981';
+            const priorityLabel = action.priority === 'high' ? 'HIGH' : action.priority === 'medium' ? 'REC.' : 'OPT.';
+            return (
+              <div key={i}
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 20px',
+                  borderBottom: i < product.recommendedActions.length - 1 ? '1px solid var(--border)' : 'none',
+                  transition: 'background 0.12s', cursor: 'default',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, paddingTop: 2, flexShrink: 0 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: priorityDot }} />
+                  <span style={{ fontSize: 8, fontWeight: 700, color: priorityDot, letterSpacing: '0.05em' }}>{priorityLabel}</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', lineHeight: 1.4, marginBottom: 3 }}>
+                    {action.title}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.5 }}>
+                    {action.reason}
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6, flexShrink: 0 }}>
+                  <span style={{
+                    fontSize: 11, fontWeight: 600, color: action.impactColor,
+                    background: `${action.impactColor}12`, padding: '3px 8px', borderRadius: 6,
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {action.impact}
+                  </span>
+                  <button
+                    onClick={() => onTabChange && onTabChange(action.targetTab)}
+                    style={{
+                      fontSize: 11, fontWeight: 600, color: 'var(--brand)',
+                      background: 'rgba(240,107,37,0.08)', border: 'none', borderRadius: 6,
+                      padding: '5px 10px', cursor: 'pointer', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {action.cta} →
+                  </button>
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       )}
 
@@ -260,8 +323,8 @@ function GrowthOverview({ product, benchmark }) {
   );
 }
 
-/* ── Tab 2: Content Hub ── */
-function ContentHubTab({ content, onGenerate }) {
+/* ── Content ── */
+function ContentTab({ content, onGenerate }) {
   const groups = {
     image: content.filter((c) => c.type === 'image'),
     video: content.filter((c) => c.type === 'video'),
@@ -507,7 +570,7 @@ function AigcModal({ onClose, product }) {
   );
 }
 
-/* ── Tab 3: Creator & Affiliate ── */
+/* ── Creators ── */
 function CreatorTab({ product, creatorsList }) {
   if (!creatorsList.length) return (
     <div className="card" style={{ padding: 48, textAlign: 'center' }}>
@@ -572,8 +635,8 @@ function CreatorTab({ product, creatorsList }) {
   );
 }
 
-/* ── Tab 4: Listing Quality ── */
-function ListingQuality({ product }) {
+/* ── Listings ── */
+function ListingsTab({ product }) {
   const [selectedChannel, setSelectedChannel] = useState(product.channels[0]);
 
   if (!product.channelListings) {
@@ -781,7 +844,7 @@ function ListingQuality({ product }) {
   );
 }
 
-/* ── Tab 5: Channel Performance ── */
+/* ── Channel Performance ── */
 function ChannelPerformance({ product, benchmark }) {
   const channelEntries = Object.entries(product.channelData);
 

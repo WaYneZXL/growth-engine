@@ -3,10 +3,10 @@ import { ChevronDown, ChevronUp, Play, Clock, Zap, Loader2, Check } from 'lucide
 import { workflows } from '../data/mockData';
 
 const phaseColor = {
-  Build:     { bg: 'rgba(59,130,246,0.12)',  color: '#3b82f6' },
-  Distribute:{ bg: 'rgba(16,185,129,0.12)', color: 'var(--success)' },
-  Amplify:   { bg: 'rgba(139,92,246,0.12)', color: '#8b5cf6' },
-  Learn:     { bg: 'rgba(245,158,11,0.12)', color: 'var(--warning)' },
+  Listings:  { bg: 'rgba(59,130,246,0.12)',  color: '#3b82f6' },
+  Content:   { bg: 'rgba(16,185,129,0.12)', color: 'var(--success)' },
+  Creators:  { bg: 'rgba(139,92,246,0.12)', color: '#8b5cf6' },
+  Insights:  { bg: 'rgba(245,158,11,0.12)', color: 'var(--warning)' },
 };
 
 const automationStyle = {
@@ -98,7 +98,7 @@ export default function Workflows() {
                 <div style={{ borderTop: '1px solid var(--border)', padding: '14px 20px', background: 'var(--surface-2)' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {wf.stepsDetail.map((step, i) => {
-                      const pc = phaseColor[step.phase] || phaseColor.Build;
+                      const pc = phaseColor[step.phase] || phaseColor.Listings;
                       const sc = stepStyle[step.status] || stepStyle.manual;
                       const runState = step.runState;
                       const isActiveStep = isRunning && runState === 'active';

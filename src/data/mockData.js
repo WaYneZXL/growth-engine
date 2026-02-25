@@ -1,13 +1,6 @@
 // ============================================================
-// Mock Data for Growth Engine
+// Mock Data for AfterShip Feed
 // ============================================================
-
-// --- Channels ---
-export const channels = [
-  { id: 'tiktok', name: 'TikTok Shop', color: '#ff0050', icon: 'tiktok' },
-  { id: 'shopify', name: 'Shopify', color: '#96bf48', icon: 'shopify' },
-  { id: 'amazon', name: 'Amazon', color: '#ff9900', icon: 'amazon' },
-];
 
 // --- SKU / Products ---
 export const products = [
@@ -81,11 +74,11 @@ export const products = [
       { icon: '📦', type: 'inventory', text: 'TikTok sells 3.5x faster than Amazon but has similar stock levels. Consider reallocating 200 units from Amazon → TikTok to avoid stockout in ~18 days.', impact: 'Prevent $14K stockout', impactColor: '#ef4444' },
       { icon: '💰', type: 'pricing', text: 'Shopify conversion is 2.1% vs TikTok 4.8% — Shopify price is $79.99 vs TikTok $69.99. A/B test a Shopify price of $74.99 to close the gap.', impact: 'Est. +0.8% conversion', impactColor: '#10b981' },
     ],
-    flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
-    crossInsights: [
-      { icon: '🎯', text: 'Creator videos on TikTok are lifting Shopify search traffic by ~18% — your affiliate content is cross-channel influencing organic', action: 'View Attribution' },
-      { icon: '📸', text: 'SKUs with 5+ AI images convert 2.1x better — Earbuds Pro has only 2 images, generate 3 more for Amazon', action: 'Generate Images' },
-      { icon: '🤖', text: 'AIGC CPA is $0.80 vs creator CPA $3.20 — shifting long-tail content to AIGC could save ~$2,400/mo while freeing budget for 3 hero creators', action: 'Optimize Mix' },
+    flywheel: { listings: 'complete', content: 'complete', creators: 'active', insights: 'active' },
+    recommendedActions: [
+      { priority: 'high', title: 'Add lifestyle images to Shopify listing', reason: 'Shopify hero image is white-background — listings with lifestyle imagery convert 23% better in this category.', impact: 'Est. +23% conv.', impactColor: '#10b981', cta: 'Fix Listing', targetTab: 1 },
+      { priority: 'medium', title: 'Incorporate TikTok-validated hooks into Shopify copy', reason: 'Creator videos drive +18% Shopify traffic, but the listing doesn\'t use the winning selling points.', impact: 'Est. +12% conv.', impactColor: '#10b981', cta: 'Fix Listing', targetTab: 1 },
+      { priority: 'low', title: 'Shift long-tail content from creators to AIGC', reason: 'AIGC converts at $0.80/conv vs creator $3.20/conv — rebalancing saves budget for hero moments.', impact: 'Save ~$2.4K/mo', impactColor: '#10b981', cta: 'Optimize Mix', targetTab: 2 },
     ],
     contentMix: {
       current: { aigcPct: 30, creatorPct: 70 },
@@ -151,12 +144,13 @@ export const products = [
     },
     channelOptimizations: [
       { icon: '📦', type: 'inventory', text: 'TikTok stock projected to run out in 12 days based on current velocity. Shopify has 45+ days of stock.', impact: 'Rebalance inventory', impactColor: '#f59e0b' },
-      { icon: '🔄', type: 'content', text: 'Shopify conversion trails TikTok by 2.4x — listing quality gap (72 vs 90) is likely the cause, not pricing.', impact: 'Fix listing first', impactColor: '#6366f1' },
+      { icon: '🔄', type: 'content', text: 'Shopify conversion trails TikTok by 2.4x — listing quality gap (72 vs 90) is likely the cause, not pricing.', impact: 'Fix listing first', impactColor: '#7c5cfc' },
     ],
-    flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '💡', text: '12 creators promoting Serum also post Beauty content — cross-promote with Vitamin C Cream for a bundle effect', action: 'View Creators' },
-      { icon: '🔥', text: 'Serum UGC drives 5.2% average conversion — AI-generated listing copy is underperforming vs creator copy', action: 'Refresh Copy' },
+    flywheel: { listings: 'needs-attention', content: 'complete', creators: 'active', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Rewrite Shopify title with creator-validated language', reason: 'TikTok creators use "deep hydration" (5.2% conv.) but Shopify says "Moisturizing Face Serum" (2.8% conv.).', impact: 'Est. +15% conv.', impactColor: '#10b981', cta: 'Rewrite with AI', targetTab: 1 },
+      { priority: 'high', title: 'Generate more Shopify gallery images', reason: 'Only 2 images vs category avg 8. Beauty PDPs with 6+ images convert 1.8x better.', impact: 'Est. +80% more', impactColor: '#10b981', cta: 'Generate Images', targetTab: 2 },
+      { priority: 'medium', title: 'Cross-promote with Vitamin C Cream creators', reason: '12 creators promoting Serum also post Beauty content — bundle recommendation could lift AOV.', impact: 'Est. +$3K AOV lift', impactColor: '#10b981', cta: 'View Creators', targetTab: 3 },
     ],
     contentMix: {
       current: { aigcPct: 20, creatorPct: 80 },
@@ -190,10 +184,10 @@ export const products = [
       amazon: { gmv: 7700, conversionRate: 2.6, listingScore: 75, creatorCount: 1, sessions: 6200, orders: 161 },
     },
     listingScores: { title: 82, images: 72, description: 75, keywords: 80, price: 78 },
-    flywheel: { build: 'needs-attention', distribute: 'active', amplify: 'needs-attention', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '⚠️', text: 'Yoga Mat has zero TikTok presence — 4 fitness creators already active on your account could be onboarded', action: 'Find Creators' },
-      { icon: '📉', text: 'Amazon listing images score 72 vs category avg 75 — outdated photos may be hurting conversion', action: 'Refresh Images' },
+    flywheel: { listings: 'needs-attention', content: 'needs-attention', creators: 'needs-attention', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Launch TikTok Shop listing', reason: 'Zero TikTok presence but 4 fitness creators on your account could start promoting immediately.', impact: 'New channel', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
+      { priority: 'high', title: 'Refresh Amazon listing images', reason: 'Image score 72 vs category avg 75 — outdated photos likely hurting conversion.', impact: 'Est. +15% conv.', impactColor: '#10b981', cta: 'Generate Images', targetTab: 2 },
     ],
   },
   {
@@ -262,10 +256,10 @@ export const products = [
     channelOptimizations: [
       { icon: '📦', type: 'inventory', text: 'Amazon has 35 days of stock but sales velocity is accelerating (+22% this week). Consider pre-ordering before stockout.', impact: 'Plan ahead', impactColor: '#f59e0b' },
     ],
-    flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'complete' },
-    crossInsights: [
-      { icon: '🚀', text: 'Smart Watch is your top GMV SKU — TikTok creator content is driving Shopify search lift of 22%', action: 'Scale Creators' },
-      { icon: '📊', text: 'Watch + Earbuds bundle opportunity: 68% of Earbuds buyers also viewed Watch, consider cross-promotion', action: 'Create Bundle' },
+    flywheel: { listings: 'active', content: 'active', creators: 'active', insights: 'active' },
+    recommendedActions: [
+      { priority: 'medium', title: 'Add comparison images to Shopify gallery', reason: 'No vs-Apple-Watch comparison content. Electronics category sees 18% longer time-on-page with comparison images.', impact: 'Est. +18% engagement', impactColor: '#10b981', cta: 'Generate Images', targetTab: 2 },
+      { priority: 'medium', title: 'Upgrade Amazon A+ Content', reason: 'Using generic brand template — custom A+ with lifestyle images lifts conversion 8-12% in Electronics.', impact: 'Est. +8-12% conv.', impactColor: '#10b981', cta: 'Fix Listing', targetTab: 1 },
     ],
     contentMix: {
       current: { aigcPct: 25, creatorPct: 75 },
@@ -299,10 +293,10 @@ export const products = [
       amazon: { gmv: 12600, conversionRate: 3.1, listingScore: 79, creatorCount: 1, sessions: 7100, orders: 220 },
     },
     listingScores: { title: 84, images: 78, description: 80, keywords: 82, price: 75 },
-    flywheel: { build: 'active', distribute: 'active', amplify: 'needs-attention', learn: 'active' },
-    crossInsights: [
-      { icon: '☕', text: 'Coffee Machine has no creator affiliates on TikTok — Home & Kitchen creators generate 3.2x ROI vs paid ads', action: 'Recruit Creators' },
-      { icon: '💡', text: 'Amazon bullet points last updated 90+ days ago — AI rewrite could boost conversion by an estimated 12-18%', action: 'Rewrite Copy' },
+    flywheel: { listings: 'active', content: 'active', creators: 'needs-attention', insights: 'active' },
+    recommendedActions: [
+      { priority: 'high', title: 'Recruit TikTok creator affiliates', reason: 'No creator affiliates on TikTok — Home & Kitchen creators generate 3.2x ROI vs paid ads.', impact: 'Est. 3.2x ROI', impactColor: '#10b981', cta: 'Find Creators', targetTab: 3 },
+      { priority: 'medium', title: 'Rewrite Amazon bullet points', reason: 'Amazon copy last updated 90+ days ago — AI rewrite could boost conversion by 12-18%.', impact: 'Est. +12-18% conv.', impactColor: '#10b981', cta: 'Rewrite with AI', targetTab: 1 },
     ],
   },
   {
@@ -359,11 +353,11 @@ export const products = [
       { icon: '🚀', type: 'expansion', text: 'This SKU is on 2 channels but category leaders are on 3+. Shopify Pet category has high demand — consider expanding.', impact: 'Est. +$6K/mo', impactColor: '#10b981' },
       { icon: '💰', type: 'pricing', text: 'TikTok price is $24.99 and converting at 6.1%. Category avg price is $29.99 — you may have room to increase without hurting conversion.', impact: 'Est. +$3K margin/mo', impactColor: '#10b981' },
     ],
-    flywheel: { build: 'complete', distribute: 'active', amplify: 'complete', learn: 'active' },
-    crossInsights: [
-      { icon: '🔥', text: 'Pet Toy viral video (680K views) drove 38% more search for your brand on Amazon — capitalize with keyword update', action: 'Update Keywords' },
-      { icon: '🐾', text: '9 creators promoting Pet Toy — 6 also cover Home & Kitchen, ideal for cross-SKU campaigns', action: 'Plan Campaign' },
-      { icon: '⚖️', text: 'Content mix is 60% AIGC / 40% creator — validation phase suggests balancing equally to test which drives more conversions', action: 'Optimize Mix' },
+    flywheel: { listings: 'active', content: 'complete', creators: 'complete', insights: 'active' },
+    recommendedActions: [
+      { priority: 'high', title: 'Update Amazon PDP with viral TikTok hook', reason: '@petloversarah\'s video (450K views) proved "automatic laser pattern" is the #1 purchase driver — Amazon listing doesn\'t mention it.', impact: 'Est. +18% conv.', impactColor: '#10b981', cta: 'Fix Listing', targetTab: 1 },
+      { priority: 'high', title: 'Replace Amazon hero image with lifestyle shot', reason: 'Current white-background photo vs TikTok video showing cats playing — extract video frame for Amazon.', impact: 'Est. +25% CTR', impactColor: '#10b981', cta: 'Generate Image', targetTab: 2 },
+      { priority: 'medium', title: 'Expand to Shopify store', reason: 'Strong TikTok performance (6.1% conv., 3.2x above category) with zero Shopify presence. Pet accessories sell well on Shopify.', impact: 'Est. +$6K/mo', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
     ],
     contentMix: {
       current: { aigcPct: 60, creatorPct: 40 },
@@ -397,10 +391,10 @@ export const products = [
       amazon: { gmv: 3700, conversionRate: 2.2, listingScore: 70, creatorCount: 1, sessions: 3600, orders: 79 },
     },
     listingScores: { title: 75, images: 68, description: 70, keywords: 72, price: 74 },
-    flywheel: { build: 'needs-attention', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '⚠️', text: 'LED Lamp is the lowest-performing SKU — no TikTok, only 2 creators, listing score 72. Recommend running Boost Underperforming workflow', action: 'Run Workflow' },
-      { icon: '💡', text: 'Home Office category avg GMV is $12k — you are at $8.9k. Expanding to TikTok could add $4-6k/month', action: 'Add TikTok' },
+    flywheel: { listings: 'needs-attention', content: 'needs-attention', creators: 'needs-attention', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Launch TikTok Shop listing', reason: 'No TikTok presence, only 2 creators, listing score 72. Home Office category avg GMV is $12k vs your $8.9k.', impact: 'Est. +$4-6K/mo', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
+      { priority: 'high', title: 'Refresh all listing images', reason: 'Listing images score 68 — lowest across all SKUs. AI-generated lifestyle shots could close the gap.', impact: 'Est. +20% conv.', impactColor: '#10b981', cta: 'Generate Images', targetTab: 2 },
     ],
   },
   {
@@ -444,11 +438,11 @@ export const products = [
     channelOptimizations: [
       { icon: '🌐', type: 'expansion', text: 'Strong on TikTok but underperforming on Shopify and Amazon. Fitness accessories sell well on Amazon — AIGC-validated "travel-friendly" angle works for Amazon keyword strategy too.', impact: 'New channel opportunity', impactColor: '#10b981' },
     ],
-    flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
-    crossInsights: [
-      { icon: '💪', text: 'Resistance Bands + Yoga Mat cross-promotion opportunity — 4 creators cover both fitness products', action: 'Create Bundle' },
-      { icon: '📈', text: 'Bands TikTok conversion 5.5% vs Amazon 3.4% — shifting 20% of ad budget to TikTok creator seeding could increase total GMV by ~$3k', action: 'Rebalance Budget' },
-      { icon: '🚀', text: 'Cold-start phase: AIGC is correctly dominating at 90% — begin recruiting 2-3 fitness creators now as GMV approaches $5K threshold', action: 'Find Creators' },
+    flywheel: { listings: 'needs-attention', content: 'active', creators: 'needs-attention', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Rewrite TikTok listing with validated selling angle', reason: 'AIGC cold-start proved "travel-friendly" converts 2.1x better than "5 resistance levels". Title still uses old angle.', impact: 'Est. +2.1x conv.', impactColor: '#10b981', cta: 'Rewrite with AI', targetTab: 1 },
+      { priority: 'high', title: 'Start creator recruitment', reason: 'Cold start phase complete — GMV data and validated hooks ready. 8 matched creators waiting for outreach.', impact: 'Est. +$8K/mo', impactColor: '#10b981', cta: 'Find Creators', targetTab: 3 },
+      { priority: 'medium', title: 'Replace TikTok main image', reason: 'Flat-lay photo of all 5 bands — fitness listings with "in-use workout" images get 45% higher CTR.', impact: 'Est. +45% CTR', impactColor: '#10b981', cta: 'Generate Image', targetTab: 2 },
     ],
     contentMix: {
       current: { aigcPct: 90, creatorPct: 10 },
@@ -482,10 +476,10 @@ export const products = [
       shopify: { gmv: 6600, conversionRate: 2.4, listingScore: 86, creatorCount: 2, sessions: 5400, orders: 130 },
     },
     listingScores: { title: 92, images: 90, description: 88, keywords: 91, price: 89 },
-    flywheel: { build: 'complete', distribute: 'complete', amplify: 'complete', learn: 'active' },
-    crossInsights: [
-      { icon: '🥤', text: 'Blender viral content is your #1 top-of-funnel driver — 11 creators reaching 3.2M combined followers this month', action: 'Scale Creators' },
-      { icon: '🔗', text: 'Blender + Coffee Machine audience overlap 41% — coordinate posting schedule for maximum reach', action: 'Coordinate Posts' },
+    flywheel: { listings: 'complete', content: 'active', creators: 'complete', insights: 'active' },
+    recommendedActions: [
+      { priority: 'high', title: 'Expand to Amazon marketplace', reason: 'Strong on TikTok ($24.6K GMV) and Shopify but zero Amazon presence. Home & Kitchen category has high demand on Amazon.', impact: 'Est. +$8K/mo', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
+      { priority: 'medium', title: 'Generate more video content', reason: 'Only 2 video assets. Recipe/smoothie videos are top-performing content type for this category.', impact: 'Content gap', impactColor: '#f59e0b', cta: 'Generate Videos', targetTab: 2 },
     ],
     contentMix: {
       current: { aigcPct: 40, creatorPct: 60 },
@@ -518,10 +512,10 @@ export const products = [
       amazon: { gmv: 4200, conversionRate: 2.1, listingScore: 68, creatorCount: 0, sessions: 3800, orders: 80 },
     },
     listingScores: { title: 70, images: 62, description: 65, keywords: 72, price: 70 },
-    flywheel: { build: 'needs-attention', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '🪵', text: 'Bamboo Board has zero creator coverage and Amazon-only presence — this SKU is invisible to discovery channels', action: 'Run Launch Workflow' },
-      { icon: '📦', text: 'Kitchen bundle opportunity: Board + Blender + Coffee Machine — buyers often purchase 2+ kitchen items within 30 days', action: 'Create Bundle' },
+    flywheel: { listings: 'active', content: 'needs-attention', creators: 'needs-attention', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Expand to TikTok and Shopify', reason: 'Amazon-only presence with zero creators — invisible to discovery channels. Kitchen items trend well on TikTok.', impact: 'New channels', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
+      { priority: 'high', title: 'Recruit kitchen creators', reason: 'Zero creator coverage. 5 Home & Kitchen creators on your account could promote immediately.', impact: 'Est. +$5K/mo', impactColor: '#10b981', cta: 'Find Creators', targetTab: 3 },
     ],
   },
   {
@@ -544,10 +538,10 @@ export const products = [
       shopify: { gmv: 5400, conversionRate: 2.5, listingScore: 80, creatorCount: 1, sessions: 4200, orders: 105 },
     },
     listingScores: { title: 85, images: 80, description: 82, keywords: 84, price: 86 },
-    flywheel: { build: 'active', distribute: 'active', amplify: 'active', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '✨', text: 'Vitamin C Cream is new but already 5 creators — bundle with Hydrating Serum for a skincare routine campaign', action: 'Plan Campaign' },
-      { icon: '🧴', text: 'Beauty category conversion avg is 4.1% — Cream is at 4.2% already. Increasing creator count to 10 could push to 5%+', action: 'Recruit Creators' },
+    flywheel: { listings: 'active', content: 'active', creators: 'active', insights: 'active' },
+    recommendedActions: [
+      { priority: 'medium', title: 'Bundle with Hydrating Serum for skincare routine', reason: '5 creators already promoting Cream also post Beauty content — bundle could lift AOV significantly.', impact: 'Est. +$4K AOV lift', impactColor: '#10b981', cta: 'Plan Campaign', targetTab: 3 },
+      { priority: 'medium', title: 'Recruit 5 more Beauty creators', reason: 'Conversion already at 4.2% vs category avg 4.1%. Doubling creator count to 10 could push to 5%+.', impact: 'Est. +$6K/mo', impactColor: '#10b981', cta: 'Find Creators', targetTab: 3 },
     ],
   },
   {
@@ -570,10 +564,10 @@ export const products = [
       amazon: { gmv: 4800, conversionRate: 2.4, listingScore: 74, creatorCount: 0, sessions: 4400, orders: 106 },
     },
     listingScores: { title: 78, images: 74, description: 72, keywords: 76, price: 80 },
-    flywheel: { build: 'active', distribute: 'needs-attention', amplify: 'needs-attention', learn: 'needs-attention' },
-    crossInsights: [
-      { icon: '🎧', text: 'Headphones + Earbuds — electronics buyers overlap 55%. Earbuds creators could cross-promote Headphones with minimal extra cost', action: 'Cross-Promote' },
-      { icon: '⚡', text: 'New SKU with Shopify+Amazon only — adding TikTok could 2-3x monthly GMV based on Earbuds benchmark', action: 'Add TikTok' },
+    flywheel: { listings: 'needs-attention', content: 'needs-attention', creators: 'needs-attention', insights: 'needs-attention' },
+    recommendedActions: [
+      { priority: 'high', title: 'Launch TikTok Shop listing', reason: 'New SKU with Shopify+Amazon only — adding TikTok could 2-3x monthly GMV based on Earbuds benchmark.', impact: 'Est. 2-3x GMV', impactColor: '#10b981', cta: 'Expand Channel', targetTab: 4 },
+      { priority: 'medium', title: 'Cross-promote with Earbuds creators', reason: 'Electronics buyers overlap 55% between Headphones and Earbuds. Existing creators could promote with minimal extra cost.', impact: 'Est. +$4K/mo', impactColor: '#10b981', cta: 'Find Creators', targetTab: 3 },
     ],
   },
 ];
@@ -633,73 +627,6 @@ export const gmvWeeklyTrend = [
   { week: 'W12', listing: 28400, affiliate: 17400, aigc: 12000, total: 57800 },
 ];
 
-// --- GMV Attribution ---
-// influenced: true = this segment is driven/boosted by AfterShip (listing opt + creator marketing)
-export const gmvAttribution = [
-  { name: 'Organic Search',    value: 35, color: '#94a3b8', influenced: false },
-  { name: 'Affiliate/Creator', value: 22, color: '#6366f1', influenced: true  },
-  { name: 'Paid Ads',          value: 25, color: '#94a3b8', influenced: false },
-  { name: 'Listing SEO',       value: 12, color: '#818cf8', influenced: true  },
-  { name: 'Other',             value: 6,  color: '#cbd5e1', influenced: false },
-];
-
-// --- Dashboard Metrics ---
-export const dashboardMetrics = {
-  gmv: { value: 128450, change: 18.2, trend: [95, 98, 102, 108, 112, 118, 128] },
-  activeSKUs: { value: 342, channels: 3 },
-  creatorPartners: { value: 87, active: true },
-  contentAssets: { value: 1204, aiPercentage: 68 },
-};
-
-// --- AI Insights ---
-export const aiInsights = [
-  {
-    id: 'INS-001',
-    type: 'opportunity',
-    icon: '🔥',
-    title: 'High-performing creator cluster detected',
-    description: "SKU-0042 'Wireless Earbuds Pro' has 8 creators driving 3x avg conversion — consider increasing creator recruitment for this SKU.",
-    action: 'Recruit More Creators',
-    skuId: 'SKU-0042',
-  },
-  {
-    id: 'INS-002',
-    type: 'warning',
-    icon: '⚠️',
-    title: 'Content-listing mismatch detected',
-    description: '12 SKUs have high-performing creator content but outdated Shopify listings — content mismatch may be reducing conversion rates.',
-    action: 'Review Listings',
-    skuId: null,
-  },
-  {
-    id: 'INS-003',
-    type: 'insight',
-    icon: '💡',
-    title: 'Channel ROI imbalance',
-    description: 'Your TikTok affiliate ROI is 2.4x higher than Shopify organic — recommend shifting content budget to TikTok creator partnerships.',
-    action: 'View Analysis',
-    skuId: null,
-  },
-  {
-    id: 'INS-004',
-    type: 'opportunity',
-    icon: '🚀',
-    title: 'Viral potential detected',
-    description: "SKU-0537 'Interactive Pet Toy' content engagement is 3.2x above category average on TikTok — prime candidate for scaling.",
-    action: 'Scale Campaign',
-    skuId: 'SKU-0537',
-  },
-  {
-    id: 'INS-005',
-    type: 'opportunity',
-    icon: '🛍️',
-    title: 'Shopify write-back opportunity',
-    description: '8 SKUs have high-performing TikTok creator content that hasn\'t been synced to Shopify listings — auto-write-back could lift Shopify conversion by an estimated 15-22%.',
-    action: 'Sync to Shopify',
-    skuId: null,
-  },
-];
-
 // --- Content Assets ---
 export const contentAssets = [
   { id: 'CA-001', type: 'image', name: 'Earbuds Hero Shot', skuId: 'SKU-0042', source: 'ai', channels: ['tiktok', 'shopify', 'amazon'], color: '#6366f1', createdAt: '2026-02-18' },
@@ -744,11 +671,11 @@ export const workflows = [
     runningFor: 'Interactive Pet Toy — TikTok Launch',
     icon: '🚀',
     stepsDetail: [
-      { phase: 'Build', name: 'Generate product images & copy with AI', status: 'auto', runState: 'done' },
-      { phase: 'Build', name: 'Create creator brief & outreach template', status: 'auto', runState: 'done' },
-      { phase: 'Distribute', name: 'Publish listings to selected channels', status: 'auto', runState: 'active' },
-      { phase: 'Amplify', name: 'Match & invite relevant creators', status: 'semi-auto', runState: 'pending' },
-      { phase: 'Learn', name: 'Set up performance tracking & alerts', status: 'auto', runState: 'pending' },
+      { phase: 'Listings', name: 'Generate product images & copy with AI', status: 'auto', runState: 'done' },
+      { phase: 'Listings', name: 'Create creator brief & outreach template', status: 'auto', runState: 'done' },
+      { phase: 'Content', name: 'Publish listings to selected channels', status: 'auto', runState: 'active' },
+      { phase: 'Creators', name: 'Match & invite relevant creators', status: 'semi-auto', runState: 'pending' },
+      { phase: 'Insights', name: 'Set up performance tracking & alerts', status: 'auto', runState: 'pending' },
     ],
   },
   {
@@ -762,10 +689,10 @@ export const workflows = [
     status: 'active',
     icon: '📈',
     stepsDetail: [
-      { phase: 'Learn', name: 'Analyze performance gaps vs category benchmarks', status: 'auto' },
-      { phase: 'Build', name: 'Regenerate underperforming content assets', status: 'auto' },
-      { phase: 'Distribute', name: 'Update listings with optimized content', status: 'semi-auto' },
-      { phase: 'Amplify', name: 'Recruit high-converting creators in category', status: 'semi-auto' },
+      { phase: 'Insights', name: 'Analyze performance gaps vs category benchmarks', status: 'auto' },
+      { phase: 'Listings', name: 'Regenerate underperforming content assets', status: 'auto' },
+      { phase: 'Content', name: 'Update listings with optimized content', status: 'semi-auto' },
+      { phase: 'Creators', name: 'Recruit high-converting creators in category', status: 'semi-auto' },
     ],
   },
   {
@@ -779,9 +706,9 @@ export const workflows = [
     status: 'active',
     icon: '⚡',
     stepsDetail: [
-      { phase: 'Distribute', name: 'Adapt content for new channel requirements', status: 'auto' },
-      { phase: 'Amplify', name: 'Scale creator partnerships based on performance data', status: 'semi-auto' },
-      { phase: 'Learn', name: 'Monitor cross-channel cannibalization', status: 'auto' },
+      { phase: 'Content', name: 'Adapt content for new channel requirements', status: 'auto' },
+      { phase: 'Creators', name: 'Scale creator partnerships based on performance data', status: 'semi-auto' },
+      { phase: 'Insights', name: 'Monitor cross-channel cannibalization', status: 'auto' },
     ],
   },
   {
@@ -795,12 +722,12 @@ export const workflows = [
     status: 'active',
     icon: '🎯',
     stepsDetail: [
-      { phase: 'Learn', name: 'Identify top SKUs with highest sale potential', status: 'auto' },
-      { phase: 'Build', name: 'Generate sale-specific creative assets', status: 'auto' },
-      { phase: 'Build', name: 'Create event-specific creator briefs', status: 'auto' },
-      { phase: 'Distribute', name: 'Schedule listing updates with sale pricing', status: 'semi-auto' },
-      { phase: 'Amplify', name: 'Coordinate creator posting schedule', status: 'manual' },
-      { phase: 'Learn', name: 'Set up real-time sale performance dashboard', status: 'auto' },
+      { phase: 'Insights', name: 'Identify top SKUs with highest sale potential', status: 'auto' },
+      { phase: 'Listings', name: 'Generate sale-specific creative assets', status: 'auto' },
+      { phase: 'Listings', name: 'Create event-specific creator briefs', status: 'auto' },
+      { phase: 'Content', name: 'Schedule listing updates with sale pricing', status: 'semi-auto' },
+      { phase: 'Creators', name: 'Coordinate creator posting schedule', status: 'manual' },
+      { phase: 'Insights', name: 'Set up real-time sale performance dashboard', status: 'auto' },
     ],
   },
   {
@@ -814,10 +741,10 @@ export const workflows = [
     status: 'active',
     icon: '🤝',
     stepsDetail: [
-      { phase: 'Learn', name: 'AI recommends best-fit creators based on product & audience', status: 'auto' },
-      { phase: 'Build', name: 'Generate personalized creator briefs with product samples', status: 'auto' },
-      { phase: 'Amplify', name: 'Send outreach & track responses', status: 'semi-auto' },
-      { phase: 'Learn', name: 'Monitor content creation & early performance signals', status: 'auto' },
+      { phase: 'Insights', name: 'AI recommends best-fit creators based on product & audience', status: 'auto' },
+      { phase: 'Listings', name: 'Generate personalized creator briefs with product samples', status: 'auto' },
+      { phase: 'Creators', name: 'Send outreach & track responses', status: 'semi-auto' },
+      { phase: 'Insights', name: 'Monitor content creation & early performance signals', status: 'auto' },
     ],
   },
 ];
@@ -848,7 +775,7 @@ export const competitorBenchmarks = {
   'Home & Office': { avgListingScore: 71, avgConversion: 2.5, avgCreatorCount: 2, avgGMV: 12000 },
 };
 
-// Compute total gmvAttributed from channelGmv for backwards compat
+// Compute total gmvAttributed from channelGmv
 creators.forEach((c) => {
   c.gmvAttributed = Object.values(c.channelGmv).reduce((s, v) => s + v, 0);
 });
@@ -873,8 +800,8 @@ export const dashboardActions = [
     id: 'ACT-001',
     severity: 'urgent',
     severityColor: '#ef4444',
-    title: '2 SKUs declining >15% this week — listing scores dropped',
-    description: 'Wireless Earbuds Pro and Smart Watch Ultra need updated listing content. Creator engagement has also slowed.',
+    title: '3 SKUs declining — Yoga Mat, LED Lamp, and Bamboo Board need attention',
+    description: 'Premium Yoga Mat (-10.8%), LED Desk Lamp Pro (-9.2%), and Bamboo Cutting Board (-6.7%) are all declining. Listing scores and creator coverage are below category averages.',
     impact: '$12K+ GMV at risk',
     impactColor: '#ef4444',
     cta: 'Diagnose & Fix',
@@ -911,7 +838,7 @@ export const dashboardActions = [
     impact: 'Est. +$8K GMV/mo',
     impactColor: '#10b981',
     cta: 'Find Creators',
-    path: '/products/SKU-0891',
+    path: '/products/SKU-0755',
   },
 ];
 
@@ -963,9 +890,4 @@ export const getChannelColor = (channelId) => {
 export const getChannelName = (channelId) => {
   const map = { tiktok: 'TikTok Shop', shopify: 'Shopify', amazon: 'Amazon' };
   return map[channelId] || channelId;
-};
-
-export const getStatusColor = (status) => {
-  const map = { growing: '#10b981', declining: '#ef4444', new: '#94a3b8' };
-  return map[status] || '#94a3b8';
 };
