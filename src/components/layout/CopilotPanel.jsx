@@ -16,6 +16,10 @@ const mockResponses = [
     actions: [{ label: 'Run Full Launch Workflow', type: 'action' }, { label: 'View Matched Creators', type: 'insight' }],
   },
   {
+    content: "Here's your content mix analysis:\n\nYour top 5 SKUs are 72% creator-dependent on average. Based on category benchmarks and your conversion data:\n\n• 3 SKUs can shift 15-20% of content budget to AIGC — saving ~$4.8K/mo with minimal GMV impact\n• 1 SKU (Resistance Bands) is in cold-start — AIGC is correctly leading, creator recruitment should begin when monthly GMV exceeds $5K\n• 1 SKU (Portable Blender) has an optimal mix already\n\n**Biggest opportunity:** Wireless Earbuds Pro — creator CPA is 4x higher than AIGC. Shifting long-tail to AIGC frees budget for 3 additional hero creators.",
+    actions: [{ label: 'Apply Recommended Mix', type: 'action' }, { label: 'View Per-SKU Breakdown', type: 'insight' }],
+  },
+  {
     content: "Sales drop analysis:\n\n1. 3 SKUs haven't had listing updates in 45+ days\n2. Two top creators paused posting\n3. Competitors improved their listings significantly last month",
     actions: [{ label: 'Refresh Listing Content', type: 'action' }, { label: 'Re-engage Paused Creators', type: 'action' }],
   },
@@ -84,7 +88,13 @@ export default function CopilotPanel({ isOpen, onClose }) {
                 background: msg.role === 'user' ? 'var(--brand)' : 'var(--surface-2)',
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
-                <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
+                <div style={{ whiteSpace: 'pre-line' }}>
+                  {msg.content.split(/(\*\*[^*]+\*\*)/).map((part, i) =>
+                    part.startsWith('**') && part.endsWith('**')
+                      ? <strong key={i} style={{ color: msg.role === 'user' ? '#fff' : 'var(--text-1)', fontWeight: 700 }}>{part.slice(2, -2)}</strong>
+                      : part
+                  )}
+                </div>
                 {/* Stepper rendering */}
                 {msg.steps && (
                   <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -105,7 +115,7 @@ export default function CopilotPanel({ isOpen, onClose }) {
                             {isPending && <Clock size={9} style={{ color: 'var(--text-3)' }} />}
                           </div>
                           <div style={{ paddingBottom: 12, flex: 1 }}>
-                            <span style={{ fontSize: 12, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400, textDecoration: isDone ? 'line-through' : 'none' }}>
+                            <span style={{ fontSize: 12, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400 }}>
                               {step.label}
                             </span>
                             {isActive && <span style={{ display: 'inline-block', marginLeft: 6, fontSize: 10, fontWeight: 600, color: 'var(--brand)' }}>● In progress</span>}

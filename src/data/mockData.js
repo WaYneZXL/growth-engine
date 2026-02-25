@@ -38,7 +38,19 @@ export const products = [
     crossInsights: [
       { icon: '🎯', text: 'Creator videos on TikTok are lifting Shopify search traffic by ~18% — your affiliate content is cross-channel influencing organic', action: 'View Attribution' },
       { icon: '📸', text: 'SKUs with 5+ AI images convert 2.1x better — Earbuds Pro has only 2 images, generate 3 more for Amazon', action: 'Generate Images' },
+      { icon: '🤖', text: 'AIGC CPA is $0.80 vs creator CPA $3.20 — shifting long-tail content to AIGC could save ~$2,400/mo while freeing budget for 3 hero creators', action: 'Optimize Mix' },
     ],
+    contentMix: {
+      current: { aigcPct: 30, creatorPct: 70 },
+      recommended: { aigcPct: 45, creatorPct: 55 },
+      aigcCPA: 0.8,
+      creatorCPA: 3.2,
+      aigcGmv: 8400,
+      creatorGmv: 24600,
+      phase: 'scale',
+      phaseLabel: 'Scaling — shift long-tail to AIGC, focus creators on hero moments',
+      savingsEstimate: 2400,
+    },
   },
   {
     id: 'SKU-0118',
@@ -65,6 +77,17 @@ export const products = [
       { icon: '💡', text: '12 creators promoting Serum also post Beauty content — cross-promote with Vitamin C Cream for a bundle effect', action: 'View Creators' },
       { icon: '🔥', text: 'Serum UGC drives 5.2% average conversion — AI-generated listing copy is underperforming vs creator copy', action: 'Refresh Copy' },
     ],
+    contentMix: {
+      current: { aigcPct: 20, creatorPct: 80 },
+      recommended: { aigcPct: 45, creatorPct: 55 },
+      aigcCPA: 1.1,
+      creatorCPA: 2.8,
+      aigcGmv: 7100,
+      creatorGmv: 28500,
+      phase: 'scale',
+      phaseLabel: 'Scaling — 12 creators is strong, supplement with AIGC to cover long-tail keywords',
+      savingsEstimate: 1800,
+    },
   },
   {
     id: 'SKU-0205',
@@ -118,6 +141,17 @@ export const products = [
       { icon: '🚀', text: 'Smart Watch is your top GMV SKU — TikTok creator content is driving Shopify search lift of 22%', action: 'Scale Creators' },
       { icon: '📊', text: 'Watch + Earbuds bundle opportunity: 68% of Earbuds buyers also viewed Watch, consider cross-promotion', action: 'Create Bundle' },
     ],
+    contentMix: {
+      current: { aigcPct: 25, creatorPct: 75 },
+      recommended: { aigcPct: 40, creatorPct: 60 },
+      aigcCPA: 1.0,
+      creatorCPA: 2.6,
+      aigcGmv: 13000,
+      creatorGmv: 39100,
+      phase: 'scale',
+      phaseLabel: 'Scaling — diversify with AIGC for product variations, creators for brand storytelling',
+      savingsEstimate: 1600,
+    },
   },
   {
     id: 'SKU-0428',
@@ -169,7 +203,19 @@ export const products = [
     crossInsights: [
       { icon: '🔥', text: 'Pet Toy viral video (680K views) drove 38% more search for your brand on Amazon — capitalize with keyword update', action: 'Update Keywords' },
       { icon: '🐾', text: '9 creators promoting Pet Toy — 6 also cover Home & Kitchen, ideal for cross-SKU campaigns', action: 'Plan Campaign' },
+      { icon: '⚖️', text: 'Content mix is 60% AIGC / 40% creator — validation phase suggests balancing equally to test which drives more conversions', action: 'Optimize Mix' },
     ],
+    contentMix: {
+      current: { aigcPct: 60, creatorPct: 40 },
+      recommended: { aigcPct: 50, creatorPct: 50 },
+      aigcCPA: 1.4,
+      creatorCPA: 1.9,
+      aigcGmv: 10900,
+      creatorGmv: 7300,
+      phase: 'validation',
+      phaseLabel: 'Validation — test equal AIGC/creator split to find your optimal conversion ratio',
+      savingsEstimate: 600,
+    },
   },
   {
     id: 'SKU-0641',
@@ -222,7 +268,19 @@ export const products = [
     crossInsights: [
       { icon: '💪', text: 'Resistance Bands + Yoga Mat cross-promotion opportunity — 4 creators cover both fitness products', action: 'Create Bundle' },
       { icon: '📈', text: 'Bands TikTok conversion 5.5% vs Amazon 3.4% — shifting 20% of ad budget to TikTok creator seeding could increase total GMV by ~$3k', action: 'Rebalance Budget' },
+      { icon: '🚀', text: 'Cold-start phase: AIGC is correctly dominating at 90% — begin recruiting 2-3 fitness creators now as GMV approaches $5K threshold', action: 'Find Creators' },
     ],
+    contentMix: {
+      current: { aigcPct: 90, creatorPct: 10 },
+      recommended: { aigcPct: 80, creatorPct: 20 },
+      aigcCPA: 0.9,
+      creatorCPA: 2.1,
+      aigcGmv: 17600,
+      creatorGmv: 1900,
+      phase: 'cold-start',
+      phaseLabel: 'Cold Start — AIGC leads, begin recruiting creators once monthly GMV exceeds $5K',
+      savingsEstimate: 0,
+    },
   },
   {
     id: 'SKU-0863',
@@ -249,6 +307,17 @@ export const products = [
       { icon: '🥤', text: 'Blender viral content is your #1 top-of-funnel driver — 11 creators reaching 3.2M combined followers this month', action: 'Scale Creators' },
       { icon: '🔗', text: 'Blender + Coffee Machine audience overlap 41% — coordinate posting schedule for maximum reach', action: 'Coordinate Posts' },
     ],
+    contentMix: {
+      current: { aigcPct: 40, creatorPct: 60 },
+      recommended: { aigcPct: 40, creatorPct: 60 },
+      aigcCPA: 1.6,
+      creatorCPA: 1.7,
+      aigcGmv: 12500,
+      creatorGmv: 18700,
+      phase: 'scale',
+      phaseLabel: 'Optimal mix — AIGC and creator costs are nearly equal, maintain current split',
+      savingsEstimate: 0,
+    },
   },
   {
     id: 'SKU-0971',
@@ -585,7 +654,7 @@ export const copilotConversations = [
 export const copilotQuickPrompts = [
   'Launch Interactive Pet Toy on TikTok',
   "Why did this SKU's sales drop?",
-  'Generate content for my top SKUs',
+  'Should I use more AIGC or creators?',
   'Find creators for my best sellers',
 ];
 

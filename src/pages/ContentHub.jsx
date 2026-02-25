@@ -38,10 +38,7 @@ export default function ContentHub() {
     return true;
   });
 
-  const total     = allAssets.length;
-  const aiCount   = allAssets.filter((a) => a.source === 'ai').length;
-  const creatorCt = allAssets.filter((a) => a.source === 'creator').length;
-  const sellerCt  = allAssets.filter((a) => a.source === 'seller').length;
+  const total = allAssets.length;
 
   const getProductName = (skuId) => products.find((x) => x.id === skuId)?.name ?? skuId;
 
@@ -54,22 +51,6 @@ export default function ContentHub() {
           <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>{total} assets across all SKUs</p>
         </div>
         <button className="btn btn-ghost"><Sparkles size={14} /> Generate with AI</button>
-      </div>
-
-      {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
-        {[
-          { label: 'Total Assets',  value: total,     color: 'var(--text-1)', sub: null },
-          { label: 'AI Generated',  value: aiCount,   color: 'var(--brand)',  sub: `${Math.round(aiCount / total * 100)}% of total` },
-          { label: 'Creator UGC',   value: creatorCt, color: 'var(--success)', sub: null },
-          { label: 'Seller Upload', value: sellerCt,  color: 'var(--text-2)', sub: null },
-        ].map(({ label, value, color, sub }) => (
-          <div key={label} className="card" style={{ padding: 16 }}>
-            <div style={{ fontSize: 10, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</div>
-            <div style={{ fontSize: 22, fontWeight: 700, color, marginTop: 4 }}>{value}</div>
-            {sub && <div style={{ fontSize: 10, color: 'var(--text-3)', marginTop: 2 }}>{sub}</div>}
-          </div>
-        ))}
       </div>
 
       {/* Filters */}

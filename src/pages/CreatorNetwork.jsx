@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Sparkles, TrendingUp, Users, DollarSign, Star, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Sparkles, Users, ChevronDown, ChevronUp } from 'lucide-react';
 import { creators, creatorPlatforms, productCreators, products, formatNumber, formatCurrency } from '../data/mockData';
 
 // Reverse-lookup: for each creator, which SKUs are they associated with?
@@ -109,11 +109,7 @@ export default function CreatorNetwork() {
     amazon:  Math.max(...creators.map((c) => c.channelGmv.amazon)),
   };
 
-  // Stats
-  const totalGMV    = creators.reduce((s, c) => s + c.gmvAttributed, 0);
   const activeCount = creators.filter((c) => c.status === 'active').length;
-  const avgConv     = (creators.reduce((s, c) => s + c.conversionRate, 0) / creators.length).toFixed(1);
-  const topCreator  = [...creators].sort((a, b) => b.gmvAttributed - a.gmvAttributed)[0];
 
   const SortIcon = ({ k }) => {
     if (sortKey !== k) return <span style={{ color: 'var(--text-3)', fontSize: 10, marginLeft: 2 }}>↕</span>;
@@ -144,25 +140,6 @@ export default function CreatorNetwork() {
           <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>{creators.length} creators · {activeCount} active</p>
         </div>
         <button className="btn btn-primary"><Sparkles size={14} /> Find Creators with AI</button>
-      </div>
-
-      {/* Stats row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
-        {[
-          { Icon: Users,      iconColor: 'var(--brand)',   label: 'Total Creators',      value: creators.length,          sub: `${activeCount} active`                                   },
-          { Icon: DollarSign, iconColor: 'var(--success)', label: 'Total Attributed GMV', value: formatCurrency(totalGMV), sub: null                                                      },
-          { Icon: TrendingUp, iconColor: 'var(--brand)',   label: 'Avg Conv. Rate',       value: `${avgConv}%`,            sub: null                                                      },
-          { Icon: Star,       iconColor: 'var(--warning)', label: 'Top Performer',        value: topCreator.name,          sub: `${formatCurrency(topCreator.gmvAttributed)} total GMV`   },
-        ].map(({ Icon, iconColor, label, value, sub }) => (
-          <div key={label} className="card" style={{ padding: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-              <Icon size={13} style={{ color: iconColor }} />
-              <span style={{ fontSize: 10, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-            </div>
-            <div style={{ fontSize: value.length > 12 ? 14 : 20, fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.2 }}>{value}</div>
-            {sub && <div style={{ fontSize: 11, color: 'var(--text-2)', marginTop: 3 }}>{sub}</div>}
-          </div>
-        ))}
       </div>
 
       {/* Filters */}

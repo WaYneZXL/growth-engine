@@ -138,7 +138,101 @@ function GrowthOverview({ product, benchmark }) {
             );
           })}
         </div>
+        {/* B5: Flywheel phase annotation */}
+        {product.contentMix && (
+          <div style={{ marginTop: 14, padding: '8px 14px', borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{
+              fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, flexShrink: 0,
+              background: product.contentMix.phase === 'cold-start' ? 'rgba(245,158,11,0.12)' : product.contentMix.phase === 'validation' ? 'rgba(99,102,241,0.12)' : 'rgba(16,185,129,0.12)',
+              color: product.contentMix.phase === 'cold-start' ? 'var(--warning)' : product.contentMix.phase === 'validation' ? 'var(--brand)' : 'var(--success)',
+            }}>
+              {product.contentMix.phase === 'cold-start' ? 'Cold Start' : product.contentMix.phase === 'validation' ? 'Validation' : 'Scaling'}
+            </span>
+            <span style={{ fontSize: 12, color: 'var(--text-2)' }}>{product.contentMix.phaseLabel}</span>
+          </div>
+        )}
       </div>
+
+      {/* B2: Content Strategy card */}
+      {product.contentMix && (() => {
+        const cm = product.contentMix;
+        const phaseColor = cm.phase === 'cold-start' ? 'var(--warning)' : cm.phase === 'validation' ? 'var(--brand)' : 'var(--success)';
+        const phaseBg    = cm.phase === 'cold-start' ? 'rgba(245,158,11,0.1)' : cm.phase === 'validation' ? 'rgba(99,102,241,0.1)' : 'rgba(16,185,129,0.1)';
+        const phaseLabel = cm.phase === 'cold-start' ? 'Cold Start' : cm.phase === 'validation' ? 'Validation' : 'Scaling';
+        return (
+          <div className="card" style={{ padding: 20, background: 'rgba(99,102,241,0.04)', border: '1px dashed rgba(99,102,241,0.25)' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Sparkles size={14} style={{ color: 'var(--brand)' }} />
+                <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)', margin: 0 }}>Content Strategy</h3>
+                <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', color: 'var(--brand)' }}>AI-optimized</span>
+              </div>
+              <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999, background: phaseBg, color: phaseColor }}>{phaseLabel}</span>
+            </div>
+            {/* Two-column layout */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              {/* Left: content mix bars */}
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-2)', marginBottom: 10 }}>Content Mix</div>
+                {/* Current */}
+                <div style={{ marginBottom: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-3)', marginBottom: 5 }}>
+                    <span>Current</span>
+                    <span style={{ color: 'var(--brand)' }}>{cm.current.aigcPct}% AIGC</span>
+                  </div>
+                  <div style={{ height: 8, borderRadius: 999, background: 'var(--surface-2)', overflow: 'hidden', display: 'flex' }}>
+                    <div style={{ width: `${cm.current.aigcPct}%`, height: '100%', background: 'var(--brand)', transition: 'width 0.4s' }} />
+                    <div style={{ flex: 1, height: '100%', background: 'var(--success)', opacity: 0.7 }} />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-3)', marginTop: 3 }}>
+                    <span style={{ color: 'var(--brand)' }}>AIGC {cm.current.aigcPct}%</span>
+                    <span style={{ color: 'var(--success)' }}>Creator {cm.current.creatorPct}%</span>
+                  </div>
+                </div>
+                {/* Recommended */}
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-3)', marginBottom: 5 }}>
+                    <span>Recommended</span>
+                    <span style={{ color: 'var(--brand)' }}>{cm.recommended.aigcPct}% AIGC</span>
+                  </div>
+                  <div style={{ height: 8, borderRadius: 999, background: 'var(--surface-2)', overflow: 'hidden', display: 'flex' }}>
+                    <div style={{ width: `${cm.recommended.aigcPct}%`, height: '100%', background: 'var(--brand)', opacity: 0.5, transition: 'width 0.4s' }} />
+                    <div style={{ flex: 1, height: '100%', background: 'var(--success)', opacity: 0.4 }} />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-3)', marginTop: 3 }}>
+                    <span>AIGC {cm.recommended.aigcPct}%</span>
+                    <span>Creator {cm.recommended.creatorPct}%</span>
+                  </div>
+                </div>
+              </div>
+              {/* Right: cost efficiency */}
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-2)', marginBottom: 10 }}>Cost Efficiency</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 11, color: 'var(--text-2)' }}>AIGC CPA</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)' }}>${cm.aigcCPA}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 11, color: 'var(--text-2)' }}>Creator CPA</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--success)' }}>${cm.creatorCPA}</span>
+                  </div>
+                  {cm.savingsEstimate > 0 && (
+                    <div style={{ marginTop: 4, padding: '6px 10px', borderRadius: 8, background: 'rgba(16,185,129,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 11, color: 'var(--success)', fontWeight: 600 }}>Potential savings</span>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--success)' }}>${cm.savingsEstimate.toLocaleString()}/mo</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <button style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--brand)', background: 'none', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 8, padding: '6px 12px', cursor: 'pointer' }}>
+              Optimize Content Mix →
+            </button>
+          </div>
+        );
+      })()}
 
       {/* Cross-Product Insights */}
       {product.crossInsights && product.crossInsights.length > 0 && (
@@ -162,50 +256,6 @@ function GrowthOverview({ product, benchmark }) {
         </div>
       )}
 
-      {/* Channel cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${product.channels.length}, 1fr)`, gap: 12 }}>
-        {product.channels.map((ch) => {
-          const data = product.channelData[ch];
-          if (!data) return null;
-          const color = getChannelColor(ch);
-          return (
-            <div key={ch} className="card" style={{ padding: 20 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                <span style={{ width: 10, height: 10, borderRadius: '50%', background: color }} />
-                <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>{getChannelName(ch)}</span>
-              </div>
-              {[
-                ['GMV (30d)',       `$${data.gmv.toLocaleString()}`],
-                ['Conversion Rate', `${data.conversionRate}%`],
-                ['Sessions',        formatNumber(data.sessions)],
-                ['Active Creators', data.creatorCount],
-              ].map(([label, val]) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                  <span style={{ fontSize: 12, color: 'var(--text-2)' }}>{label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{val}</span>
-                </div>
-              ))}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontSize: 12, color: 'var(--text-2)' }}>Listing Score</span>
-                <ListingScoreRing score={data.listingScore} size={30} strokeWidth={2} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Cross-channel insight */}
-      {product.channels.length > 1 && product.channelData.tiktok && (
-        <div style={{ display: 'flex', gap: 12, padding: 16, borderRadius: 12, background: 'rgba(99,102,241,0.06)', border: '1px solid rgba(99,102,241,0.12)' }}>
-          <Sparkles size={16} style={{ color: 'var(--brand)', flexShrink: 0, marginTop: 2 }} />
-          <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }}>Cross-channel Insight</div>
-            <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.6 }}>
-              This SKU converts {(product.channelData.tiktok.conversionRate / (product.channelData.shopify?.conversionRate || product.channelData.amazon?.conversionRate || 2.5)).toFixed(1)}x better on TikTok — creator content is driving the difference. Consider scaling creator partnerships across other channels.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -430,7 +480,18 @@ function AigcModal({ onClose, product }) {
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 10, border: '1px solid var(--border)', background: 'var(--surface-2)' }}>
                     <span style={{ fontSize: 16 }}>{AIGC_TYPES.find((t) => t.id === selectedType)?.icon}</span>
                     <span style={{ fontSize: 13, color: 'var(--text-1)', flex: 1 }}>{result}</span>
-                    <button style={{ fontSize: 11, fontWeight: 600, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer' }}>Use</button>
+                    <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                      {(selectedType === 'image' || selectedType === 'video' || selectedType === 'copy') && (
+                        <button style={{ fontSize: 10, fontWeight: 600, color: 'var(--brand)', background: 'rgba(99,102,241,0.08)', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          Apply to Listing
+                        </button>
+                      )}
+                      {(selectedType === 'image' || selectedType === 'video' || selectedType === 'brief') && (
+                        <button style={{ fontSize: 10, fontWeight: 600, color: 'var(--success)', background: 'rgba(16,185,129,0.08)', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                          Send to Creator
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

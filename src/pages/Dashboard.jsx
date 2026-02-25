@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { DollarSign, Package, Users, Image, TrendingUp, TrendingDown, ArrowRight, Sparkles, Rocket, BarChart3, Wand2, UserPlus } from 'lucide-react';
+import { DollarSign, Package, Users, Image, TrendingUp, TrendingDown, ArrowRight, Sparkles } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart, Pie, Cell, Legend,
@@ -54,30 +54,6 @@ export default function Dashboard() {
         <MetricCard title="Active SKUs" value={dashboardMetrics.activeSKUs.value} subtitle={`across ${dashboardMetrics.activeSKUs.channels} channels`} icon={Package} iconColor="#3b82f6" />
         <MetricCard title="Creator Partners" value={dashboardMetrics.creatorPartners.value} subtitle="active creators" icon={Users} iconColor="#10b981" />
         <MetricCard title="Content Assets" value={dashboardMetrics.contentAssets.value.toLocaleString()} subtitle={`${dashboardMetrics.contentAssets.aiPercentage}% AI-generated`} icon={Image} iconColor="#8b5cf6" />
-      </div>
-
-      {/* Quick Actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
-        {[
-          { icon: Rocket,    color: '#6366f1', label: 'Launch a new product',           sub: 'End-to-end launch workflow', path: '/workflows' },
-          { icon: BarChart3, color: '#ef4444', label: 'Fix a declining SKU',            sub: 'Diagnose & boost performance', path: '/products' },
-          { icon: Wand2,     color: '#10b981', label: 'Generate content for top SKUs',  sub: 'AI images, copy & briefs',    path: '/content' },
-          { icon: UserPlus,  color: '#f59e0b', label: 'Find creators for best sellers', sub: 'AI-matched creator recommendations', path: '/creators' },
-        ].map(({ icon: Icon, color, label, sub, path }) => (
-          <button key={label} onClick={() => navigate(path)}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = color; e.currentTarget.style.background = `${color}06`; e.currentTarget.style.boxShadow = `0 2px 12px ${color}18`; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; e.currentTarget.style.boxShadow = 'none'; }}
-          >
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Icon size={16} style={{ color }} />
-            </div>
-            <div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)', lineHeight: 1.3 }}>{label}</div>
-              <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2 }}>{sub}</div>
-            </div>
-          </button>
-        ))}
       </div>
 
       {/* Charts row */}

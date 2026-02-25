@@ -16,6 +16,10 @@ const mockResponses = [
     actions: [{ label: 'Run Full Launch Workflow', type: 'action' }, { label: 'View Matched Creators', type: 'insight' }],
   },
   {
+    content: "Here's your content mix analysis:\n\nYour top 5 SKUs are 72% creator-dependent on average. Based on category benchmarks and your conversion data:\n\n• 3 SKUs can shift 15-20% of content budget to AIGC — saving ~$4.8K/mo with minimal GMV impact\n• 1 SKU (Resistance Bands) is in cold-start — AIGC is correctly leading, creator recruitment should begin when monthly GMV exceeds $5K\n• 1 SKU (Portable Blender) has an optimal mix already\n\n**Biggest opportunity:** Wireless Earbuds Pro — creator CPA is 4x higher than AIGC. Shifting long-tail to AIGC frees budget for 3 additional hero creators.",
+    actions: [{ label: 'Apply Recommended Mix', type: 'action' }, { label: 'View Per-SKU Breakdown', type: 'insight' }],
+  },
+  {
     content: "I've analyzed your product catalog and identified several growth opportunities:\n\n**Quick Wins:**\n1. 4 SKUs have high-performing TikTok content but aren't listed on TikTok Shop yet\n2. Your top 3 creators haven't received updated product briefs in 30+ days\n3. 6 product listings are missing optimized keywords\n\n**Biggest Impact:**\n• Expanding 'Interactive Pet Toy' to Shopify could add ~$8k/month based on category trends",
     actions: [{ label: 'Expand to New Channels', type: 'action' }, { label: 'Update Creator Briefs', type: 'action' }, { label: 'View Full Analysis', type: 'insight' }],
   },
@@ -75,7 +79,13 @@ export default function AICopilot() {
                 background: msg.role === 'user' ? 'var(--brand)' : 'var(--surface-2)',
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
-                <div style={{ whiteSpace: 'pre-line' }}>{msg.content}</div>
+                <div style={{ whiteSpace: 'pre-line' }}>
+                  {msg.content.split(/(\*\*[^*]+\*\*)/).map((part, i) =>
+                    part.startsWith('**') && part.endsWith('**')
+                      ? <strong key={i} style={{ color: msg.role === 'user' ? '#fff' : 'var(--text-1)', fontWeight: 700 }}>{part.slice(2, -2)}</strong>
+                      : part
+                  )}
+                </div>
                 {/* Stepper rendering */}
                 {msg.steps && (
                   <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -94,7 +104,7 @@ export default function AICopilot() {
                             {isPending && <Clock size={10} style={{ color: 'var(--text-3)' }} />}
                           </div>
                           <div style={{ paddingBottom: 14, flex: 1 }}>
-                            <span style={{ fontSize: 13, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400, textDecoration: isDone ? 'line-through' : 'none' }}>
+                            <span style={{ fontSize: 13, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400 }}>
                               {step.label}
                             </span>
                             {isActive && <span style={{ display: 'inline-block', marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--brand)' }}>In progress…</span>}
