@@ -28,7 +28,7 @@ const flywheelPhases = [
 
 const flywheelStyle = (s) => {
   if (s === 'complete')       return { bg: 'rgba(16,185,129,0.08)',  border: 'rgba(16,185,129,0.25)', badgeBg: 'rgba(16,185,129,0.15)',  badgeColor: 'var(--success)', label: 'Complete'      };
-  if (s === 'active')         return { bg: 'rgba(99,102,241,0.08)', border: 'rgba(99,102,241,0.25)', badgeBg: 'rgba(99,102,241,0.15)',  badgeColor: 'var(--brand)',   label: 'In Progress'   };
+  if (s === 'active')         return { bg: 'rgba(240,107,37,0.08)', border: 'rgba(240,107,37,0.25)', badgeBg: 'rgba(240,107,37,0.15)',  badgeColor: 'var(--brand)',   label: 'In Progress'   };
   return                             { bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)', badgeBg: 'rgba(245,158,11,0.15)',  badgeColor: 'var(--warning)', label: 'Needs Attention' };
 };
 
@@ -143,7 +143,7 @@ function GrowthOverview({ product, benchmark }) {
           <div style={{ marginTop: 14, padding: '8px 14px', borderRadius: 8, background: 'var(--surface-2)', display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{
               fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 999, flexShrink: 0,
-              background: product.contentMix.phase === 'cold-start' ? 'rgba(245,158,11,0.12)' : product.contentMix.phase === 'validation' ? 'rgba(99,102,241,0.12)' : 'rgba(16,185,129,0.12)',
+              background: product.contentMix.phase === 'cold-start' ? 'rgba(245,158,11,0.12)' : product.contentMix.phase === 'validation' ? 'rgba(124,92,252,0.12)' : 'rgba(16,185,129,0.12)',
               color: product.contentMix.phase === 'cold-start' ? 'var(--warning)' : product.contentMix.phase === 'validation' ? 'var(--brand)' : 'var(--success)',
             }}>
               {product.contentMix.phase === 'cold-start' ? 'Cold Start' : product.contentMix.phase === 'validation' ? 'Validation' : 'Scaling'}
@@ -157,16 +157,16 @@ function GrowthOverview({ product, benchmark }) {
       {product.contentMix && (() => {
         const cm = product.contentMix;
         const phaseColor = cm.phase === 'cold-start' ? 'var(--warning)' : cm.phase === 'validation' ? 'var(--brand)' : 'var(--success)';
-        const phaseBg    = cm.phase === 'cold-start' ? 'rgba(245,158,11,0.1)' : cm.phase === 'validation' ? 'rgba(99,102,241,0.1)' : 'rgba(16,185,129,0.1)';
+        const phaseBg    = cm.phase === 'cold-start' ? 'rgba(245,158,11,0.1)' : cm.phase === 'validation' ? 'rgba(124,92,252,0.1)' : 'rgba(16,185,129,0.1)';
         const phaseLabel = cm.phase === 'cold-start' ? 'Cold Start' : cm.phase === 'validation' ? 'Validation' : 'Scaling';
         return (
-          <div className="card" style={{ padding: 20, background: 'rgba(99,102,241,0.04)', border: '1px dashed rgba(99,102,241,0.25)' }}>
+          <div className="card" style={{ padding: 20, background: 'rgba(124,92,252,0.04)', border: '1px dashed rgba(124,92,252,0.25)' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Sparkles size={14} style={{ color: 'var(--brand)' }} />
-                <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)', margin: 0 }}>Content Strategy</h3>
-                <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', color: 'var(--brand)' }}>AI-optimized</span>
+                <Sparkles size={14} style={{ color: 'var(--ai)' }} />
+                <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--ai)', margin: 0 }}>Content Strategy</h3>
+                <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(124,92,252,0.12)', color: 'var(--ai)' }}>AI-optimized</span>
               </div>
               <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 999, background: phaseBg, color: phaseColor }}>{phaseLabel}</span>
             </div>
@@ -227,7 +227,7 @@ function GrowthOverview({ product, benchmark }) {
                 </div>
               </div>
             </div>
-            <button style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--brand)', background: 'none', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 8, padding: '6px 12px', cursor: 'pointer' }}>
+            <button style={{ marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, fontWeight: 600, color: 'var(--brand)', background: 'none', border: '1px solid rgba(124,92,252,0.25)', borderRadius: 8, padding: '6px 12px', cursor: 'pointer' }}>
               Optimize Content Mix →
             </button>
           </div>
@@ -236,15 +236,15 @@ function GrowthOverview({ product, benchmark }) {
 
       {/* Cross-Product Insights */}
       {product.crossInsights && product.crossInsights.length > 0 && (
-        <div className="card" style={{ padding: 20, background: 'rgba(99,102,241,0.04)', border: '1px dashed rgba(99,102,241,0.25)' }}>
+        <div className="card" style={{ padding: 20, background: 'rgba(124,92,252,0.04)', border: '1px dashed rgba(124,92,252,0.25)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <Sparkles size={14} style={{ color: 'var(--brand)' }} />
-            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand)', margin: 0 }}>Cross-Product Insights</h3>
-            <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(99,102,241,0.12)', color: 'var(--brand)' }}>AI-powered</span>
+            <Sparkles size={14} style={{ color: 'var(--ai)' }} />
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--ai)', margin: 0 }}>Cross-Product Insights</h3>
+            <span style={{ fontSize: 10, fontWeight: 500, padding: '2px 7px', borderRadius: 999, background: 'rgba(124,92,252,0.12)', color: 'var(--ai)' }}>AI-powered</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {product.crossInsights.map((ins, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(99,102,241,0.1)' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(124,92,252,0.1)' }}>
                 <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{ins.icon}</span>
                 <p style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.6, flex: 1, margin: 0 }}>{ins.text}</p>
                 <button style={{ fontSize: 11, fontWeight: 600, color: 'var(--brand)', background: 'none', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
@@ -270,7 +270,7 @@ function ContentHubTab({ content, onGenerate }) {
   };
 
   const sourceBadge = (s) => {
-    if (s === 'ai')      return { text: 'AI Generated', bg: 'rgba(99,102,241,0.12)', color: 'var(--brand)' };
+    if (s === 'ai')      return { text: 'AI Generated', bg: 'rgba(124,92,252,0.12)', color: 'var(--ai)' };
     if (s === 'creator') return { text: 'Creator UGC',  bg: 'rgba(16,185,129,0.12)', color: 'var(--success)' };
     return                      { text: 'Seller Upload', bg: 'rgba(148,163,184,0.15)', color: 'var(--text-2)' };
   };
@@ -389,8 +389,8 @@ function AigcModal({ onClose, product }) {
         {/* Modal header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sparkles size={15} style={{ color: 'var(--brand)' }} />
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(124,92,252,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={15} style={{ color: 'var(--ai)' }} />
             </div>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)' }}>Generate with AI</div>
@@ -407,12 +407,12 @@ function AigcModal({ onClose, product }) {
           {stepLabels.map((label, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: i < stepLabels.length - 1 ? 1 : undefined }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                <div style={{ width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, background: i < currentStep ? 'var(--brand)' : i === currentStep ? 'rgba(99,102,241,0.12)' : 'var(--surface-2)', color: i < currentStep ? '#fff' : i === currentStep ? 'var(--brand)' : 'var(--text-3)', border: i === currentStep ? '2px solid var(--brand)' : 'none' }}>
+                <div style={{ width: 22, height: 22, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 700, background: i < currentStep ? 'var(--ai)' : i === currentStep ? 'rgba(124,92,252,0.12)' : 'var(--surface-2)', color: i < currentStep ? '#fff' : i === currentStep ? 'var(--ai)' : 'var(--text-3)', border: i === currentStep ? '2px solid var(--ai)' : 'none' }}>
                   {i < currentStep ? '✓' : i + 1}
                 </div>
                 <span style={{ fontSize: 11, fontWeight: 500, color: i <= currentStep ? 'var(--text-1)' : 'var(--text-3)' }}>{label}</span>
               </div>
-              {i < stepLabels.length - 1 && <div style={{ flex: 1, height: 1, background: i < currentStep ? 'var(--brand)' : 'var(--border)', margin: '0 10px' }} />}
+              {i < stepLabels.length - 1 && <div style={{ flex: 1, height: 1, background: i < currentStep ? 'var(--ai)' : 'var(--border)', margin: '0 10px' }} />}
             </div>
           ))}
         </div>
@@ -425,7 +425,7 @@ function AigcModal({ onClose, product }) {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 {AIGC_TYPES.map((t) => (
                   <button key={t.id} onClick={() => handleTypeSelect(t.id)}
-                    style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: 14, borderRadius: 10, border: `2px solid ${selectedType === t.id ? 'var(--brand)' : 'var(--border)'}`, background: selectedType === t.id ? 'rgba(99,102,241,0.05)' : 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
+                    style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: 14, borderRadius: 10, border: `2px solid ${selectedType === t.id ? 'var(--ai)' : 'var(--border)'}`, background: selectedType === t.id ? 'rgba(124,92,252,0.05)' : 'var(--surface)', cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s' }}>
                     <span style={{ fontSize: 20, lineHeight: 1 }}>{t.icon}</span>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', marginBottom: 2 }}>{t.label}</div>
@@ -435,7 +435,7 @@ function AigcModal({ onClose, product }) {
                 ))}
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-                <button disabled={!selectedType} onClick={() => setStep(1)} style={{ height: 36, padding: '0 20px', borderRadius: 8, border: 'none', background: selectedType ? 'var(--brand)' : 'var(--border)', color: selectedType ? '#fff' : 'var(--text-3)', fontSize: 13, fontWeight: 600, cursor: selectedType ? 'pointer' : 'default' }}>
+                <button disabled={!selectedType} onClick={() => setStep(1)} style={{ height: 36, padding: '0 20px', borderRadius: 8, border: 'none', background: selectedType ? 'var(--ai)' : 'var(--border)', color: selectedType ? '#fff' : 'var(--text-3)', fontSize: 13, fontWeight: 600, cursor: selectedType ? 'pointer' : 'default' }}>
                   Next: Select Channel →
                 </button>
               </div>
@@ -482,7 +482,7 @@ function AigcModal({ onClose, product }) {
                     <span style={{ fontSize: 13, color: 'var(--text-1)', flex: 1 }}>{result}</span>
                     <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                       {(selectedType === 'image' || selectedType === 'video' || selectedType === 'copy') && (
-                        <button style={{ fontSize: 10, fontWeight: 600, color: 'var(--brand)', background: 'rgba(99,102,241,0.08)', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                        <button style={{ fontSize: 10, fontWeight: 600, color: 'var(--ai)', background: 'rgba(124,92,252,0.08)', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                           Apply to Listing
                         </button>
                       )}
@@ -497,7 +497,7 @@ function AigcModal({ onClose, product }) {
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 20 }}>
                 <button onClick={onClose} style={{ height: 36, padding: '0 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'none', color: 'var(--text-2)', fontSize: 13, cursor: 'pointer' }}>Close</button>
-                <button onClick={() => { setStep(0); setSelectedType(null); setSelectedChannel(null); }} style={{ height: 36, padding: '0 16px', borderRadius: 8, border: 'none', background: 'var(--brand)', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Generate More</button>
+                <button onClick={() => { setStep(0); setSelectedType(null); setSelectedChannel(null); }} style={{ height: 36, padding: '0 16px', borderRadius: 8, border: 'none', background: 'var(--ai)', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Generate More</button>
               </div>
             </div>
           )}
@@ -719,7 +719,7 @@ function ListingQuality({ product }) {
                     display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
                     borderRadius: 10, background: 'var(--surface-2)', transition: 'background 0.15s',
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(99,102,241,0.06)'}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(124,92,252,0.06)'}
                   onMouseLeave={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
                 >
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: ps.color, marginTop: 4, flexShrink: 0 }} />

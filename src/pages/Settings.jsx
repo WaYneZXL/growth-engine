@@ -12,7 +12,7 @@ export default function Settings() {
   return (
     <div style={{ maxWidth: 560 }}>
       <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Settings</h1>
-      <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2, marginBottom: 20 }}>Manage your Growth Engine preferences</p>
+      <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2, marginBottom: 20 }}>Manage your AfterShip Feed preferences</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {sections.map(({ Icon, label, desc }) => (
           <div key={label} className="card card-hover" style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>

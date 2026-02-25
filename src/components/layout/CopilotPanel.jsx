@@ -65,11 +65,11 @@ export default function CopilotPanel({ isOpen, onClose }) {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Sparkles size={15} style={{ color: 'var(--brand)' }} />
+            <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(124,92,252,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Sparkles size={15} style={{ color: 'var(--ai)' }} />
             </div>
             <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>Growth Copilot</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)' }}>Feed Copilot</div>
               <div style={{ fontSize: 10, color: 'var(--text-3)' }}>AI-powered growth assistant</div>
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function CopilotPanel({ isOpen, onClose }) {
               <div style={{
                 maxWidth: '92%', borderRadius: msg.role === 'user' ? '14px 14px 3px 14px' : '14px 14px 14px 3px',
                 padding: '10px 14px', fontSize: 13, lineHeight: 1.55,
-                background: msg.role === 'user' ? 'var(--brand)' : 'var(--surface-2)',
+                background: msg.role === 'user' ? 'var(--ai)' : 'var(--surface-2)',
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
                 <div style={{ whiteSpace: 'pre-line' }}>
@@ -109,16 +109,16 @@ export default function CopilotPanel({ isOpen, onClose }) {
                             <div style={{ position: 'absolute', left: 9, top: 22, width: 1, height: 'calc(100% - 4px)', background: isDone ? 'rgba(16,185,129,0.4)' : 'rgba(148,163,184,0.3)', zIndex: 0 }} />
                           )}
                           {/* Status icon */}
-                          <div style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(99,102,241,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(99,102,241,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
+                          <div style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(124,92,252,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(124,92,252,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
                             {isDone   && <Check size={10} style={{ color: 'var(--success)' }} />}
-                            {isActive && <Loader2 size={10} style={{ color: 'var(--brand)', animation: 'spin 1s linear infinite' }} />}
+                            {isActive && <Loader2 size={10} style={{ color: 'var(--ai)', animation: 'spin 1s linear infinite' }} />}
                             {isPending && <Clock size={9} style={{ color: 'var(--text-3)' }} />}
                           </div>
                           <div style={{ paddingBottom: 12, flex: 1 }}>
                             <span style={{ fontSize: 12, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400 }}>
                               {step.label}
                             </span>
-                            {isActive && <span style={{ display: 'inline-block', marginLeft: 6, fontSize: 10, fontWeight: 600, color: 'var(--brand)' }}>● In progress</span>}
+                            {isActive && <span style={{ display: 'inline-block', marginLeft: 6, fontSize: 10, fontWeight: 600, color: 'var(--ai)' }}>● In progress</span>}
                           </div>
                         </div>
                       );
@@ -128,7 +128,7 @@ export default function CopilotPanel({ isOpen, onClose }) {
                 {msg.actions && (
                   <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 5 }}>
                     {msg.actions.map((action, i) => (
-                      <button key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%', padding: '7px 10px', borderRadius: 8, fontSize: 11, fontWeight: 500, border: action.type === 'action' ? 'none' : '1px solid var(--border)', background: action.type === 'action' ? 'rgba(99,102,241,0.12)' : 'var(--surface)', color: action.type === 'action' ? 'var(--brand)' : 'var(--text-2)', cursor: 'pointer' }}>
+                      <button key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%', padding: '7px 10px', borderRadius: 8, fontSize: 11, fontWeight: 500, border: action.type === 'action' ? 'none' : '1px solid var(--border)', background: action.type === 'action' ? 'rgba(124,92,252,0.12)' : 'var(--surface)', color: action.type === 'action' ? 'var(--ai)' : 'var(--text-2)', cursor: 'pointer' }}>
                         {action.type === 'action' ? <ArrowRight size={12} /> : <BarChart3 size={12} />}
                         {action.label}
                       </button>
@@ -148,7 +148,7 @@ export default function CopilotPanel({ isOpen, onClose }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               {copilotQuickPrompts.map((prompt, i) => (
                 <button key={i} onClick={() => handleSend(prompt)} style={{ textAlign: 'left', padding: '8px 12px', borderRadius: 8, fontSize: 12, color: 'var(--text-2)', background: 'var(--surface-2)', border: 'none', cursor: 'pointer', transition: 'background 0.15s, color 0.15s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99,102,241,0.07)'; e.currentTarget.style.color = 'var(--brand)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(124,92,252,0.07)'; e.currentTarget.style.color = 'var(--ai)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-2)'; }}
                 >
                   {prompt}
@@ -166,11 +166,11 @@ export default function CopilotPanel({ isOpen, onClose }) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask Growth Copilot..."
+            placeholder="Ask Feed Copilot..."
           />
-          <button onClick={() => handleSend()} style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--brand)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--brand-dark)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--brand)'}
+          <button onClick={() => handleSend()} style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--ai)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#6a4de0'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--ai)'}
           >
             <Send size={15} />
           </button>

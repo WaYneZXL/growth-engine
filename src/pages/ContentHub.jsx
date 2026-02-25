@@ -18,7 +18,7 @@ const typeIcon = { image: Image, video: Play, copy: FileText, brief: File };
 const allAssets = contentAssets;
 
 const sourceLabel = (s) => {
-  if (s === 'ai')      return { text: 'AI Generated', bg: 'rgba(99,102,241,0.12)', color: 'var(--brand)'   };
+  if (s === 'ai')      return { text: 'AI Generated', bg: 'rgba(124,92,252,0.12)', color: 'var(--ai)'   };
   if (s === 'creator') return { text: 'Creator UGC',  bg: 'rgba(16,185,129,0.12)', color: 'var(--success)' };
   return                      { text: 'Seller Upload', bg: 'rgba(148,163,184,0.15)', color: 'var(--text-2)' };
 };
@@ -62,7 +62,7 @@ export default function ContentHub() {
 
         <div style={{ display: 'flex', gap: 4 }}>
           {typeFilters.map(({ value, label, Icon }) => (
-            <button key={value} onClick={() => setTypeFilter(value)} style={{ display: 'flex', alignItems: 'center', gap: 5, height: 34, padding: '0 10px', borderRadius: 8, fontSize: 12, fontWeight: 500, border: `1px solid ${typeFilter === value ? 'transparent' : 'var(--border)'}`, background: typeFilter === value ? 'rgba(99,102,241,0.1)' : 'var(--surface)', color: typeFilter === value ? 'var(--brand)' : 'var(--text-2)', cursor: 'pointer', transition: 'all 0.15s' }}>
+            <button key={value} onClick={() => setTypeFilter(value)} style={{ display: 'flex', alignItems: 'center', gap: 5, height: 34, padding: '0 10px', borderRadius: 8, fontSize: 12, fontWeight: 500, border: `1px solid ${typeFilter === value ? 'transparent' : 'var(--border)'}`, background: typeFilter === value ? 'rgba(240,107,37,0.1)' : 'var(--surface)', color: typeFilter === value ? 'var(--brand)' : 'var(--text-2)', cursor: 'pointer', transition: 'all 0.15s' }}>
               <Icon size={13} /> {label}
             </button>
           ))}

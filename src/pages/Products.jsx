@@ -64,7 +64,7 @@ export default function Products() {
         {/* View toggle */}
         <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', marginLeft: 'auto' }}>
           {[{ v: 'grid', Icon: LayoutGrid }, { v: 'list', Icon: List }].map(({ v, Icon }) => (
-            <button key={v} onClick={() => setView(v)} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', background: view === v ? 'rgba(99,102,241,0.1)' : 'var(--surface)', color: view === v ? 'var(--brand)' : 'var(--text-3)' }}>
+            <button key={v} onClick={() => setView(v)} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', background: view === v ? 'rgba(240,107,37,0.1)' : 'var(--surface)', color: view === v ? 'var(--brand)' : 'var(--text-3)' }}>
               <Icon size={15} />
             </button>
           ))}

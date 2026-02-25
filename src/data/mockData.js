@@ -827,7 +827,7 @@ export const copilotConversations = [
   {
     id: 'msg-1',
     role: 'assistant',
-    content: "Hi! I'm your Growth Copilot. I can help you launch products, optimize listings, find creators, and grow your sales across channels. What would you like to work on?",
+    content: "Hi! I'm your Feed Copilot. I can help you launch products, optimize listings, find creators, and grow your sales across channels. What would you like to work on?",
   },
 ];
 

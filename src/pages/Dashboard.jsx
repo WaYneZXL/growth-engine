@@ -167,8 +167,8 @@ export default function Dashboard() {
             </div>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 4,
-              fontSize: 11, fontWeight: 600, color: 'var(--brand)',
-              background: 'rgba(99,102,241,0.08)', padding: '3px 10px', borderRadius: 10,
+              fontSize: 11, fontWeight: 600, color: 'var(--ai)',
+              background: 'rgba(124,92,252,0.08)', padding: '3px 10px', borderRadius: 10,
             }}>
               <Sparkles size={11} /> AI-detected
             </span>
@@ -190,7 +190,7 @@ export default function Dashboard() {
                 <button
                   style={{
                     fontSize: 11, fontWeight: 600, color: 'var(--brand)',
-                    background: 'rgba(99,102,241,0.08)', border: 'none', borderRadius: 6,
+                    background: 'rgba(240,107,37,0.08)', border: 'none', borderRadius: 6,
                     padding: '5px 10px', cursor: 'pointer', whiteSpace: 'nowrap',
                   }}
                   onClick={() => navigate(item.path)}

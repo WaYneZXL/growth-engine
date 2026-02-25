@@ -222,7 +222,7 @@ export default function CreatorNetwork() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</span>
                             {skuIds.length > 0 && (
-                              <span style={{ fontSize: 9, fontWeight: 600, padding: '1px 5px', borderRadius: 999, background: 'rgba(99,102,241,0.1)', color: 'var(--brand)' }}>{skuIds.length} SKUs</span>
+                              <span style={{ fontSize: 9, fontWeight: 600, padding: '1px 5px', borderRadius: 999, background: 'rgba(124,92,252,0.1)', color: 'var(--ai)' }}>{skuIds.length} SKUs</span>
                             )}
                           </div>
                           <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{c.handle}</div>
@@ -280,7 +280,7 @@ export default function CreatorNetwork() {
                   </tr>
                   {isExpanded && (
                     <tr key={`${c.id}-expand`} style={{ borderBottom: idx < sorted.length - 1 ? '1px solid var(--border)' : 'none' }}>
-                      <td colSpan={9} style={{ padding: '0 14px 12px 58px', background: 'rgba(99,102,241,0.03)' }}>
+                      <td colSpan={9} style={{ padding: '0 14px 12px 58px', background: 'rgba(124,92,252,0.03)' }}>
                         <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
                           Promoting {skuIds.length} SKU{skuIds.length !== 1 ? 's' : ''}
                         </div>
@@ -294,7 +294,7 @@ export default function CreatorNetwork() {
                               return (
                                 <button key={sid} onClick={(e) => { e.stopPropagation(); navigate(`/products/${sid}`); }}
                                   style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', cursor: 'pointer', transition: 'all 0.12s' }}
-                                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.background = 'rgba(99,102,241,0.05)'; }}
+                                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--brand)'; e.currentTarget.style.background = 'rgba(240,107,37,0.05)'; }}
                                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--surface)'; }}
                                 >
                                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: prod.imageColor, flexShrink: 0 }} />

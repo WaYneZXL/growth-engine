@@ -58,12 +58,12 @@ export default function AICopilot() {
     <div style={{ maxWidth: 760, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(99,102,241,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Sparkles size={18} style={{ color: 'var(--brand)' }} />
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(124,92,252,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Sparkles size={18} style={{ color: 'var(--ai)' }} />
         </div>
         <div>
-          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Growth Copilot</h1>
-          <p style={{ fontSize: 13, color: 'var(--text-2)' }}>AI-powered assistant for your growth engine</p>
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Feed Copilot</h1>
+          <p style={{ fontSize: 13, color: 'var(--text-2)' }}>AI-powered assistant for your store</p>
         </div>
       </div>
 
@@ -76,7 +76,7 @@ export default function AICopilot() {
               <div style={{
                 maxWidth: '80%', borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
                 padding: '12px 16px', fontSize: 13, lineHeight: 1.6,
-                background: msg.role === 'user' ? 'var(--brand)' : 'var(--surface-2)',
+                background: msg.role === 'user' ? 'var(--ai)' : 'var(--surface-2)',
                 color: msg.role === 'user' ? '#fff' : 'var(--text-1)',
               }}>
                 <div style={{ whiteSpace: 'pre-line' }}>
@@ -98,16 +98,16 @@ export default function AICopilot() {
                           {i < msg.steps.length - 1 && (
                             <div style={{ position: 'absolute', left: 10, top: 24, width: 1, height: 'calc(100% - 6px)', background: isDone ? 'rgba(16,185,129,0.4)' : 'rgba(148,163,184,0.3)', zIndex: 0 }} />
                           )}
-                          <div style={{ width: 22, height: 22, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(99,102,241,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(99,102,241,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
+                          <div style={{ width: 22, height: 22, borderRadius: '50%', flexShrink: 0, marginTop: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1, background: isDone ? 'rgba(16,185,129,0.15)' : isActive ? 'rgba(124,92,252,0.15)' : 'rgba(148,163,184,0.12)', border: `1.5px solid ${isDone ? 'rgba(16,185,129,0.5)' : isActive ? 'rgba(124,92,252,0.5)' : 'rgba(148,163,184,0.3)'}` }}>
                             {isDone    && <Check size={11} style={{ color: 'var(--success)' }} />}
-                            {isActive  && <Loader2 size={11} style={{ color: 'var(--brand)', animation: 'spin 1s linear infinite' }} />}
+                            {isActive  && <Loader2 size={11} style={{ color: 'var(--ai)', animation: 'spin 1s linear infinite' }} />}
                             {isPending && <Clock size={10} style={{ color: 'var(--text-3)' }} />}
                           </div>
                           <div style={{ paddingBottom: 14, flex: 1 }}>
                             <span style={{ fontSize: 13, color: isDone ? 'var(--text-3)' : isActive ? 'var(--text-1)' : 'var(--text-2)', fontWeight: isActive ? 600 : 400 }}>
                               {step.label}
                             </span>
-                            {isActive && <span style={{ display: 'inline-block', marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--brand)' }}>In progress…</span>}
+                            {isActive && <span style={{ display: 'inline-block', marginLeft: 8, fontSize: 10, fontWeight: 700, color: 'var(--ai)' }}>In progress…</span>}
                           </div>
                         </div>
                       );
@@ -117,7 +117,7 @@ export default function AICopilot() {
                 {msg.actions && (
                   <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {msg.actions.map((action, i) => (
-                      <button key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 500, border: action.type === 'action' ? 'none' : '1px solid var(--border)', background: action.type === 'action' ? 'rgba(99,102,241,0.12)' : 'var(--surface)', color: action.type === 'action' ? 'var(--brand)' : 'var(--text-2)', cursor: 'pointer', transition: 'background 0.15s' }}>
+                      <button key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 12, fontWeight: 500, border: action.type === 'action' ? 'none' : '1px solid var(--border)', background: action.type === 'action' ? 'rgba(124,92,252,0.12)' : 'var(--surface)', color: action.type === 'action' ? 'var(--ai)' : 'var(--text-2)', cursor: 'pointer', transition: 'background 0.15s' }}>
                         {action.type === 'action' ? <ArrowRight size={13} /> : <BarChart3 size={13} />}
                         {action.label}
                       </button>
@@ -137,7 +137,7 @@ export default function AICopilot() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 8 }}>
               {copilotQuickPrompts.map((prompt, i) => (
                 <button key={i} onClick={() => handleSend(prompt)} style={{ textAlign: 'left', padding: '10px 14px', borderRadius: 8, fontSize: 13, color: 'var(--text-2)', background: 'var(--surface-2)', border: 'none', cursor: 'pointer', lineHeight: 1.4, transition: 'background 0.15s, color 0.15s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99,102,241,0.07)'; e.currentTarget.style.color = 'var(--brand)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(124,92,252,0.07)'; e.currentTarget.style.color = 'var(--ai)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--surface-2)'; e.currentTarget.style.color = 'var(--text-2)'; }}
                 >
                   {prompt}
@@ -155,11 +155,11 @@ export default function AICopilot() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask Growth Copilot anything..."
+            placeholder="Ask Feed Copilot anything..."
           />
-          <button onClick={() => handleSend()} style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--brand)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}
-            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--brand-dark)'}
-            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--brand)'}
+          <button onClick={() => handleSend()} style={{ width: 42, height: 42, borderRadius: 12, background: 'var(--ai)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}
+            onMouseEnter={(e) => e.currentTarget.style.background = '#6a4de0'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'var(--ai)'}
           >
             <Send size={16} />
           </button>

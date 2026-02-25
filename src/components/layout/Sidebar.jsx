@@ -1,43 +1,55 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard, Package, Palette, Users, Workflow,
-  Sparkles, Settings, ChevronRight, PanelLeftClose, PanelLeftOpen,
+  Sparkles, Settings, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react';
 
-const navItems = [
-  { path: '/',          icon: LayoutDashboard, label: 'Dashboard' },
-  { path: '/products',  icon: Package,         label: 'Products' },
-  { path: '/content',   icon: Palette,         label: 'Digital Assets' },
-  { path: '/creators',  icon: Users,           label: 'Creator Network' },
-  { path: '/workflows', icon: Workflow,        label: 'Growth Recs' },
-  { path: '/copilot',   icon: Sparkles,        label: 'AI Copilot' },
+const navSections = [
+  {
+    label: null,
+    items: [
+      { path: '/',          icon: LayoutDashboard, label: 'Home' },
+      { path: '/products',  icon: Package,         label: 'Products' },
+      { path: '/content',   icon: Palette,         label: 'Digital Assets' },
+    ],
+  },
+  {
+    label: 'AFFILIATES',
+    items: [
+      { path: '/creators',  icon: Users,           label: 'Creator Network' },
+    ],
+  },
+  {
+    label: 'AI TOOLS',
+    items: [
+      { path: '/workflows', icon: Workflow,        label: 'Playbooks' },
+      { path: '/copilot',   icon: Sparkles,        label: 'AI Copilot' },
+    ],
+  },
 ];
 
 const S = {
-  sidebar:      { background: '#0f172a', display: 'flex', flexDirection: 'column', height: '100%' },
+  sidebar:      { background: '#1a1a2e', display: 'flex', flexDirection: 'column', height: '100%' },
   logo:         { padding: '20px 16px 16px', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 },
   logoInner:    { display: 'flex', alignItems: 'center', gap: 10 },
-  logoIcon:     { width: 32, height: 32, borderRadius: 8, background: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  logoIcon:     { width: 32, height: 32, borderRadius: 8, background: '#f06b25', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   logoText:     { overflow: 'hidden' },
-  logoTitle:    { color: '#fff', fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' },
-  logoSub:      { color: 'rgba(255,255,255,0.35)', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.08em', whiteSpace: 'nowrap' },
+  logoTitle:    { color: '#fff', fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', letterSpacing: '-0.02em' },
   toggleBtn:    { background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', padding: 4, borderRadius: 6, display: 'flex', flexShrink: 0 },
   nav:          { flex: 1, padding: '12px 8px', overflowY: 'auto', overflowX: 'hidden' },
   navItem:      (active) => ({
     display: 'flex', alignItems: 'center', gap: 12,
     padding: '8px 10px', borderRadius: 8, fontSize: 14, fontWeight: 500,
     textDecoration: 'none', whiteSpace: 'nowrap', overflow: 'hidden',
-    transition: 'background 0.15s',
-    background: active ? '#1e293b' : 'transparent',
-    color: active ? '#fff' : 'rgba(255,255,255,0.55)',
-    marginBottom: 2,
+    transition: 'background 0.15s', marginBottom: 2,
+    background: active ? 'rgba(240,107,37,0.12)' : 'transparent',
+    color: active ? '#f06b25' : 'rgba(255,255,255,0.55)',
   }),
-  navIcon:      (active) => ({ width: 18, height: 18, flexShrink: 0, color: active ? '#818cf8' : 'inherit' }),
+  navIcon:      (active) => ({ width: 18, height: 18, flexShrink: 0, color: active ? '#f06b25' : 'inherit' }),
   navLabel:     { flex: 1, overflow: 'hidden', textOverflow: 'ellipsis' },
-  navChevron:   { color: 'rgba(255,255,255,0.3)', flexShrink: 0 },
   bottom:       { padding: '8px 8px 16px', borderTop: '1px solid rgba(255,255,255,0.08)', flexShrink: 0 },
   settingsLink: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px 10px', borderRadius: 8, fontSize: 14, textDecoration: 'none', color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap', overflow: 'hidden', marginBottom: 2 },
-  avatar:       { width: 28, height: 28, borderRadius: '50%', background: 'rgba(99,102,241,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: '#fff', fontWeight: 600, flexShrink: 0 },
+  avatar:       { width: 28, height: 28, borderRadius: '50%', background: 'rgba(240,107,37,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, color: '#fff', fontWeight: 600, flexShrink: 0 },
   userRow:      { display: 'flex', alignItems: 'center', gap: 12, padding: '6px 10px', overflow: 'hidden' },
   userName:     { color: '#fff', fontSize: 12, fontWeight: 500, whiteSpace: 'nowrap' },
   userPlan:     { color: 'rgba(255,255,255,0.35)', fontSize: 10, whiteSpace: 'nowrap' },
@@ -52,12 +64,11 @@ export default function Sidebar({ collapsed, onToggle }) {
       <div style={S.logo}>
         <div style={S.logoInner}>
           <div style={S.logoIcon}>
-            <Sparkles size={16} color="#fff" />
+            <Package size={16} color="#fff" />
           </div>
           {!collapsed && (
             <div style={S.logoText}>
-              <div style={S.logoTitle}>Growth Engine</div>
-              <div style={S.logoSub}>by AfterShip</div>
+              <div style={S.logoTitle}>aftership</div>
             </div>
           )}
         </div>
@@ -68,23 +79,24 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Nav */}
       <nav style={S.nav}>
-        {navItems.map((item) => {
-          const isActive = item.path === '/'
-            ? location.pathname === '/'
-            : location.pathname.startsWith(item.path);
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              style={S.navItem(isActive)}
-              title={collapsed ? item.label : undefined}
-            >
-              <item.icon style={S.navIcon(isActive)} />
-              {!collapsed && <span style={S.navLabel}>{item.label}</span>}
-              {!collapsed && isActive && <ChevronRight size={13} style={S.navChevron} />}
-            </NavLink>
-          );
-        })}
+        {navSections.map((section, si) => (
+          <div key={si} style={{ marginBottom: 8 }}>
+            {section.label && !collapsed && (
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '12px 10px 6px', userSelect: 'none' }}>
+                {section.label}
+              </div>
+            )}
+            {section.items.map((item) => {
+              const isActive = item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path);
+              return (
+                <NavLink key={item.path} to={item.path} style={S.navItem(isActive)} title={collapsed ? item.label : undefined}>
+                  <item.icon style={S.navIcon(isActive)} />
+                  {!collapsed && <span style={S.navLabel}>{item.label}</span>}
+                </NavLink>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* Bottom */}

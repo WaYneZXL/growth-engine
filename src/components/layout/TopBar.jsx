@@ -6,7 +6,7 @@ const breadcrumbMap = {
   '/products':  ['Products'],
   '/content':   ['Digital Assets'],
   '/creators':  ['Creator Network'],
-  '/workflows': ['Growth Recommendations'],
+  '/workflows': ['Playbooks'],
   '/copilot':   ['AI Copilot'],
   '/settings':  ['Settings'],
 };
@@ -78,8 +78,8 @@ export default function TopBar({ onToggleCopilot }) {
           onClick={onToggleCopilot}
           style={{
             display: 'flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px',
-            borderRadius: 8, border: 'none', background: 'rgba(99,102,241,0.1)',
-            color: '#6366f1', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+            borderRadius: 8, border: 'none', background: 'rgba(124,92,252,0.1)',
+            color: '#7c5cfc', fontSize: 13, fontWeight: 500, cursor: 'pointer',
           }}
         >
           <Sparkles size={15} className="animate-sparkle" />
