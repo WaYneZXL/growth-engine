@@ -4,28 +4,13 @@ import {
   Sparkles, Settings, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react';
 
-const navSections = [
-  {
-    label: null,
-    items: [
-      { path: '/',          icon: LayoutDashboard, label: 'Home' },
-      { path: '/products',  icon: Package,         label: 'Products' },
-      { path: '/content',   icon: Palette,         label: 'Digital Assets' },
-    ],
-  },
-  {
-    label: 'AFFILIATES',
-    items: [
-      { path: '/creators',  icon: Users,           label: 'Creator Network' },
-    ],
-  },
-  {
-    label: 'AI TOOLS',
-    items: [
-      { path: '/workflows', icon: Workflow,        label: 'Playbooks' },
-      { path: '/copilot',   icon: Sparkles,        label: 'AI Copilot' },
-    ],
-  },
+const navItems = [
+  { path: '/',          icon: LayoutDashboard, label: 'Home' },
+  { path: '/products',  icon: Package,         label: 'Products' },
+  { path: '/content',   icon: Palette,         label: 'Digital Assets' },
+  { path: '/creators',  icon: Users,           label: 'Creator Network' },
+  { path: '/workflows', icon: Workflow,        label: 'Playbooks' },
+  { path: '/copilot',   icon: Sparkles,        label: 'AI Copilot' },
 ];
 
 const S = {
@@ -79,24 +64,15 @@ export default function Sidebar({ collapsed, onToggle }) {
 
       {/* Nav */}
       <nav style={S.nav}>
-        {navSections.map((section, si) => (
-          <div key={si} style={{ marginBottom: 8 }}>
-            {section.label && !collapsed && (
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', padding: '12px 10px 6px', userSelect: 'none' }}>
-                {section.label}
-              </div>
-            )}
-            {section.items.map((item) => {
-              const isActive = item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path);
-              return (
-                <NavLink key={item.path} to={item.path} style={S.navItem(isActive)} title={collapsed ? item.label : undefined}>
-                  <item.icon style={S.navIcon(isActive)} />
-                  {!collapsed && <span style={S.navLabel}>{item.label}</span>}
-                </NavLink>
-              );
-            })}
-          </div>
-        ))}
+        {navItems.map((item) => {
+          const isActive = item.path === '/' ? location.pathname === '/' : location.pathname.startsWith(item.path);
+          return (
+            <NavLink key={item.path} to={item.path} style={S.navItem(isActive)} title={collapsed ? item.label : undefined}>
+              <item.icon style={S.navIcon(isActive)} />
+              {!collapsed && <span style={S.navLabel}>{item.label}</span>}
+            </NavLink>
+          );
+        })}
       </nav>
 
       {/* Bottom */}
