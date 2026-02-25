@@ -7,8 +7,7 @@ import {
   X, Loader2, ChevronDown,
 } from 'lucide-react';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
-  RadarChart, PolarGrid, PolarAngleAxis, Radar, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell,
 } from 'recharts';
 import {
   products, creators, productCreators, contentAssets,
@@ -18,7 +17,7 @@ import ProductImage from '../components/shared/ProductImage';
 import ChannelBadge from '../components/shared/ChannelBadge';
 import ListingScoreRing from '../components/shared/ListingScoreRing';
 
-const tabs = ['Growth Overview', 'Content Hub', 'Creator & Affiliate', 'Channel Performance'];
+const tabs = ['Growth Overview', 'Content Hub', 'Creator & Affiliate', 'Listing Quality', 'Channel Performance'];
 
 const flywheelPhases = [
   { key: 'build',     label: 'Build',     desc: 'Content Creation'   },
@@ -104,7 +103,8 @@ export default function ProductDetail() {
         {activeTab === 0 && <GrowthOverview product={product} benchmark={benchmark} />}
         {activeTab === 1 && <ContentHubTab content={productContent} onGenerate={() => setAigcModal({ skuId: product.id })} />}
         {activeTab === 2 && <CreatorTab product={product} creatorsList={productCreatorsList} />}
-        {activeTab === 3 && <ChannelPerformance product={product} benchmark={benchmark} />}
+        {activeTab === 3 && <ListingQuality product={product} />}
+        {activeTab === 4 && <ChannelPerformance product={product} benchmark={benchmark} />}
       </div>
 
       {/* AIGC Modal */}
@@ -572,17 +572,218 @@ function CreatorTab({ product, creatorsList }) {
   );
 }
 
-/* ── Tab 4: Channel Performance ── */
+/* ── Tab 4: Listing Quality ── */
+function ListingQuality({ product }) {
+  const [selectedChannel, setSelectedChannel] = useState(product.channels[0]);
+
+  if (!product.channelListings) {
+    return (
+      <div className="card" style={{ padding: 48, textAlign: 'center' }}>
+        <BarChart3 size={36} style={{ color: 'var(--text-3)', margin: '0 auto 12px' }} />
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }}>Listing analysis not yet available</h3>
+        <p style={{ fontSize: 12, color: 'var(--text-2)' }}>Analysis will be generated once listing data is synced.</p>
+      </div>
+    );
+  }
+
+  const listing = product.channelListings[selectedChannel];
+  if (!listing) {
+    return (
+      <div className="card" style={{ padding: 48, textAlign: 'center' }}>
+        <BarChart3 size={36} style={{ color: 'var(--text-3)', margin: '0 auto 12px' }} />
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }}>No listing data for this channel</h3>
+        <p style={{ fontSize: 12, color: 'var(--text-2)' }}>Select a different channel above.</p>
+      </div>
+    );
+  }
+
+  const scoreColor = (s) => s >= 85 ? 'var(--success)' : s >= 70 ? 'var(--warning)' : 'var(--danger)';
+  const statusPillStyle = (status) => {
+    const map = {
+      strong: { bg: 'rgba(16,185,129,0.1)', color: 'var(--success)', label: 'STRONG' },
+      good: { bg: 'rgba(59,130,246,0.1)', color: '#3b82f6', label: 'GOOD' },
+      'needs-work': { bg: 'rgba(245,158,11,0.1)', color: 'var(--warning)', label: 'NEEDS WORK' },
+      weak: { bg: 'rgba(239,68,68,0.1)', color: 'var(--danger)', label: 'WEAK' },
+    };
+    return map[status] || map.good;
+  };
+  const priorityStyle = (p) => {
+    const map = {
+      high: { color: '#ef4444', label: 'HIGH PRIORITY' },
+      medium: { color: '#f59e0b', label: 'RECOMMENDED' },
+      low: { color: '#10b981', label: 'OPTIONAL' },
+    };
+    return map[p] || map.medium;
+  };
+
+  const summaryText = listing.overallScore >= 85
+    ? 'Strong listing — minor improvements available'
+    : listing.overallScore >= 70
+    ? `Needs work — ${listing.suggestions.filter((s) => s.priority === 'high').length} high-priority fixes`
+    : `Weak listing — ${listing.suggestions.length} fixes recommended`;
+
+  // Cross-channel data for comparison
+  const allChannelScores = product.channels
+    .filter((ch) => product.channelListings[ch])
+    .map((ch) => ({ channel: ch, score: product.channelListings[ch].overallScore }))
+    .sort((a, b) => b.score - a.score);
+  const lowestChannel = allChannelScores.length > 1 ? allChannelScores[allChannelScores.length - 1].channel : null;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Channel selector tabs */}
+      <div style={{ display: 'flex', gap: 0, borderBottom: '2px solid var(--border)' }}>
+        {product.channels.map((ch) => {
+          const isActive = ch === selectedChannel;
+          const hasData = !!product.channelListings[ch];
+          return (
+            <button
+              key={ch}
+              onClick={() => hasData && setSelectedChannel(ch)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6, padding: '10px 18px',
+                fontSize: 12, fontWeight: isActive ? 700 : 500,
+                color: !hasData ? 'var(--text-3)' : isActive ? 'var(--brand)' : 'var(--text-2)',
+                background: 'none', border: 'none',
+                borderBottom: isActive ? '2px solid var(--brand)' : '2px solid transparent',
+                marginBottom: -2, cursor: hasData ? 'pointer' : 'default',
+                opacity: hasData ? 1 : 0.5,
+              }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: getChannelColor(ch) }} />
+              {getChannelName(ch)}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Overall Score card */}
+      <div className="card" style={{ padding: 20, display: 'flex', alignItems: 'center', gap: 20 }}>
+        <ListingScoreRing score={listing.overallScore} size={80} strokeWidth={5} />
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', marginBottom: 4 }}>
+            {getChannelName(selectedChannel)} Listing Score
+          </div>
+          <div style={{ fontSize: 12, color: scoreColor(listing.overallScore), fontWeight: 600 }}>
+            {summaryText}
+          </div>
+        </div>
+      </div>
+
+      {/* Score Breakdown */}
+      <div className="card" style={{ padding: 20 }}>
+        <h3 className="section-title">Score Breakdown</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {listing.dimensions.map((dim) => {
+            const sp = statusPillStyle(dim.status);
+            const barColor = dim.score >= 85 ? 'var(--success)' : dim.score >= 70 ? 'var(--warning)' : 'var(--danger)';
+            return (
+              <div key={dim.name} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 160, display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                  <span style={{ fontSize: 12, color: 'var(--text-1)', fontWeight: 500 }}>{dim.name}</span>
+                  <span style={{ fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 4, background: 'var(--surface-2)', color: 'var(--text-3)', textTransform: 'uppercase' }}>
+                    {dim.weight}
+                  </span>
+                </div>
+                <div className="progress-bar" style={{ flex: 1 }}>
+                  <div className="progress-fill" style={{ width: `${dim.score}%`, background: barColor }} />
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-1)', width: 28, textAlign: 'right' }}>{dim.score}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 999, background: sp.bg, color: sp.color, width: 80, textAlign: 'center', flexShrink: 0 }}>
+                  {sp.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* AI Improvement Suggestions */}
+      <div className="card" style={{ padding: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+          <Sparkles size={14} style={{ color: 'var(--brand)' }} />
+          <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>AI Improvement Suggestions</h3>
+        </div>
+        {listing.suggestions.length === 0 ? (
+          <div style={{ padding: '16px 0', fontSize: 12, color: 'var(--success)', fontWeight: 600 }}>
+            ✅ No issues detected — this listing is performing well
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {listing.suggestions.map((sug, i) => {
+              const ps = priorityStyle(sug.priority);
+              return (
+                <div
+                  key={i}
+                  style={{
+                    display: 'flex', alignItems: 'flex-start', gap: 12, padding: '12px 14px',
+                    borderRadius: 10, background: 'var(--surface-2)', transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(99,102,241,0.06)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+                >
+                  <div style={{ width: 10, height: 10, borderRadius: '50%', background: ps.color, marginTop: 4, flexShrink: 0 }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: ps.color, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
+                      {ps.label}
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.55 }}>
+                      {sug.text}
+                    </div>
+                  </div>
+                  <button
+                    className="btn btn-ghost"
+                    style={{ fontSize: 11, flexShrink: 0, whiteSpace: 'nowrap', padding: '5px 10px' }}
+                  >
+                    {sug.action} →
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Cross-Channel Comparison */}
+      {allChannelScores.length > 1 && (
+        <div className="card" style={{ padding: 20 }}>
+          <h3 className="section-title">Cross-Channel Comparison</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {allChannelScores.map(({ channel: ch, score }) => {
+              const barColor = score >= 85 ? 'var(--success)' : score >= 70 ? 'var(--warning)' : 'var(--danger)';
+              const isLowest = ch === lowestChannel;
+              return (
+                <div
+                  key={ch}
+                  onClick={() => setSelectedChannel(ch)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', padding: '6px 0' }}
+                >
+                  <div style={{ width: 90, display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: getChannelColor(ch) }} />
+                    <span style={{ fontSize: 12, fontWeight: ch === selectedChannel ? 700 : 500, color: ch === selectedChannel ? 'var(--text-1)' : 'var(--text-2)' }}>
+                      {getChannelName(ch).split(' ')[0]}
+                    </span>
+                  </div>
+                  <div className="progress-bar" style={{ flex: 1 }}>
+                    <div className="progress-fill" style={{ width: `${score}%`, background: barColor }} />
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-1)', width: 28, textAlign: 'right' }}>{score}</span>
+                  {isLowest && (
+                    <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--warning)', whiteSpace: 'nowrap' }}>← Needs work</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Tab 5: Channel Performance ── */
 function ChannelPerformance({ product, benchmark }) {
   const channelEntries = Object.entries(product.channelData);
-
-  const radarData = [
-    { subject: 'Title',       value: product.listingScores.title,       benchmark: benchmark.avgListingScore     },
-    { subject: 'Images',      value: product.listingScores.images,      benchmark: benchmark.avgListingScore - 5 },
-    { subject: 'Description', value: product.listingScores.description, benchmark: benchmark.avgListingScore - 3 },
-    { subject: 'Keywords',    value: product.listingScores.keywords,    benchmark: benchmark.avgListingScore + 2 },
-    { subject: 'Price',       value: product.listingScores.price,       benchmark: benchmark.avgListingScore - 2 },
-  ];
 
   const channelBarData = channelEntries.map(([ch, data]) => ({
     channel: getChannelName(ch), gmv: data.gmv, fill: getChannelColor(ch),
@@ -590,28 +791,9 @@ function ChannelPerformance({ product, benchmark }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Top row: charts */}
       <div className="content-grid-2">
-        {/* Radar */}
-        <div className="card" style={{ padding: 20 }}>
-          <h3 className="section-title">Listing Quality Score</h3>
-          <div style={{ height: 240 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="var(--border)" />
-                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 11, fill: 'var(--text-2)' }} />
-                <Radar name="Your Score"   dataKey="value"     stroke="var(--brand)"   fill="var(--brand)"   fillOpacity={0.18} strokeWidth={2} />
-                <Radar name="Category Avg" dataKey="benchmark" stroke="var(--text-3)"  fill="transparent"    strokeWidth={1}    strokeDasharray="4 4" />
-                <Tooltip />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, marginTop: 8, fontSize: 11, color: 'var(--text-2)' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><span style={{ width: 12, height: 2, background: 'var(--brand)', borderRadius: 2, display: 'inline-block' }} /> Your Score</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}><span style={{ width: 12, height: 2, background: 'var(--text-3)', borderRadius: 2, display: 'inline-block' }} /> Category Avg</span>
-          </div>
-        </div>
-
-        {/* Bar */}
+        {/* Bar chart */}
         <div className="card" style={{ padding: 20 }}>
           <h3 className="section-title">Channel GMV Comparison</h3>
           <div style={{ height: 240 }}>
@@ -628,37 +810,125 @@ function ChannelPerformance({ product, benchmark }) {
             </ResponsiveContainer>
           </div>
         </div>
-      </div>
 
-      {/* Score breakdown */}
-      <div className="card" style={{ padding: 20 }}>
-        <h3 className="section-title">Score Breakdown by Component</h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {Object.entries(product.listingScores).map(([key, value]) => {
-            const barColor = value >= 85 ? 'var(--success)' : value >= 70 ? 'var(--warning)' : 'var(--danger)';
-            return (
-              <div key={key} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 12, color: 'var(--text-2)', width: 80, textTransform: 'capitalize' }}>{key}</span>
-                <div className="progress-bar" style={{ flex: 1 }}>
-                  <div className="progress-fill" style={{ width: `${value}%`, background: barColor }} />
+        {/* Conversion Funnel */}
+        <div className="card" style={{ padding: 20 }}>
+          <h3 className="section-title">Conversion Funnel</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
+            {channelEntries.map(([ch, data]) => (
+              <div key={ch}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: getChannelColor(ch), marginBottom: 6 }}>
+                  {getChannelName(ch)}
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-1)', width: 28, textAlign: 'right' }}>{value}</span>
-                <span style={{ fontSize: 10, color: 'var(--text-3)', width: 56, textAlign: 'right' }}>avg {benchmark.avgListingScore}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, flexWrap: 'wrap' }}>
+                  <span style={{ color: 'var(--text-2)' }}>{data.impressions ? formatNumber(data.impressions) : '—'} imp</span>
+                  <span style={{ color: 'var(--text-3)' }}>→</span>
+                  <span style={{ color: 'var(--text-2)' }}>{data.clicks ? formatNumber(data.clicks) : '—'} clicks</span>
+                  {data.ctr && <span style={{ color: 'var(--text-3)', fontSize: 10 }}>({data.ctr}%)</span>}
+                  <span style={{ color: 'var(--text-3)' }}>→</span>
+                  <span style={{ color: 'var(--text-2)' }}>{formatNumber(data.sessions)} sessions</span>
+                  <span style={{ color: 'var(--text-3)' }}>→</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-1)' }}>{data.orders} orders</span>
+                  <span style={{ color: 'var(--success)', fontSize: 10, fontWeight: 600 }}>({data.conversionRate}%)</span>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Benchmark */}
+      {/* Channel Detail Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(${channelEntries.length}, 1fr)`, gap: 14 }}>
+        {channelEntries.map(([ch, data]) => {
+          const stockColor = data.daysOfStock
+            ? data.daysOfStock < 14 ? 'var(--danger)' : data.daysOfStock <= 30 ? 'var(--warning)' : 'var(--success)'
+            : 'var(--text-2)';
+          return (
+            <div key={ch} className="card" style={{ padding: 16, borderTop: `3px solid ${getChannelColor(ch)}` }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', marginBottom: 12 }}>
+                {getChannelName(ch)}
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)', marginBottom: 12 }}>
+                {formatCurrency(data.gmv)}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                  <span style={{ color: 'var(--text-2)' }}>Conversion</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-1)' }}>{data.conversionRate}%</span>
+                </div>
+                {data.aov && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                    <span style={{ color: 'var(--text-2)' }}>AOV</span>
+                    <span style={{ fontWeight: 600, color: 'var(--text-1)' }}>${data.aov}</span>
+                  </div>
+                )}
+                {data.returnRate !== undefined && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                    <span style={{ color: 'var(--text-2)' }}>Return Rate</span>
+                    <span style={{ fontWeight: 600, color: data.returnRate > 5 ? 'var(--danger)' : 'var(--text-1)' }}>{data.returnRate}%</span>
+                  </div>
+                )}
+                {data.inventory !== undefined && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginTop: 4, padding: '6px 0', borderTop: '1px solid var(--border)' }}>
+                    <span style={{ color: 'var(--text-2)' }}>Inventory</span>
+                    <span style={{ fontWeight: 600, color: 'var(--text-1)' }}>{data.inventory} units</span>
+                  </div>
+                )}
+                {data.daysOfStock !== undefined && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                    <span style={{ color: 'var(--text-2)' }}>Days of Stock</span>
+                    <span style={{ fontWeight: 600, color: stockColor }}>{data.daysOfStock} days</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* AI Optimization Recommendations */}
+      {product.channelOptimizations && product.channelOptimizations.length > 0 && (
+        <div className="card" style={{ overflow: 'hidden' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
+            <Sparkles size={14} style={{ color: 'var(--brand)' }} />
+            <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>AI Optimization Recommendations</h3>
+          </div>
+          {product.channelOptimizations.map((opt, i) => (
+            <div
+              key={i}
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12, padding: '14px 20px',
+                borderBottom: i < product.channelOptimizations.length - 1 ? '1px solid var(--border)' : 'none',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-2)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0, marginTop: 1 }}>{opt.icon}</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 12, color: 'var(--text-2)', lineHeight: 1.55 }}>{opt.text}</div>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 6,
+                  fontSize: 11, fontWeight: 600, color: opt.impactColor,
+                  background: `${opt.impactColor}10`, padding: '3px 8px', borderRadius: 6,
+                }}>
+                  {opt.impact}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Category Benchmark */}
       <div className="card" style={{ padding: 20 }}>
         <h3 className="section-title">Category Benchmark ({product.category})</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
           {[
-            { label: 'Avg Listing Score', benchmark: benchmark.avgListingScore, yours: product.listingScore,    fmt: (v) => v           },
-            { label: 'Avg Conversion',    benchmark: `${benchmark.avgConversion}%`, yours: null                                          },
-            { label: 'Avg Creator Count', benchmark: benchmark.avgCreatorCount,  yours: product.creatorCount,   fmt: (v) => v           },
-            { label: 'Avg Monthly GMV',   benchmark: formatCurrency(benchmark.avgGMV), yours: null                                       },
+            { label: 'Avg Listing Score', benchmark: benchmark.avgListingScore, yours: product.listingScore, fmt: (v) => v },
+            { label: 'Avg Conversion', benchmark: `${benchmark.avgConversion}%`, yours: null },
+            { label: 'Avg Creator Count', benchmark: benchmark.avgCreatorCount, yours: product.creatorCount, fmt: (v) => v },
+            { label: 'Avg Monthly GMV', benchmark: formatCurrency(benchmark.avgGMV), yours: null },
           ].map(({ label, benchmark: bval, yours, fmt }) => (
             <div key={label} style={{ padding: 16, background: 'var(--surface-2)', borderRadius: 10 }}>
               <div style={{ fontSize: 10, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>{label}</div>

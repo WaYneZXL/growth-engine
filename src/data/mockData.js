@@ -27,13 +27,60 @@ export const products = [
     description: 'Premium wireless earbuds with active noise cancellation, 36-hour battery life, and IPX5 water resistance.',
     price: 79.99,
     channelData: {
-      tiktok: { gmv: 28900, conversionRate: 4.8, listingScore: 95, creatorCount: 6, sessions: 12400, orders: 595 },
-      shopify: { gmv: 12300, conversionRate: 2.1, listingScore: 88, creatorCount: 2, sessions: 8200, orders: 172 },
-      amazon: { gmv: 7000, conversionRate: 3.2, listingScore: 91, creatorCount: 0, sessions: 5600, orders: 179 },
+      tiktok: { gmv: 28900, conversionRate: 4.8, listingScore: 95, creatorCount: 6, sessions: 12400, orders: 595, impressions: 185000, clicks: 24800, ctr: 13.4, aov: 48.6, returnRate: 4.2, inventory: 820, daysOfStock: 18 },
+      shopify: { gmv: 12300, conversionRate: 2.1, listingScore: 88, creatorCount: 2, sessions: 8200, orders: 172, impressions: 62000, clicks: 14200, ctr: 22.9, aov: 71.5, returnRate: 2.8, inventory: 450, daysOfStock: 42 },
+      amazon: { gmv: 7000, conversionRate: 3.2, listingScore: 91, creatorCount: 0, sessions: 5600, orders: 179, impressions: 84000, clicks: 9800, ctr: 11.7, aov: 39.1, returnRate: 5.1, inventory: 340, daysOfStock: 28 },
     },
     listingScores: {
       title: 95, images: 90, description: 88, keywords: 94, price: 85,
     },
+    channelListings: {
+      tiktok: {
+        overallScore: 95,
+        dimensions: [
+          { name: 'Title & Hooks', score: 97, weight: 'high', status: 'strong' },
+          { name: 'Main Image', score: 92, weight: 'high', status: 'strong' },
+          { name: 'Product Video', score: 98, weight: 'high', status: 'strong' },
+          { name: 'Description', score: 90, weight: 'medium', status: 'good' },
+          { name: 'Selling Points Match', score: 94, weight: 'medium', status: 'strong' },
+        ],
+        suggestions: [
+          { priority: 'low', text: 'Description could emphasize "36-hour battery" more — top converting hook from creator videos', action: 'Rewrite with AI' },
+        ],
+      },
+      shopify: {
+        overallScore: 78,
+        dimensions: [
+          { name: 'Title & SEO', score: 85, weight: 'high', status: 'good' },
+          { name: 'Hero Image', score: 62, weight: 'high', status: 'weak' },
+          { name: 'Image Gallery', score: 70, weight: 'medium', status: 'needs-work' },
+          { name: 'Description', score: 82, weight: 'high', status: 'good' },
+          { name: 'Meta & Structured Data', score: 88, weight: 'medium', status: 'good' },
+        ],
+        suggestions: [
+          { priority: 'high', text: 'Hero image is white-background product shot — Shopify converts 23% better with lifestyle imagery. AI can generate from existing assets.', action: 'Generate Lifestyle Image' },
+          { priority: 'medium', text: 'Gallery only has 3 images (category avg: 6). Add lifestyle scenes, detail close-ups, and in-use shots.', action: 'Generate Images' },
+          { priority: 'low', text: 'Creator @techsarah\'s TikTok hook "these replaced my AirPods" hasn\'t been incorporated into Shopify copy — could lift conversion.', action: 'Rewrite with AI' },
+        ],
+      },
+      amazon: {
+        overallScore: 91,
+        dimensions: [
+          { name: 'Title Keywords', score: 94, weight: 'high', status: 'strong' },
+          { name: 'Main Image (Compliance)', score: 96, weight: 'high', status: 'strong' },
+          { name: 'Bullet Points', score: 88, weight: 'high', status: 'good' },
+          { name: 'A+ Content', score: 85, weight: 'medium', status: 'good' },
+          { name: 'Backend Keywords', score: 92, weight: 'medium', status: 'strong' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'Bullet point #3 mentions "water resistant" — upgrade to "IPX5 waterproof" which has 3x search volume on Amazon.', action: 'Optimize Keywords' },
+        ],
+      },
+    },
+    channelOptimizations: [
+      { icon: '📦', type: 'inventory', text: 'TikTok sells 3.5x faster than Amazon but has similar stock levels. Consider reallocating 200 units from Amazon → TikTok to avoid stockout in ~18 days.', impact: 'Prevent $14K stockout', impactColor: '#ef4444' },
+      { icon: '💰', type: 'pricing', text: 'Shopify conversion is 2.1% vs TikTok 4.8% — Shopify price is $79.99 vs TikTok $69.99. A/B test a Shopify price of $74.99 to close the gap.', impact: 'Est. +0.8% conversion', impactColor: '#10b981' },
+    ],
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
     crossInsights: [
       { icon: '🎯', text: 'Creator videos on TikTok are lifting Shopify search traffic by ~18% — your affiliate content is cross-channel influencing organic', action: 'View Attribution' },
@@ -68,10 +115,44 @@ export const products = [
     description: 'Hyaluronic acid serum with vitamin C and niacinamide for deep hydration and brightening.',
     price: 34.99,
     channelData: {
-      tiktok: { gmv: 26800, conversionRate: 5.2, listingScore: 90, creatorCount: 10, sessions: 15200, orders: 790 },
-      shopify: { gmv: 8800, conversionRate: 2.8, listingScore: 82, creatorCount: 2, sessions: 6100, orders: 171 },
+      tiktok: { gmv: 26800, conversionRate: 5.2, listingScore: 90, creatorCount: 10, sessions: 15200, orders: 790, impressions: 228000, clicks: 31400, ctr: 13.8, aov: 33.9, returnRate: 3.1, inventory: 580, daysOfStock: 12 },
+      shopify: { gmv: 8800, conversionRate: 2.8, listingScore: 82, creatorCount: 2, sessions: 6100, orders: 171, impressions: 48000, clicks: 10200, ctr: 21.3, aov: 51.5, returnRate: 1.9, inventory: 920, daysOfStock: 48 },
     },
     listingScores: { title: 90, images: 85, description: 82, keywords: 88, price: 92 },
+    channelListings: {
+      tiktok: {
+        overallScore: 90,
+        dimensions: [
+          { name: 'Title & Hooks', score: 92, weight: 'high', status: 'strong' },
+          { name: 'Main Image', score: 85, weight: 'high', status: 'good' },
+          { name: 'Product Video', score: 95, weight: 'high', status: 'strong' },
+          { name: 'Description', score: 88, weight: 'medium', status: 'good' },
+          { name: 'Selling Points Match', score: 90, weight: 'medium', status: 'strong' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'Main image still uses studio shot. TikTok listings with "skin close-up" images get 31% more clicks in Beauty category.', action: 'Generate Image' },
+        ],
+      },
+      shopify: {
+        overallScore: 72,
+        dimensions: [
+          { name: 'Title & SEO', score: 78, weight: 'high', status: 'needs-work' },
+          { name: 'Hero Image', score: 65, weight: 'high', status: 'weak' },
+          { name: 'Image Gallery', score: 60, weight: 'medium', status: 'weak' },
+          { name: 'Description', score: 80, weight: 'high', status: 'good' },
+          { name: 'Meta & Structured Data', score: 75, weight: 'medium', status: 'needs-work' },
+        ],
+        suggestions: [
+          { priority: 'high', text: 'Creator content on TikTok emphasizes "deep hydration" as #1 hook — Shopify title still says "Moisturizing Face Serum". Rewrite using creator-validated language.', action: 'Rewrite with AI' },
+          { priority: 'high', text: 'Only 2 gallery images. Beauty category avg is 8. AI can generate ingredient close-ups, before/after mockups, and texture shots.', action: 'Generate Images' },
+          { priority: 'medium', text: 'Missing structured data for "Skin Type" and "Key Ingredients" — adding these improves Google Shopping visibility.', action: 'Fix SEO' },
+        ],
+      },
+    },
+    channelOptimizations: [
+      { icon: '📦', type: 'inventory', text: 'TikTok stock projected to run out in 12 days based on current velocity. Shopify has 45+ days of stock.', impact: 'Rebalance inventory', impactColor: '#f59e0b' },
+      { icon: '🔄', type: 'content', text: 'Shopify conversion trails TikTok by 2.4x — listing quality gap (72 vs 90) is likely the cause, not pricing.', impact: 'Fix listing first', impactColor: '#6366f1' },
+    ],
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'needs-attention' },
     crossInsights: [
       { icon: '💡', text: '12 creators promoting Serum also post Beauty content — cross-promote with Vitamin C Cream for a bundle effect', action: 'View Creators' },
@@ -131,11 +212,56 @@ export const products = [
     description: 'Advanced smartwatch with AMOLED display, health monitoring, GPS, and 7-day battery.',
     price: 199.99,
     channelData: {
-      tiktok: { gmv: 22400, conversionRate: 3.6, listingScore: 96, creatorCount: 4, sessions: 9800, orders: 353 },
-      shopify: { gmv: 18200, conversionRate: 2.9, listingScore: 92, creatorCount: 2, sessions: 11200, orders: 325 },
-      amazon: { gmv: 11500, conversionRate: 3.8, listingScore: 93, creatorCount: 0, sessions: 7400, orders: 281 },
+      tiktok: { gmv: 22400, conversionRate: 3.6, listingScore: 96, creatorCount: 4, sessions: 9800, orders: 353, impressions: 142000, clicks: 18600, ctr: 13.1, aov: 63.5, returnRate: 3.8, inventory: 410, daysOfStock: 15 },
+      shopify: { gmv: 18200, conversionRate: 2.9, listingScore: 92, creatorCount: 2, sessions: 11200, orders: 325, impressions: 78000, clicks: 17800, ctr: 22.8, aov: 56.0, returnRate: 2.2, inventory: 680, daysOfStock: 35 },
+      amazon: { gmv: 11500, conversionRate: 3.8, listingScore: 93, creatorCount: 0, sessions: 7400, orders: 281, impressions: 96000, clicks: 12800, ctr: 13.3, aov: 40.9, returnRate: 4.5, inventory: 520, daysOfStock: 28 },
     },
     listingScores: { title: 96, images: 94, description: 92, keywords: 95, price: 88 },
+    channelListings: {
+      tiktok: {
+        overallScore: 86,
+        dimensions: [
+          { name: 'Title & Hooks', score: 88, weight: 'high', status: 'good' },
+          { name: 'Main Image', score: 82, weight: 'high', status: 'good' },
+          { name: 'Product Video', score: 90, weight: 'high', status: 'strong' },
+          { name: 'Description', score: 84, weight: 'medium', status: 'good' },
+          { name: 'Selling Points Match', score: 86, weight: 'medium', status: 'good' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'Main image shows watch on white background. TikTok fitness content performs 40% better with "on-wrist action shots".', action: 'Generate Image' },
+        ],
+      },
+      shopify: {
+        overallScore: 81,
+        dimensions: [
+          { name: 'Title & SEO', score: 85, weight: 'high', status: 'good' },
+          { name: 'Hero Image', score: 78, weight: 'high', status: 'needs-work' },
+          { name: 'Image Gallery', score: 80, weight: 'medium', status: 'good' },
+          { name: 'Description', score: 82, weight: 'high', status: 'good' },
+          { name: 'Meta & Structured Data', score: 80, weight: 'medium', status: 'good' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'Gallery lacks comparison images (vs Apple Watch). Competitor comparison content drives 18% longer time-on-page in Electronics.', action: 'Generate Comparison' },
+        ],
+      },
+      amazon: {
+        overallScore: 84,
+        dimensions: [
+          { name: 'Title Keywords', score: 86, weight: 'high', status: 'good' },
+          { name: 'Main Image (Compliance)', score: 92, weight: 'high', status: 'strong' },
+          { name: 'Bullet Points', score: 80, weight: 'high', status: 'good' },
+          { name: 'A+ Content', score: 78, weight: 'medium', status: 'needs-work' },
+          { name: 'Backend Keywords', score: 85, weight: 'medium', status: 'good' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'A+ content still uses generic brand template. Custom A+ with lifestyle images lifts conversion 8-12% in Electronics.', action: 'Upgrade A+ Content' },
+          { priority: 'low', text: 'Backend keywords missing "fitness tracker" variant — 12K monthly searches on Amazon.', action: 'Add Keywords' },
+        ],
+      },
+    },
+    channelOptimizations: [
+      { icon: '📦', type: 'inventory', text: 'Amazon has 35 days of stock but sales velocity is accelerating (+22% this week). Consider pre-ordering before stockout.', impact: 'Plan ahead', impactColor: '#f59e0b' },
+    ],
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'complete' },
     crossInsights: [
       { icon: '🚀', text: 'Smart Watch is your top GMV SKU — TikTok creator content is driving Shopify search lift of 22%', action: 'Scale Creators' },
@@ -195,10 +321,44 @@ export const products = [
     description: 'Smart interactive ball with LED lights, auto-rolling mode, and pet-safe materials.',
     price: 29.99,
     channelData: {
-      tiktok: { gmv: 18200, conversionRate: 6.1, listingScore: 88, creatorCount: 8, sessions: 18400, orders: 1123 },
-      amazon: { gmv: 4500, conversionRate: 2.9, listingScore: 82, creatorCount: 1, sessions: 4200, orders: 122 },
+      tiktok: { gmv: 18200, conversionRate: 6.1, listingScore: 88, creatorCount: 8, sessions: 18400, orders: 1123, impressions: 276000, clicks: 38200, ctr: 13.8, aov: 16.2, returnRate: 2.4, inventory: 1200, daysOfStock: 14 },
+      amazon: { gmv: 4500, conversionRate: 2.9, listingScore: 82, creatorCount: 1, sessions: 4200, orders: 122, impressions: 52000, clicks: 7400, ctr: 14.2, aov: 36.9, returnRate: 4.8, inventory: 680, daysOfStock: 56 },
     },
     listingScores: { title: 88, images: 84, description: 82, keywords: 86, price: 90 },
+    channelListings: {
+      tiktok: {
+        overallScore: 88,
+        dimensions: [
+          { name: 'Title & Hooks', score: 82, weight: 'high', status: 'good' },
+          { name: 'Main Image', score: 90, weight: 'high', status: 'strong' },
+          { name: 'Product Video', score: 95, weight: 'high', status: 'strong' },
+          { name: 'Description', score: 85, weight: 'medium', status: 'good' },
+          { name: 'Selling Points Match', score: 88, weight: 'medium', status: 'good' },
+        ],
+        suggestions: [
+          { priority: 'medium', text: 'Title uses generic "Interactive Cat Toy" — creator @petloversarah\'s viral hook "automatic laser pattern" has 3.2x higher CTR. Rewrite title.', action: 'Rewrite with AI' },
+        ],
+      },
+      amazon: {
+        overallScore: 64,
+        dimensions: [
+          { name: 'Title Keywords', score: 70, weight: 'high', status: 'needs-work' },
+          { name: 'Main Image (Compliance)', score: 55, weight: 'high', status: 'weak' },
+          { name: 'Bullet Points', score: 58, weight: 'medium', status: 'weak' },
+          { name: 'A+ Content', score: 72, weight: 'high', status: 'needs-work' },
+          { name: 'Backend Keywords', score: 68, weight: 'medium', status: 'needs-work' },
+        ],
+        suggestions: [
+          { priority: 'high', text: 'Amazon hero image is a white-background product photo. The TikTok video (450K views) shows cats actively playing — extract a frame for Amazon hero.', action: 'Generate from Video' },
+          { priority: 'high', text: 'Amazon description doesn\'t mention "automatic laser pattern" — the #1 reason people buy according to TikTok data. AI can rewrite using creator-validated hooks.', action: 'Rewrite with AI' },
+          { priority: 'medium', text: 'No customer review highlights on PDP. 85% of TikTok comments mention "my cat loves it" — use as social proof on Amazon.', action: 'Add Social Proof' },
+        ],
+      },
+    },
+    channelOptimizations: [
+      { icon: '🚀', type: 'expansion', text: 'This SKU is on 2 channels but category leaders are on 3+. Shopify Pet category has high demand — consider expanding.', impact: 'Est. +$6K/mo', impactColor: '#10b981' },
+      { icon: '💰', type: 'pricing', text: 'TikTok price is $24.99 and converting at 6.1%. Category avg price is $29.99 — you may have room to increase without hurting conversion.', impact: 'Est. +$3K margin/mo', impactColor: '#10b981' },
+    ],
     flywheel: { build: 'complete', distribute: 'active', amplify: 'complete', learn: 'active' },
     crossInsights: [
       { icon: '🔥', text: 'Pet Toy viral video (680K views) drove 38% more search for your brand on Amazon — capitalize with keyword update', action: 'Update Keywords' },
@@ -259,11 +419,31 @@ export const products = [
     description: '5-piece resistance band set with door anchor, handles, and carry bag. Latex-free TPE material.',
     price: 24.99,
     channelData: {
-      tiktok: { gmv: 11200, conversionRate: 5.5, listingScore: 90, creatorCount: 5, sessions: 12800, orders: 704 },
-      shopify: { gmv: 4800, conversionRate: 2.6, listingScore: 85, creatorCount: 1, sessions: 4200, orders: 109 },
-      amazon: { gmv: 3500, conversionRate: 3.4, listingScore: 88, creatorCount: 1, sessions: 3800, orders: 129 },
+      tiktok: { gmv: 11200, conversionRate: 5.5, listingScore: 90, creatorCount: 5, sessions: 12800, orders: 704, impressions: 168000, clicks: 22400, ctr: 13.3, aov: 15.9, returnRate: 2.1, inventory: 1800, daysOfStock: 34 },
+      shopify: { gmv: 4800, conversionRate: 2.6, listingScore: 85, creatorCount: 1, sessions: 4200, orders: 109, impressions: 32000, clicks: 7200, ctr: 22.5, aov: 44.0, returnRate: 1.6, inventory: 620, daysOfStock: 85 },
+      amazon: { gmv: 3500, conversionRate: 3.4, listingScore: 88, creatorCount: 1, sessions: 3800, orders: 129, impressions: 48000, clicks: 6800, ctr: 14.2, aov: 27.1, returnRate: 3.8, inventory: 540, daysOfStock: 63 },
     },
     listingScores: { title: 90, images: 86, description: 88, keywords: 90, price: 92 },
+    channelListings: {
+      tiktok: {
+        overallScore: 74,
+        dimensions: [
+          { name: 'Title & Hooks', score: 70, weight: 'high', status: 'needs-work' },
+          { name: 'Main Image', score: 72, weight: 'high', status: 'needs-work' },
+          { name: 'Product Video', score: 80, weight: 'high', status: 'good' },
+          { name: 'Description', score: 75, weight: 'medium', status: 'needs-work' },
+          { name: 'Selling Points Match', score: 72, weight: 'medium', status: 'needs-work' },
+        ],
+        suggestions: [
+          { priority: 'high', text: 'AIGC cold-start data shows "travel-friendly" converts 2.1x better than "5 resistance levels". Rewrite title and description to lead with portability angle.', action: 'Rewrite with AI' },
+          { priority: 'high', text: 'Main image is a flat lay of all 5 bands. TikTok fitness listings with "in-use workout" images get 45% higher CTR.', action: 'Generate Image' },
+          { priority: 'medium', text: 'Description is 20 words — TikTok optimal is 80-120 words with emoji breaks. AI can expand.', action: 'Expand Description' },
+        ],
+      },
+    },
+    channelOptimizations: [
+      { icon: '🌐', type: 'expansion', text: 'Strong on TikTok but underperforming on Shopify and Amazon. Fitness accessories sell well on Amazon — AIGC-validated "travel-friendly" angle works for Amazon keyword strategy too.', impact: 'New channel opportunity', impactColor: '#10b981' },
+    ],
     flywheel: { build: 'complete', distribute: 'complete', amplify: 'active', learn: 'active' },
     crossInsights: [
       { icon: '💪', text: 'Resistance Bands + Yoga Mat cross-promotion opportunity — 4 creators cover both fitness products', action: 'Create Bundle' },
@@ -679,6 +859,89 @@ export const creatorPlatforms = {
   instagram: { label: 'Instagram',  color: '#e1306c', bg: 'rgba(225,48,108,0.09)'  },
   youtube:   { label: 'YouTube',    color: '#ff0000', bg: 'rgba(255,0,0,0.08)'     },
 };
+
+// --- Dashboard Impact Hero ---
+export const dashboardImpact = {
+  gmv: { value: 128450, change: 18.2 },
+  savings: { value: 4800, description: 'this month by using AIGC for long-tail content' },
+  actions: { total: 4, urgent: 2, recommended: 2 },
+};
+
+// --- Dashboard Action Items ---
+export const dashboardActions = [
+  {
+    id: 'ACT-001',
+    severity: 'urgent',
+    severityColor: '#ef4444',
+    title: '2 SKUs declining >15% this week — listing scores dropped',
+    description: 'Wireless Earbuds Pro and Smart Watch Ultra need updated listing content. Creator engagement has also slowed.',
+    impact: '$12K+ GMV at risk',
+    impactColor: '#ef4444',
+    cta: 'Diagnose & Fix',
+    path: '/products',
+  },
+  {
+    id: 'ACT-002',
+    severity: 'urgent',
+    severityColor: '#ef4444',
+    title: 'Creator video went viral — Shopify listing missing the winning hook',
+    description: '@petloversarah\'s TikTok video (450K views) for Interactive Pet Toy highlights "automatic laser pattern" — but your Shopify PDP title and hero image don\'t mention it.',
+    impact: 'Est. +18% Shopify conversion',
+    impactColor: '#10b981',
+    cta: 'Update Listing',
+    path: '/products/SKU-0537',
+  },
+  {
+    id: 'ACT-003',
+    severity: 'warning',
+    severityColor: '#f59e0b',
+    title: 'Content mix imbalance on 3 SKUs — over-reliant on creators',
+    description: 'Earbuds Pro, Hydrating Serum, and Smart Watch are 70%+ creator-dependent, but AIGC content converts at 4x better cost efficiency.',
+    impact: 'Save ~$4.8K/mo',
+    impactColor: '#10b981',
+    cta: 'Optimize Mix',
+    path: '/products/SKU-0042',
+  },
+  {
+    id: 'ACT-004',
+    severity: 'ready',
+    severityColor: '#10b981',
+    title: 'Resistance Bands cold start complete — ready for creators',
+    description: 'AIGC content validated "travel-friendly" as the #1 converting hook (2.1x above other angles). 8 matched creators are ready for outreach.',
+    impact: 'Est. +$8K GMV/mo',
+    impactColor: '#10b981',
+    cta: 'Find Creators',
+    path: '/products/SKU-0891',
+  },
+];
+
+// --- Dashboard Growth Opportunities ---
+export const dashboardOpportunities = [
+  {
+    id: 'OPP-001',
+    title: 'Sync TikTok creator content to Shopify listings',
+    description: '8 SKUs have high-performing TikTok creator content that hasn\'t been reflected in Shopify PDPs. AI can rewrite listings using creator-validated messaging.',
+    impact: '+15-22% conv.',
+    cta: 'Sync Now',
+    path: '/products',
+  },
+  {
+    id: 'OPP-002',
+    title: 'Scale creator recruitment for Pet Toy',
+    description: 'Content engagement is 3.2x above category average on TikTok — prime candidate for scaling creator partnerships.',
+    impact: '+$8K/mo',
+    cta: 'Find Creators',
+    path: '/products/SKU-0537',
+  },
+  {
+    id: 'OPP-003',
+    title: 'Expand 4 SKUs to TikTok Shop',
+    description: 'These SKUs perform well on Shopify but have zero TikTok presence. Category data suggests strong TikTok demand.',
+    impact: 'New channel',
+    cta: 'Expand',
+    path: '/products',
+  },
+];
 
 // --- Helper functions ---
 export const formatCurrency = (value) => {
