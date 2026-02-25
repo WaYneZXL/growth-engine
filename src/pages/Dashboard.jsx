@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Zap, ArrowRight } from 'lucide-react';
+import { Sparkles, Zap, ArrowRight, Rocket, BarChart3, Wand2, UserPlus } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
@@ -97,6 +97,24 @@ export default function Dashboard() {
             Review now <ArrowRight size={12} />
           </button>
         </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+        {[
+          { Icon: Rocket,    color: '#8b5cf6', label: 'Launch a new product',           sub: 'End-to-end launch workflow', path: '/workflows' },
+          { Icon: BarChart3, color: '#ef4444', label: 'Fix a declining SKU',            sub: 'Diagnose & boost performance', path: '/products?status=declining&sort=priority' },
+          { Icon: Wand2,     color: '#10b981', label: 'Generate content for top SKUs',  sub: 'AI images, copy & briefs',    path: '/content' },
+          { Icon: UserPlus,  color: '#f59e0b', label: 'Find creators for best sellers', sub: 'AI-matched creator recommendations', path: '/creators' },
+        ].map(({ Icon, color, label, sub, path }) => (
+          <div key={label} className="card card-hover" style={{ padding: 16, cursor: 'pointer' }} onClick={() => navigate(path)}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${color}14`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+              <Icon size={18} style={{ color }} />
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', marginBottom: 2 }}>{label}</div>
+            <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{sub}</div>
+          </div>
+        ))}
       </div>
 
       {/* 2. Needs Attention — urgent action items */}

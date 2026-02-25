@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Plus, LayoutGrid, List, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { products, formatCurrency } from '../data/mockData';
 import ProductImage from '../components/shared/ProductImage';
@@ -18,18 +18,43 @@ function StatusBadge({ status }) {
 
 const badgeBase = { display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: 999, fontSize: 11, fontWeight: 500 };
 
+const getPriorityScore = (p) => {
+  let score = 0;
+  if (p.status === 'declining') score += 30;
+  if (p.listingScore < 75) score += 20;
+  else if (p.listingScore < 85) score += 10;
+  const fwValues = Object.values(p.flywheel);
+  const needsAttention = fwValues.filter(v => v === 'needs-attention').length;
+  score += needsAttention * 8;
+  if (p.creatorCount === 0) score += 15;
+  else if (p.creatorCount < 3) score += 8;
+  if (p.status === 'new') score += 5;
+  return score;
+};
+
 export default function Products() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [view, setView] = useState('list');
   const [search, setSearch] = useState('');
-  const [channelFilter, setChannelFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [channelFilter, setChannelFilter] = useState(searchParams.get('channel') || 'all');
+  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'priority');
 
   const filtered = products.filter((p) => {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.id.toLowerCase().includes(search.toLowerCase())) return false;
     if (channelFilter !== 'all' && !p.channels.includes(channelFilter)) return false;
     if (statusFilter !== 'all' && p.status !== statusFilter) return false;
     return true;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === 'priority') return getPriorityScore(b) - getPriorityScore(a);
+    if (sortBy === 'gmv-desc') return (b.gmv30d || 0) - (a.gmv30d || 0);
+    if (sortBy === 'gmv-asc') return (a.gmv30d || 0) - (b.gmv30d || 0);
+    if (sortBy === 'listing-asc') return (a.listingScore || 0) - (b.listingScore || 0);
+    if (sortBy === 'growth-desc') return (b.growth || -999) - (a.growth || -999);
+    return 0;
   });
 
   return (
@@ -61,6 +86,13 @@ export default function Products() {
           <option value="declining">Declining</option>
           <option value="new">New</option>
         </select>
+        <select className="select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="priority">Sort: Priority</option>
+          <option value="gmv-desc">Sort: GMV ↓</option>
+          <option value="gmv-asc">Sort: GMV ↑</option>
+          <option value="listing-asc">Sort: Listing Score ↑</option>
+          <option value="growth-desc">Sort: Growth ↓</option>
+        </select>
         {/* View toggle */}
         <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', marginLeft: 'auto' }}>
           {[{ v: 'grid', Icon: LayoutGrid }, { v: 'list', Icon: List }].map(({ v, Icon }) => (
@@ -71,11 +103,39 @@ export default function Products() {
         </div>
       </div>
 
+      {/* Summary bar */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: 'var(--text-2)' }}>
+        <span>{sorted.length} products</span>
+        <span style={{ color: 'var(--border)' }}>|</span>
+        <span style={{ color: 'var(--danger)' }}>
+          {sorted.filter(p => getPriorityScore(p) >= 30).length} urgent
+        </span>
+        <span style={{ color: 'var(--warning)' }}>
+          {sorted.filter(p => { const s = getPriorityScore(p); return s >= 15 && s < 30; }).length} to review
+        </span>
+        <span style={{ color: 'var(--success)' }}>
+          {sorted.filter(p => getPriorityScore(p) < 15).length} on track
+        </span>
+      </div>
+
       {/* Grid view */}
       {view === 'grid' ? (
         <div className="content-grid-3">
-          {filtered.map((p) => (
-            <div key={p.id} className="card card-hover" style={{ padding: 16 }} onClick={() => navigate(`/products/${p.id}`)}>
+          {sorted.map((p) => (
+            <div key={p.id} className="card card-hover" style={{ padding: 16, position: 'relative' }} onClick={() => navigate(`/products/${p.id}`)}>
+              {(() => {
+                const score = getPriorityScore(p);
+                if (score < 15) return null;
+                const color = score >= 30 ? 'var(--danger)' : 'var(--warning)';
+                return (
+                  <div style={{ position: 'absolute', top: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: color }} />
+                    <span style={{ fontSize: 9, fontWeight: 700, color, letterSpacing: '0.05em' }}>
+                      {score >= 30 ? 'URGENT' : 'REVIEW'}
+                    </span>
+                  </div>
+                );
+              })()}
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                 <ProductImage product={p} size="md" />
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -118,6 +178,7 @@ export default function Products() {
           <table className="data-table">
             <thead>
               <tr>
+                <th style={{ width: 56 }}>Priority</th>
                 <th>Product</th>
                 <th>Category</th>
                 <th>Channels</th>
@@ -129,8 +190,22 @@ export default function Products() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p) => (
+              {sorted.map((p) => (
                 <tr key={p.id} onClick={() => navigate(`/products/${p.id}`)}>
+                  <td style={{ textAlign: 'center' }}>
+                    {(() => {
+                      const score = getPriorityScore(p);
+                      if (score >= 30) return (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(239,68,68,0.1)', fontSize: 10, fontWeight: 700, color: 'var(--danger)' }}>!</span>
+                      );
+                      if (score >= 15) return (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(245,158,11,0.1)', fontSize: 10, fontWeight: 700, color: 'var(--warning)' }}>!</span>
+                      );
+                      return (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', background: 'rgba(16,185,129,0.08)', fontSize: 10, fontWeight: 700, color: 'var(--success)' }}>✓</span>
+                      );
+                    })()}
+                  </td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <ProductImage product={p} size="sm" />

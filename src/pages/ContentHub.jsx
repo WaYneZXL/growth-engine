@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Image, Play, FileText, File, Sparkles, Eye, Grid3X3 } from 'lucide-react';
-import { contentAssets, products, formatNumber } from '../data/mockData';
+import { Search, Image, Play, FileText, File, Sparkles, Eye, Grid3X3, AlertTriangle, Share2 } from 'lucide-react';
+import { contentAssets, products, formatNumber, getChannelName } from '../data/mockData';
 import ChannelBadge from '../components/shared/ChannelBadge';
 
 const typeFilters = [
@@ -48,7 +48,9 @@ export default function ContentHub() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Digital Assets</h1>
-          <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>{total} assets across all SKUs</p>
+          <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>
+            {total} assets · {allAssets.filter(a => a.source === 'ai').length} AI-generated · {allAssets.filter(a => a.source === 'creator').length} creator UGC
+          </p>
         </div>
         <button className="btn btn-ghost"><Sparkles size={14} /> Generate with AI</button>
       </div>
@@ -80,6 +82,109 @@ export default function ContentHub() {
           <option value="shopify">Shopify</option>
           <option value="amazon">Amazon</option>
         </select>
+      </div>
+
+      {/* Actionable cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        {/* Content Gaps */}
+        {(() => {
+          const contentGapProducts = products
+            .map(p => {
+              const assets = contentAssets.filter(a => a.skuId === p.id);
+              const hasImage = assets.some(a => a.type === 'image');
+              const hasVideo = assets.some(a => a.type === 'video');
+              const hasCopy = assets.some(a => a.type === 'copy');
+              const missing = [];
+              if (!hasImage) missing.push('images');
+              if (!hasVideo) missing.push('video');
+              if (!hasCopy) missing.push('copy');
+              return { ...p, assetCount: assets.length, missing };
+            })
+            .filter(p => p.missing.length > 0 || p.assetCount < 3)
+            .sort((a, b) => a.assetCount - b.assetCount)
+            .slice(0, 4);
+
+          return (
+            <div className="card" style={{ padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <AlertTriangle size={14} style={{ color: 'var(--warning)' }} />
+                  <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>Content Gaps</h3>
+                </div>
+                <span style={{ fontSize: 11, color: 'var(--text-3)' }}>{contentGapProducts.length} SKUs need content</span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(contentGapProducts.length, 4)}, 1fr)`, gap: 10 }}>
+                {contentGapProducts.map(p => (
+                  <div key={p.id} onClick={() => navigate(`/products/${p.id}`)}
+                    style={{ padding: 12, borderRadius: 10, background: 'var(--surface-2)', cursor: 'pointer', transition: 'background 0.15s' }}
+                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(245,158,11,0.06)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'var(--surface-2)'}
+                  >
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }} className="truncate">{p.name}</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-3)', marginBottom: 6 }}>{p.assetCount} assets</div>
+                    <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                      {p.missing.map(m => (
+                        <span key={m} style={{ fontSize: 9, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: 'rgba(245,158,11,0.1)', color: 'var(--warning)' }}>
+                          Missing {m}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Expand Distribution */}
+        {(() => {
+          const underDistributed = contentAssets
+            .filter(a => {
+              const p = products.find(x => x.id === a.skuId);
+              return p && a.channels.length < p.channels.length && (a.type === 'image' || a.type === 'video');
+            })
+            .slice(0, 4);
+
+          return (
+            <div className="card" style={{ padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Share2 size={14} style={{ color: 'var(--brand)' }} />
+                  <h3 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>Expand Distribution</h3>
+                </div>
+                <span style={{ fontSize: 11, color: 'var(--text-3)' }}>{underDistributed.length} assets on fewer channels</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {underDistributed.map(a => {
+                  const p = products.find(x => x.id === a.skuId);
+                  const missingChannels = p ? p.channels.filter(ch => !a.channels.includes(ch)) : [];
+                  return (
+                    <div key={a.id}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'var(--surface-2)', transition: 'background 0.15s', cursor: 'default' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(240,107,37,0.05)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'var(--surface-2)'}
+                    >
+                      <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--text-1)', flex: 1, minWidth: 0 }} className="truncate">
+                        {a.name}
+                      </span>
+                      <div style={{ display: 'flex', gap: 3 }}>
+                        {a.channels.map(c => <ChannelBadge key={c} channelId={c} />)}
+                      </div>
+                      <span style={{ fontSize: 11, color: 'var(--text-3)', flexShrink: 0 }}>→</span>
+                      <div style={{ display: 'flex', gap: 3 }}>
+                        {missingChannels.map(c => (
+                          <span key={c} style={{ fontSize: 9, fontWeight: 600, padding: '2px 6px', borderRadius: 4, background: 'rgba(240,107,37,0.08)', color: 'var(--brand)' }}>
+                            + {getChannelName(c)}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Content */}
