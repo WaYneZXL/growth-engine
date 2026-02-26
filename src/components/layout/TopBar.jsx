@@ -1,123 +1,77 @@
-import { useLocation, Link } from 'react-router-dom';
-import { Search, Sparkles, Bell } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Search, Bell } from 'lucide-react';
 
-const breadcrumbMap = {
-  '/':                     ['Home'],
-  '/products':             ['Products'],
-  '/content':              ['Digital Assets'],
-  '/creators':             ['My Creators'],
-  '/workflows':            ['Workflows', 'Templates'],
-  '/workflows/tasks':      ['Workflows', 'Tasks'],
-  '/copilot':              ['AI Copilot'],
-  '/settings':             ['Settings'],
-  '/store/shopify':        ['Store Products', 'Shopify Products'],
-  '/store/consolidated':   ['Store Products', 'Consolidated Listings'],
-  '/store/bundles':        ['Store Products', 'Bundles'],
-  '/channel-listings':     ['Channel Listings'],
-  '/category-templates':   ['Category Templates'],
-  '/orders':               ['Orders'],
-  '/reviews':              ['Reviews'],
-  '/affiliates/find':      ['Find Creators'],
-  '/affiliates/magic-search': ['Find Creators', 'Magic Search'],
-  '/affiliates/lookalike': ['Find Creators', 'Lookalike'],
-  '/affiliates/outreach':  ['Creator Outreach'],
+const pageNames = {
+  '/':            'Command Center',
+  '/products':    'Products',
+  '/content':     'Digital Assets',
+  '/creators':    'Creator Network',
+  '/workflows':   'Workflows',
+  '/settings':    'Settings',
 };
 
-export default function TopBar({ onToggleCopilot }) {
+export default function TopBar() {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(Boolean);
 
-  const getBreadcrumbs = () => {
-    if (location.pathname === '/') return [{ label: 'Dashboard', path: '/' }];
-
-    // Dynamic detail routes
-    if (pathSegments[0] === 'products' && pathSegments[1]) {
-      return [
-        { label: 'Products', path: '/products' },
-        { label: pathSegments[1], path: location.pathname },
-      ];
-    }
-    if (pathSegments[0] === 'creators' && pathSegments[1]) {
-      return [
-        { label: 'My Creators', path: '/creators' },
-        { label: pathSegments[1], path: location.pathname },
-      ];
-    }
-
-    // Static mapped routes
-    const mapped = breadcrumbMap[location.pathname];
-    if (mapped) {
-      const parentPaths = {
-        'Products': '/products',
-        'Store Products': '/store/shopify',
-        'Find Creators': '/affiliates/find',
-        'Workflows': '/workflows/tasks',
-      };
-      return mapped.map((label, i) => ({
-        label,
-        path: i === mapped.length - 1 ? location.pathname : (parentPaths[label] || '/'),
-      }));
-    }
-
-    return [{ label: pathSegments[pathSegments.length - 1], path: location.pathname }];
+  const getPageName = () => {
+    if (pathSegments[0] === 'products' && pathSegments[1]) return 'Product Detail';
+    if (pathSegments[0] === 'creators' && pathSegments[1]) return 'Creator Detail';
+    return pageNames[location.pathname] || pathSegments[pathSegments.length - 1] || 'Home';
   };
 
-  const crumbs = getBreadcrumbs();
+  const pageName = getPageName();
 
   return (
-    <header className="topbar">
-      {/* Breadcrumbs */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14 }}>
-        {crumbs.map((crumb, i) => (
-          <span key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {i > 0 && <span style={{ color: 'var(--text-3)' }}>/</span>}
-            {i === crumbs.length - 1 ? (
-              <span style={{ color: 'var(--text-1)', fontWeight: 600 }}>{crumb.label}</span>
-            ) : (
-              <Link to={crumb.path} style={{ color: 'var(--text-2)', textDecoration: 'none' }}>{crumb.label}</Link>
-            )}
-          </span>
-        ))}
+    <header style={{
+      height: 52,
+      background: 'var(--surface)',
+      borderBottom: '1px solid var(--border)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '0 24px',
+      flexShrink: 0,
+    }}>
+      {/* Left: product name / page name */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15 }}>
+        <span style={{ fontWeight: 600, color: 'var(--text-1)' }}>Growth Engine</span>
+        <span style={{ color: 'var(--text-3)' }}>/</span>
+        <span style={{ color: 'var(--text-2)', fontWeight: 400 }}>{pageName}</span>
       </div>
 
       {/* Right side */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         {/* Search */}
         <div style={{ position: 'relative' }}>
-          <Search size={15} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
+          <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
           <input
             type="text"
             placeholder="Search SKUs, creators..."
             style={{
-              width: 240, height: 36, paddingLeft: 32, paddingRight: 44,
+              width: 200, height: 32, paddingLeft: 30, paddingRight: 40,
               borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface-2)',
-              fontSize: 13, color: 'var(--text-1)', outline: 'none',
+              fontSize: 12, color: 'var(--text-1)', outline: 'none',
             }}
           />
           <kbd style={{
-            position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+            position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
             fontSize: 10, color: 'var(--text-3)', background: '#fff', border: '1px solid var(--border)',
-            borderRadius: 4, padding: '2px 5px',
+            borderRadius: 4, padding: '1px 5px',
           }}>⌘K</kbd>
         </div>
 
         {/* Notifications */}
-        <button style={{ position: 'relative', width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 8, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-2)' }}>
-          <Bell size={18} />
-          <span style={{ position: 'absolute', top: 6, right: 6, width: 8, height: 8, background: 'var(--danger)', borderRadius: '50%' }} />
-        </button>
-
-        {/* Copilot toggle */}
-        <button
-          onClick={onToggleCopilot}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 6, height: 36, padding: '0 12px',
-            borderRadius: 8, border: 'none', background: 'rgba(124,92,252,0.1)',
-            color: '#7c5cfc', fontSize: 13, fontWeight: 500, cursor: 'pointer',
-          }}
-        >
-          <Sparkles size={15} className="animate-sparkle" />
-          Copilot
+        <button style={{
+          position: 'relative', width: 32, height: 32,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: 8, border: 'none', background: 'none', cursor: 'pointer', color: 'var(--text-2)',
+        }}>
+          <Bell size={16} />
+          <span style={{
+            position: 'absolute', top: 5, right: 5,
+            width: 7, height: 7, background: 'var(--danger)', borderRadius: '50%',
+          }} />
         </button>
       </div>
     </header>

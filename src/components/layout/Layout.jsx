@@ -1,26 +1,43 @@
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
-import CopilotPanel from './CopilotPanel';
+import RightPanel from './RightPanel';
 
 export default function Layout() {
-  const [copilotOpen, setCopilotOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
 
   return (
-    <div className="app-shell">
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((v) => !v)} onToggleCopilot={() => setCopilotOpen((v) => !v)} />
-      <div className={`main-content${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
-        <TopBar
-          onToggleCopilot={() => setCopilotOpen((v) => !v)}
-          sidebarCollapsed={sidebarCollapsed}
-        />
-        <div className="page-content animate-fade-in-up">
-          <Outlet />
-        </div>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: '60px 1fr 340px',
+      gridTemplateRows: 'auto 1fr',
+      height: '100vh',
+    }}>
+      {/* Thin left nav — spans full height */}
+      <div style={{ gridRow: '1 / -1' }}>
+        <Sidebar />
       </div>
-      <CopilotPanel isOpen={copilotOpen} onClose={() => setCopilotOpen(false)} />
+
+      {/* Top bar — spans center + right */}
+      <div style={{ gridColumn: '2 / -1' }}>
+        <TopBar />
+      </div>
+
+      {/* Center stage */}
+      <div style={{ overflow: 'auto', padding: '24px 32px' }}>
+        <Outlet />
+      </div>
+
+      {/* Right panel — persistent, always visible */}
+      <div style={{
+        borderLeft: '1px solid var(--border)',
+        background: '#fff',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        <RightPanel currentPath={location.pathname} />
+      </div>
     </div>
   );
 }

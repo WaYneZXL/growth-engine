@@ -58,52 +58,7 @@ body {
   font-size: 14px;
 }
 
-/* ── App shell ── */
-.app-shell { display: flex; min-height: 100vh; }
-
-/* ── Sidebar ── */
-.sidebar {
-  position: fixed;
-  left: 0; top: 0; bottom: 0;
-  width: 240px;
-  background: var(--sidebar-bg);
-  display: flex;
-  flex-direction: column;
-  z-index: 30;
-  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-}
-.sidebar.collapsed { width: 56px; }
-
-/* ── Main content ── */
-.main-content {
-  flex: 1;
-  margin-left: 240px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  transition: margin-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.main-content.sidebar-collapsed { margin-left: 56px; }
-
-/* ── TopBar ── */
-.topbar {
-  height: 56px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  flex-shrink: 0;
-  gap: 16px;
-}
-
-/* ── Page ── */
-.page-content { padding: 24px; flex: 1; min-width: 0; }
+#root { height: 100%; }
 
 /* ── Cards ── */
 .card {
@@ -287,4 +242,50 @@ body {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
+}
+
+/* ── Right panel ── */
+.right-panel-briefing-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+/* Right panel stagger animation on route change */
+@keyframes rp-card-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rp-card-anim {
+  animation: rp-card-in 0.2s ease-out both;
+}
+
+/* ── Decision feed card ── */
+.decision-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+  background: var(--surface);
+  transition: box-shadow 0.15s;
+}
+.decision-card:hover {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ── Triage card transition ── */
+.triage-card-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.triage-card-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+.triage-card-exit {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: all 0.3s ease;
 }

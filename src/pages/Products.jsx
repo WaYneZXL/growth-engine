@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Search, Plus, LayoutGrid, List, TrendingUp, TrendingDown, Users } from 'lucide-react';
+import { Search, Plus, LayoutGrid, List, TrendingUp, TrendingDown, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { products, formatCurrency } from '../data/mockData';
 import ProductImage from '../components/shared/ProductImage';
 import ChannelBadge from '../components/shared/ChannelBadge';
@@ -32,6 +32,21 @@ const getPriorityScore = (p) => {
   return score;
 };
 
+const getPriorityLabel = (score) => {
+  if (score >= 30) return { label: 'URGENT', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' };
+  if (score >= 15) return { label: 'REVIEW', color: '#f59e0b', bg: 'rgba(245,158,11,0.08)' };
+  return { label: 'ON TRACK', color: '#10b981', bg: 'rgba(16,185,129,0.08)' };
+};
+
+const triageRecommendations = [
+  "Title length exceeds TikTok's new 80-char sweet spot. Trim to focus on 'automatic laser pattern' — your #1 converting keyword from creator content.",
+  "Listing images are static product shots. Category data shows 32% higher conversion with lifestyle context. AIGC can generate 5 lifestyle variants.",
+  "Strong review sentiment (4.6★) but listing doesn't surface top keywords: 'portable', 'quiet', 'USB-C'. Refresh copy to mirror buyer language.",
+  "Creator video showing 'unboxing experience' drove 3x CTR. Current listing thumbnail doesn't match this angle. Consider updating hero image.",
+  "Price point is 12% above category median. Competitors offer bundle deals. Consider creating a bundle workflow or adjusting positioning.",
+  "High add-to-cart rate (8.2%) but low conversion (2.1%). Shipping info and return policy may be causing checkout abandonment.",
+];
+
 export default function Products() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -40,6 +55,10 @@ export default function Products() {
   const [channelFilter, setChannelFilter] = useState(searchParams.get('channel') || 'all');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'all');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'priority');
+  const [triageMode, setTriageMode] = useState(false);
+  const [triageIndex, setTriageIndex] = useState(0);
+  const [triageActions, setTriageActions] = useState([]);
+  const [triageComplete, setTriageComplete] = useState(false);
 
   const filtered = products.filter((p) => {
     if (search && !p.name.toLowerCase().includes(search.toLowerCase()) && !p.id.toLowerCase().includes(search.toLowerCase())) return false;
@@ -57,6 +76,176 @@ export default function Products() {
     return 0;
   });
 
+  // Triage items: only urgent + review products
+  const triageItems = sorted.filter(p => getPriorityScore(p) >= 15);
+
+  const handleTriageAction = (action) => {
+    setTriageActions(prev => [...prev, { product: triageItems[triageIndex]?.name, action }]);
+    if (triageIndex + 1 >= triageItems.length) {
+      setTriageComplete(true);
+    } else {
+      setTriageIndex(prev => prev + 1);
+    }
+  };
+
+  const resetTriage = () => {
+    setTriageMode(false);
+    setTriageIndex(0);
+    setTriageActions([]);
+    setTriageComplete(false);
+  };
+
+  // Triage complete view
+  if (triageMode && triageComplete) {
+    const optimized = triageActions.filter(a => a.action === 'Optimize Listing').length;
+    const generated = triageActions.filter(a => a.action === 'Generate Content').length;
+    const matched = triageActions.filter(a => a.action === 'Match Creators').length;
+    const skipped = triageActions.filter(a => a.action === 'Skip').length;
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Products</h1>
+          <button className="btn btn-subtle" onClick={resetTriage}>← Back to List</button>
+        </div>
+        <div className="card" style={{ padding: 40, textAlign: 'center', maxWidth: 520, margin: '40px auto' }}>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>✅</div>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-1)', marginBottom: 8 }}>Triage Complete</h2>
+          <div style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 20 }}>
+            {optimized > 0 && <span>{optimized} optimized. </span>}
+            {generated > 0 && <span>{generated} content generated. </span>}
+            {matched > 0 && <span>{matched} creator matched. </span>}
+            {skipped > 0 && <span>{skipped} skipped. </span>}
+          </div>
+          <div className="card" style={{ padding: 16, background: 'rgba(99,102,241,0.04)', border: '1px solid rgba(99,102,241,0.15)', textAlign: 'left' }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#6366f1', marginBottom: 4 }}>Agent Suggestion</div>
+            <div style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.5 }}>
+              Set auto-generate for listing score &lt; 75? This would catch issues before they impact revenue.
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+              <button className="btn btn-primary" style={{ background: '#6366f1', fontSize: 12, height: 32 }}>Enable Automation</button>
+              <button className="btn btn-subtle" style={{ fontSize: 12, height: 32 }}>Not Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Triage mode view
+  if (triageMode && triageItems.length > 0) {
+    const current = triageItems[triageIndex];
+    const score = getPriorityScore(current);
+    const priority = getPriorityLabel(score);
+    const progress = ((triageIndex) / triageItems.length) * 100;
+    const recommendation = triageRecommendations[triageIndex % triageRecommendations.length];
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Products</h1>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+              <button onClick={resetTriage} style={{ padding: '0 14px', height: 36, fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer', background: 'var(--surface)', color: 'var(--text-2)' }}>List View</button>
+              <button style={{ padding: '0 14px', height: 36, fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer', background: '#6366f1', color: '#fff' }}>Priority Triage</button>
+            </div>
+          </div>
+        </div>
+
+        {/* Triage card */}
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          {/* Progress bar */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <button onClick={() => triageIndex > 0 && setTriageIndex(i => i - 1)} disabled={triageIndex === 0} style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', cursor: triageIndex > 0 ? 'pointer' : 'default', color: triageIndex > 0 ? 'var(--text-2)' : 'var(--text-3)', opacity: triageIndex === 0 ? 0.5 : 1 }}>
+                <ChevronLeft size={14} />
+              </button>
+              <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{triageIndex + 1} of {triageItems.length} remaining</span>
+              <button onClick={() => triageIndex < triageItems.length - 1 && setTriageIndex(i => i + 1)} disabled={triageIndex >= triageItems.length - 1} style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface)', cursor: triageIndex < triageItems.length - 1 ? 'pointer' : 'default', color: triageIndex < triageItems.length - 1 ? 'var(--text-2)' : 'var(--text-3)', opacity: triageIndex >= triageItems.length - 1 ? 0.5 : 1 }}>
+                <ChevronRight size={14} />
+              </button>
+            </div>
+            <div style={{ width: 160, height: 6, borderRadius: 3, background: 'var(--border)', overflow: 'hidden' }}>
+              <div style={{ width: `${progress}%`, height: '100%', borderRadius: 3, background: '#6366f1', transition: 'width 0.3s ease' }} />
+            </div>
+          </div>
+
+          {/* Card content */}
+          <div style={{ padding: '32px 40px' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-1)', marginBottom: 6 }}>{current.name}</h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: 'var(--text-2)' }}>
+                  <span>{formatCurrency(current.gmv30d)}/mo GMV</span>
+                  <span>·</span>
+                  <span>{current.channels.length} channels</span>
+                  <span>·</span>
+                  <span>{current.creatorCount} creators</span>
+                </div>
+              </div>
+              <span style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
+                color: priority.color, background: priority.bg,
+                padding: '5px 12px', borderRadius: 6,
+              }}>
+                {priority.label}
+              </span>
+            </div>
+
+            {/* Signal cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28 }}>
+              <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Listing Score</div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: current.listingScore < 80 ? 'var(--danger)' : 'var(--text-1)' }}>{current.listingScore}</div>
+                {current.listingScore < 85 && <div style={{ fontSize: 11, color: 'var(--danger)', fontWeight: 500, marginTop: 2 }}>↓ needs attention</div>}
+              </div>
+              <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Content</div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-1)' }}>{current.contentAssets || 6}</div>
+                <div style={{ fontSize: 11, color: 'var(--warning)', fontWeight: 500, marginTop: 2 }}>{current.contentGaps || 2} gaps</div>
+              </div>
+              <div className="card" style={{ padding: 16, textAlign: 'center' }}>
+                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Creators</div>
+                <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-1)' }}>{current.creatorCount}</div>
+                {current.creatorCount < 3 && <div style={{ fontSize: 11, color: 'var(--warning)', fontWeight: 500, marginTop: 2 }}>need 3+</div>}
+              </div>
+            </div>
+
+            {/* AI Recommendation */}
+            <div style={{
+              background: 'rgba(99,102,241,0.04)',
+              border: '1px solid rgba(99,102,241,0.12)',
+              borderRadius: 10,
+              padding: 18,
+              marginBottom: 28,
+            }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: '#6366f1', marginBottom: 6 }}>AI Recommendation</div>
+              <div style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.6 }}>
+                "{recommendation}"
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button onClick={() => handleTriageAction('Optimize Listing')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: '#6366f1', color: '#fff', border: 'none', cursor: 'pointer' }}>
+                <span style={{ textDecoration: 'underline', textDecorationColor: 'rgba(255,255,255,0.4)', textUnderlineOffset: 2 }}>O</span>ptimize Listing
+              </button>
+              <button onClick={() => handleTriageAction('Generate Content')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: 'transparent', color: '#6366f1', border: '1px solid rgba(99,102,241,0.3)', cursor: 'pointer' }}>
+                <span style={{ textDecoration: 'underline', textDecorationColor: 'rgba(99,102,241,0.4)', textUnderlineOffset: 2 }}>G</span>enerate Content
+              </button>
+              <button onClick={() => handleTriageAction('Match Creators')} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 600, background: 'transparent', color: '#6366f1', border: '1px solid rgba(99,102,241,0.3)', cursor: 'pointer' }}>
+                <span style={{ textDecoration: 'underline', textDecorationColor: 'rgba(99,102,241,0.4)', textUnderlineOffset: 2 }}>M</span>atch Creators
+              </button>
+              <button onClick={() => handleTriageAction('Skip')} style={{ padding: '10px 20px', borderRadius: 8, fontSize: 13, fontWeight: 500, background: 'transparent', color: 'var(--text-3)', border: '1px solid var(--border)', cursor: 'pointer', marginLeft: 'auto' }}>
+                <span style={{ textDecoration: 'underline', textDecorationColor: 'rgba(156,163,175,0.4)', textUnderlineOffset: 2 }}>S</span>kip
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
       {/* Header */}
@@ -65,7 +254,14 @@ export default function Products() {
           <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)' }}>Products</h1>
           <p style={{ fontSize: 13, color: 'var(--text-2)', marginTop: 2 }}>{products.length} SKUs across all channels</p>
         </div>
-        <button className="btn btn-primary"><Plus size={14} /> Add Product</button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          {/* Triage toggle */}
+          <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+            <button style={{ padding: '0 14px', height: 36, fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer', background: !triageMode ? '#6366f1' : 'var(--surface)', color: !triageMode ? '#fff' : 'var(--text-2)' }} onClick={() => setTriageMode(false)}>List View</button>
+            <button style={{ padding: '0 14px', height: 36, fontSize: 13, fontWeight: 500, border: 'none', cursor: 'pointer', background: triageMode ? '#6366f1' : 'var(--surface)', color: triageMode ? '#fff' : 'var(--text-2)' }} onClick={() => { setTriageMode(true); setTriageIndex(0); setTriageActions([]); setTriageComplete(false); }}>Priority Triage</button>
+          </div>
+          <button className="btn btn-primary"><Plus size={14} /> Add Product</button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -93,7 +289,6 @@ export default function Products() {
           <option value="listing-asc">Sort: Listing Score ↑</option>
           <option value="growth-desc">Sort: Growth ↓</option>
         </select>
-        {/* View toggle */}
         <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', marginLeft: 'auto' }}>
           {[{ v: 'grid', Icon: LayoutGrid }, { v: 'list', Icon: List }].map(({ v, Icon }) => (
             <button key={v} onClick={() => setView(v)} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer', background: view === v ? 'rgba(240,107,37,0.1)' : 'var(--surface)', color: view === v ? 'var(--brand)' : 'var(--text-3)' }}>
