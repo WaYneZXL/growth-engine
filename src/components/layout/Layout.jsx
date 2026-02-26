@@ -10,7 +10,7 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((v) => !v)} />
+      <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((v) => !v)} onToggleCopilot={() => setCopilotOpen((v) => !v)} />
       <div className={`main-content${sidebarCollapsed ? ' sidebar-collapsed' : ''}`}>
         <TopBar
           onToggleCopilot={() => setCopilotOpen((v) => !v)}

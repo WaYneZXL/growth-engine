@@ -2,13 +2,24 @@ import { useLocation, Link } from 'react-router-dom';
 import { Search, Sparkles, Bell } from 'lucide-react';
 
 const breadcrumbMap = {
-  '/':          ['Dashboard'],
-  '/products':  ['Products'],
-  '/content':   ['Digital Assets'],
-  '/creators':  ['Creator Network'],
-  '/workflows': ['Playbooks'],
-  '/copilot':   ['AI Copilot'],
-  '/settings':  ['Settings'],
+  '/':                     ['Home'],
+  '/products':             ['Products'],
+  '/content':              ['Digital Assets'],
+  '/creators':             ['My Creators'],
+  '/workflows':            ['Workflow Templates'],
+  '/copilot':              ['AI Copilot'],
+  '/settings':             ['Settings'],
+  '/store/shopify':        ['Store Products', 'Shopify Products'],
+  '/store/consolidated':   ['Store Products', 'Consolidated Listings'],
+  '/store/bundles':        ['Store Products', 'Bundles'],
+  '/channel-listings':     ['Channel Listings'],
+  '/category-templates':   ['Category Templates'],
+  '/orders':               ['Orders'],
+  '/reviews':              ['Reviews'],
+  '/affiliates/find':      ['Find Creators'],
+  '/affiliates/magic-search': ['Find Creators', 'Magic Search'],
+  '/affiliates/lookalike': ['Find Creators', 'Lookalike'],
+  '/affiliates/outreach':  ['Creator Outreach'],
 };
 
 export default function TopBar({ onToggleCopilot }) {
@@ -17,15 +28,36 @@ export default function TopBar({ onToggleCopilot }) {
 
   const getBreadcrumbs = () => {
     if (location.pathname === '/') return [{ label: 'Dashboard', path: '/' }];
-    const crumbs = [];
-    if (pathSegments[0] === 'products') {
-      crumbs.push({ label: 'Products', path: '/products' });
-      if (pathSegments[1]) crumbs.push({ label: pathSegments[1], path: location.pathname });
-    } else {
-      const mapped = breadcrumbMap[location.pathname];
-      if (mapped) mapped.forEach((label, i) => crumbs.push({ label, path: i === mapped.length - 1 ? location.pathname : '/' }));
+
+    // Dynamic detail routes
+    if (pathSegments[0] === 'products' && pathSegments[1]) {
+      return [
+        { label: 'Products', path: '/products' },
+        { label: pathSegments[1], path: location.pathname },
+      ];
     }
-    return crumbs;
+    if (pathSegments[0] === 'creators' && pathSegments[1]) {
+      return [
+        { label: 'My Creators', path: '/creators' },
+        { label: pathSegments[1], path: location.pathname },
+      ];
+    }
+
+    // Static mapped routes
+    const mapped = breadcrumbMap[location.pathname];
+    if (mapped) {
+      const parentPaths = {
+        'Products': '/products',
+        'Store Products': '/store/shopify',
+        'Find Creators': '/affiliates/find',
+      };
+      return mapped.map((label, i) => ({
+        label,
+        path: i === mapped.length - 1 ? location.pathname : (parentPaths[label] || '/'),
+      }));
+    }
+
+    return [{ label: pathSegments[pathSegments.length - 1], path: location.pathname }];
   };
 
   const crumbs = getBreadcrumbs();
