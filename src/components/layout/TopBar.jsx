@@ -6,7 +6,8 @@ const breadcrumbMap = {
   '/products':             ['Products'],
   '/content':              ['Digital Assets'],
   '/creators':             ['My Creators'],
-  '/workflows':            ['Workflow Templates'],
+  '/workflows':            ['Workflows', 'Templates'],
+  '/workflows/tasks':      ['Workflows', 'Tasks'],
   '/copilot':              ['AI Copilot'],
   '/settings':             ['Settings'],
   '/store/shopify':        ['Store Products', 'Shopify Products'],
@@ -50,6 +51,7 @@ export default function TopBar({ onToggleCopilot }) {
         'Products': '/products',
         'Store Products': '/store/shopify',
         'Find Creators': '/affiliates/find',
+        'Workflows': '/workflows/tasks',
       };
       return mapped.map((label, i) => ({
         label,

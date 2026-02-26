@@ -3,7 +3,7 @@ import {
   Package, ListChecks, FolderTree, ClipboardList, Star,
   Home, BarChart3, Image,
   Sparkles, Send, Users,
-  BookOpen, Settings, PanelLeftClose, PanelLeftOpen, ChevronDown,
+  Workflow, BookOpen, Settings, PanelLeftClose, PanelLeftOpen, ChevronDown,
 } from 'lucide-react';
 
 /* ── Navigation structure ── */
@@ -47,10 +47,18 @@ const mainSections = [
       { path: '/creators', icon: Users, label: 'My creators', isNew: true },
     ],
   },
-];
-
-const bottomItems = [
-  { path: '/workflows', icon: BookOpen, label: 'Workflow Templates', isNew: true },
+  {
+    header: 'Workflows',
+    items: [
+      {
+        path: '/workflows/tasks', icon: Workflow, label: 'Workflows', isNew: true,
+        children: [
+          { path: '/workflows/tasks', label: 'Tasks' },
+          { path: '/workflows', label: 'Templates' },
+        ],
+      },
+    ],
+  },
 ];
 
 /* ── Styles ── */
@@ -133,8 +141,9 @@ const S = {
 };
 
 /* ── Helpers ── */
-function isPathActive(itemPath, locationPath) {
+function isPathActive(itemPath, locationPath, exact) {
   if (itemPath === '/') return locationPath === '/';
+  if (exact) return locationPath === itemPath;
   return locationPath === itemPath || locationPath.startsWith(itemPath + '/');
 }
 
@@ -179,9 +188,9 @@ function NavItem({ item, collapsed, locationPath }) {
       {!collapsed && item.children && parentActive && (
         <div>
           {item.children.map((child) => {
-            const childActive = isPathActive(child.path, locationPath);
+            const childActive = isPathActive(child.path, locationPath, true);
             return (
-              <NavLink key={child.path} to={child.path} style={S.childItem(childActive)}>
+              <NavLink key={child.path + child.label} to={child.path} style={S.childItem(childActive)}>
                 {child.label}
               </NavLink>
             );
@@ -226,10 +235,6 @@ export default function Sidebar({ collapsed, onToggle, onToggleCopilot }) {
 
       {/* Bottom pinned */}
       <div style={S.bottom}>
-        {bottomItems.map((item) => (
-          <NavItem key={item.path} item={item} collapsed={collapsed} locationPath={location.pathname} />
-        ))}
-
         <NavLink
           to="/settings"
           style={S.navItem(location.pathname === '/settings')}

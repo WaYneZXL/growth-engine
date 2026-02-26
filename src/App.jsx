@@ -7,6 +7,7 @@ import ContentHub from './pages/ContentHub';
 import CreatorNetwork from './pages/CreatorNetwork';
 import CreatorDetail from './pages/CreatorDetail';
 import Workflows from './pages/Workflows';
+import WorkflowTasks from './pages/WorkflowTasks';
 import AICopilot from './pages/AICopilot';
 import ExistingFeedPage from './pages/ExistingFeedPage';
 
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="creators" element={<CreatorNetwork />} />
           <Route path="creators/:id" element={<CreatorDetail />} />
           <Route path="workflows" element={<Workflows />} />
+          <Route path="workflows/tasks" element={<WorkflowTasks />} />
           <Route path="copilot" element={<AICopilot />} />
 
           {/* Store Management (existing Feed) */}
