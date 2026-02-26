@@ -220,7 +220,7 @@ export default function CreatorNetwork() {
                         </div>
                         <div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)' }}>{c.name}</span>
+                            <span onClick={(e) => { e.stopPropagation(); navigate(`/creators/${c.id}`); }} style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-1)', cursor: 'pointer', borderBottom: '1px dashed transparent', transition: 'border-color 0.15s' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--brand)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'transparent'}>{c.name}</span>
                             {skuIds.length > 0 && (
                               <span style={{ fontSize: 9, fontWeight: 600, padding: '1px 5px', borderRadius: 999, background: 'rgba(124,92,252,0.1)', color: 'var(--ai)' }}>{skuIds.length} SKUs</span>
                             )}

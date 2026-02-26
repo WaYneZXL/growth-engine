@@ -5,6 +5,7 @@ import Products from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import ContentHub from './pages/ContentHub';
 import CreatorNetwork from './pages/CreatorNetwork';
+import CreatorDetail from './pages/CreatorDetail';
 import Workflows from './pages/Workflows';
 import AICopilot from './pages/AICopilot';
 import Settings from './pages/Settings';
@@ -19,6 +20,7 @@ export default function App() {
           <Route path="products/:id" element={<ProductDetail />} />
           <Route path="content" element={<ContentHub />} />
           <Route path="creators" element={<CreatorNetwork />} />
+          <Route path="creators/:id" element={<CreatorDetail />} />
           <Route path="workflows" element={<Workflows />} />
           <Route path="copilot" element={<AICopilot />} />
           <Route path="settings" element={<Settings />} />
