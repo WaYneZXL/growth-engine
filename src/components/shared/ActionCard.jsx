@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, Check, Loader2, Undo2 } from 'lucide-react';
 import SkipFeedback from './SkipFeedback';
+import ProductImage from './ProductImage';
+import ListingScoreRing from './ListingScoreRing';
+import { products, formatCurrency } from '../../data/mockData';
 
 const priorityConfig = {
   critical: { color: '#ef4444', bg: 'rgba(239,68,68,0.08)', label: 'Revenue at Risk', icon: '\ud83d\udfe2' },
@@ -203,6 +206,31 @@ export default function ActionCard({ action, onApply, onSkip, onUndo, isResolved
                   </div>
                 ))}
               </div>
+
+              {/* Inline product context */}
+              {action.sku && (() => {
+                const prod = products.find(p => p.id === action.sku);
+                if (!prod) return null;
+                return (
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    marginTop: 12, padding: '10px 12px',
+                    background: 'var(--surface-2)', borderRadius: 8,
+                    border: '1px solid var(--border)',
+                  }}>
+                    <ProductImage product={prod} size="sm" />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-1)' }}>{prod.name}</div>
+                      <div style={{ fontSize: 11, color: 'var(--text-3)' }}>{prod.id}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-1)' }}>{formatCurrency(prod.gmv30d)}</div>
+                      <div style={{ fontSize: 10, color: 'var(--text-3)' }}>30d GMV</div>
+                    </div>
+                    <ListingScoreRing score={prod.listingScore} size={32} strokeWidth={2.5} />
+                  </div>
+                );
+              })()}
             </div>
           )}
         </>

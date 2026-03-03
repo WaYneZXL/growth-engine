@@ -1,18 +1,19 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
-import RightPanel from './RightPanel';
+import InspectorPanel from './InspectorPanel';
+import { useActionQueue } from '../../context/ActionQueueContext';
 
 export default function Layout() {
-  const location = useLocation();
-  const isActionQueue = location.pathname === '/';
+  const { inspector } = useActionQueue();
 
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: '60px 1fr 340px',
+      gridTemplateColumns: inspector.open ? '60px 1fr 420px' : '60px 1fr',
       gridTemplateRows: 'auto 1fr',
       height: '100vh',
+      transition: 'grid-template-columns 0.3s ease',
     }}>
       {/* Thin left nav — spans full height */}
       <div style={{ gridRow: '1 / -1' }}>
@@ -20,7 +21,7 @@ export default function Layout() {
       </div>
 
       {/* Top bar — spans center + right */}
-      <div style={{ gridColumn: '2 / -1' }}>
+      <div style={{ gridColumn: inspector.open ? '2 / -1' : '2' }}>
         <TopBar />
       </div>
 
@@ -29,16 +30,18 @@ export default function Layout() {
         <Outlet />
       </div>
 
-      {/* Right panel — always visible, mode varies */}
-      <div style={{
-        borderLeft: '1px solid var(--border)',
-        background: '#fff',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-      }}>
-        <RightPanel currentPath={location.pathname} mode={isActionQueue ? 'summary' : 'contextual'} />
-      </div>
+      {/* Inspector panel — slides in when open */}
+      {inspector.open && (
+        <div style={{
+          borderLeft: '1px solid var(--border)',
+          background: '#fff',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          <InspectorPanel />
+        </div>
+      )}
     </div>
   );
 }

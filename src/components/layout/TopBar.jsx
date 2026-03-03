@@ -1,27 +1,10 @@
-import { useLocation } from 'react-router-dom';
-import { Search, Bell } from 'lucide-react';
-
-const pageNames = {
-  '/':            'Action Queue',
-  '/overview':    'Overview',
-  '/products':    'Products',
-  '/content':     'Digital Assets',
-  '/creators':    'Creator Network',
-  '/workflows':   'Workflows',
-  '/settings':    'Settings',
-};
+import { Bell, Search, Zap } from 'lucide-react';
+import { useActionQueue } from '../../context/ActionQueueContext';
 
 export default function TopBar() {
-  const location = useLocation();
-  const pathSegments = location.pathname.split('/').filter(Boolean);
-
-  const getPageName = () => {
-    if (pathSegments[0] === 'products' && pathSegments[1]) return 'Product Detail';
-    if (pathSegments[0] === 'creators' && pathSegments[1]) return 'Creator Detail';
-    return pageNames[location.pathname] || pathSegments[pathSegments.length - 1] || 'Home';
-  };
-
-  const pageName = getPageName();
+  const { actions } = useActionQueue();
+  const pendingCount = actions.filter(a => a.status === 'pending').length;
+  const lastActionTime = '3 min ago';
 
   return (
     <header style={{
@@ -34,35 +17,48 @@ export default function TopBar() {
       padding: '0 24px',
       flexShrink: 0,
     }}>
-      {/* Left: product name / page name */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15 }}>
-        <span style={{ fontWeight: 600, color: 'var(--text-1)' }}>Growth Engine</span>
-        <span style={{ color: 'var(--text-3)' }}>/</span>
-        <span style={{ color: 'var(--text-2)', fontWeight: 400 }}>{pageName}</span>
+      {/* Left: Agent identity + status */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Zap size={15} style={{ color: 'var(--ai)' }} />
+          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-1)' }}>One Agent</span>
+        </div>
+        <span style={{ color: 'var(--border)', fontSize: 14 }}>|</span>
+        <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+          Monitoring 24 SKUs · Last action: {lastActionTime}
+        </span>
+        {pendingCount > 0 && (
+          <span style={{
+            fontSize: 10, fontWeight: 600,
+            color: 'var(--brand)', background: 'rgba(240,107,37,0.08)',
+            padding: '2px 8px', borderRadius: 10,
+          }}>
+            {pendingCount} pending
+          </span>
+        )}
       </div>
 
-      {/* Right side */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        {/* Search */}
-        <div style={{ position: 'relative' }}>
-          <Search size={14} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
-          <input
-            type="text"
-            placeholder="Search SKUs, creators..."
-            style={{
-              width: 200, height: 32, paddingLeft: 30, paddingRight: 40,
-              borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface-2)',
-              fontSize: 12, color: 'var(--text-1)', outline: 'none',
-            }}
-          />
-          <kbd style={{
-            position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-            fontSize: 10, color: 'var(--text-3)', background: '#fff', border: '1px solid var(--border)',
-            borderRadius: 4, padding: '1px 5px',
-          }}>⌘K</kbd>
-        </div>
+      {/* Center: Command input */}
+      <div style={{ position: 'relative', flex: '0 1 360px' }}>
+        <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-3)' }} />
+        <input
+          type="text"
+          placeholder="Ask or assign a task..."
+          style={{
+            width: '100%', height: 34, paddingLeft: 34, paddingRight: 48,
+            borderRadius: 10, border: '1px solid var(--border)', background: 'var(--surface-2)',
+            fontSize: 12, color: 'var(--text-1)', outline: 'none',
+          }}
+        />
+        <kbd style={{
+          position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)',
+          fontSize: 10, color: 'var(--text-3)', background: '#fff', border: '1px solid var(--border)',
+          borderRadius: 4, padding: '1px 5px',
+        }}>⌘K</kbd>
+      </div>
 
-        {/* Notifications */}
+      {/* Right: Notifications */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <button style={{
           position: 'relative', width: 32, height: 32,
           display: 'flex', alignItems: 'center', justifyContent: 'center',

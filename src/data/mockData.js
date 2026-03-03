@@ -1625,6 +1625,38 @@ export const briefings = {
   },
 };
 
+// --- Agent Activity Timeline ---
+export const agentActivity = [
+  { id: 'AA-001', time: '8:02 AM', type: 'scan', title: 'Morning portfolio scan complete', detail: 'Analyzed 24 SKUs across 3 channels. Found 3 revenue risks, 2 growth opportunities, and 1 pattern insight.' },
+  { id: 'AA-002', time: '8:15 AM', type: 'applied', title: 'Auto-applied: Keyword update for Smart Watch Ultra', detail: 'Added "fitness tracker" to Amazon backend keywords — 12K monthly searches. Low-risk change, auto-approved per your rules.' },
+  { id: 'AA-003', time: '9:30 AM', type: 'analysis', title: 'Detected TikTok CVR drop on Portable Blender', detail: 'Conversion rate dropped from 4.2% to 2.8% over 14 days. Root cause: title length (142 chars vs algorithm preference of <80). Created action AQ-001.' },
+  { id: 'AA-004', time: '10:45 AM', type: 'learning', title: 'Pattern: Creator UGC converts 2.5x better on TikTok', detail: 'Cross-portfolio analysis of 35 content assets confirms creator content outperforms seller uploads by 2.5x on TikTok conversion.' },
+  { id: 'AA-005', time: '11:20 AM', type: 'applied', title: 'Auto-applied: Shopify meta description for Hydrating Serum', detail: 'Updated meta description with "deep hydration" keyword — matches creator-validated language. SEO improvement, no conversion risk.' },
+  { id: 'AA-006', time: '1:15 PM', type: 'analysis', title: 'Competitor price movement detected', detail: '3 competing earbuds on Shopify dropped to $69-74.99 range. Your Wireless Earbuds Pro at $79.99 may need price adjustment.' },
+  { id: 'AA-007', time: '2:30 PM', type: 'scan', title: 'Content gap scan complete', detail: '8 TikTok-listed SKUs have zero video content. Batch AIGC generation available at $12.80 total — created action AQ-005.' },
+  { id: 'AA-008', time: '3:00 PM', type: 'learning', title: 'Insight: Lifestyle hero images lift Shopify CVR +23%', detail: 'Analyzed top 50 Shopify electronics PDPs. Lifestyle hero images outperform white-background shots by 23% on conversion.' },
+];
+
+// --- Agent Stats ---
+export const agentStats = {
+  actionsThisWeek: 12,
+  approved: 7,
+  skipped: 2,
+  autoApplied: 3,
+  revenueImpact: 18400,
+  overrideRate: 14,
+};
+
+// --- Explore Alerts (agent-surfaced entities needing attention) ---
+export const exploreAlerts = [
+  { type: 'product', id: 'SKU-0863', name: 'Portable Blender', signal: 'urgent', reason: 'TikTok CVR dropped 33% in 14 days — revenue at risk' },
+  { type: 'product', id: 'SKU-0205', name: 'Premium Yoga Mat', signal: 'urgent', reason: 'Declining -10.8% MoM across both channels' },
+  { type: 'creator', id: 'CR-010', name: 'Jake Morris', signal: 'review', reason: 'Paused 3 weeks ago — was driving $5.6K/mo on Shopify' },
+  { type: 'product', id: 'SKU-0042', name: 'Wireless Earbuds Pro', signal: 'opportunity', reason: '0 dedicated TikTok creators despite 25% growth — $4.8K/mo upside' },
+  { type: 'content', id: 'CA-011', name: 'Yoga Mat Flat Lay', signal: 'review', reason: 'Stale asset — created 42 days ago, category avg refresh is 21 days' },
+  { type: 'creator', id: 'CR-013', name: 'Nina Olsen', signal: 'opportunity', reason: 'Highest CVR in network (6.8%) — only assigned to 1 SKU currently' },
+];
+
 // --- Helper functions ---
 export const formatCurrency = (value) => {
   if (value >= 1000) return `$${(value / 1000).toFixed(1)}k`;
