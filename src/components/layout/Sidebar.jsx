@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, BarChart3, Image, Users, BookOpen, Settings } from 'lucide-react';
+import { Zap, LayoutDashboard, BarChart3, Image, Users, BookOpen, Settings } from 'lucide-react';
 
 const navItems = [
-  { path: '/',          icon: Home,       label: 'Command Center' },
-  { path: '/products',  icon: BarChart3,  label: 'Products' },
-  { path: '/content',   icon: Image,      label: 'Digital Assets' },
-  { path: '/creators',  icon: Users,      label: 'Creator Network' },
+  { path: '/',          icon: Zap,             label: 'Action Queue' },
+  { path: '/overview',  icon: LayoutDashboard, label: 'Overview' },
+  { path: '/products',  icon: BarChart3,       label: 'Products' },
+  { path: '/content',   icon: Image,           label: 'Digital Assets' },
+  { path: '/creators',  icon: Users,           label: 'Creator Network' },
 ];
 
 const bottomItems = [

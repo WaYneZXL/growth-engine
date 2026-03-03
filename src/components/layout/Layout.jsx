@@ -5,6 +5,7 @@ import RightPanel from './RightPanel';
 
 export default function Layout() {
   const location = useLocation();
+  const isActionQueue = location.pathname === '/';
 
   return (
     <div style={{
@@ -28,7 +29,7 @@ export default function Layout() {
         <Outlet />
       </div>
 
-      {/* Right panel — persistent, always visible */}
+      {/* Right panel — always visible, mode varies */}
       <div style={{
         borderLeft: '1px solid var(--border)',
         background: '#fff',
@@ -36,7 +37,7 @@ export default function Layout() {
         display: 'flex',
         flexDirection: 'column',
       }}>
-        <RightPanel currentPath={location.pathname} />
+        <RightPanel currentPath={location.pathname} mode={isActionQueue ? 'summary' : 'contextual'} />
       </div>
     </div>
   );

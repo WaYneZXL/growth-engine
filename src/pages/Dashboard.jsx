@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Sparkles, ArrowRight, Zap } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from 'recharts';
-import { formatCurrency } from '../data/mockData';
+import { useActionQueue } from '../context/ActionQueueContext';
+import ActionCard from '../components/shared/ActionCard';
 
 /* ═══════════════════════════════════════════════
    Static data
@@ -34,36 +34,36 @@ const gmvByChannel = [
 
 const lifecycleStages = [
   {
-    stage: 'New / Cold Start', count: 3,
-    skus: ['LED Desk Lamp', 'Organic Face Cream', 'Yoga Mat Pro'],
+    stage: 'New / Cold Start', count: 2,
+    skus: ['Vitamin C Face Cream', 'Noise Cancelling Headphones'],
     color: '#6366f1', icon: '🌱',
     description: 'Need content generation & creator seeding',
     action: 'Generate launch content',
   },
   {
-    stage: 'Validating', count: 5,
-    skus: ['Interactive Pet Toy', 'Wireless Charger', 'Bamboo Bottle', 'Smart Scale', 'Aroma Diffuser'],
+    stage: 'Validating', count: 2,
+    skus: ['Interactive Pet Toy', 'Resistance Bands Set'],
     color: '#f59e0b', icon: '🧪',
     description: 'Testing channels & content angles',
     action: 'Review performance data',
   },
   {
-    stage: 'Scaling Winners', count: 10,
-    skus: ['Smart Pet Feeder', 'Wireless Earbuds Pro', 'Smart Watch Ultra', '+ 7 more'],
+    stage: 'Scaling Winners', count: 4,
+    skus: ['Wireless Earbuds Pro', 'Smart Watch Ultra', 'Hydrating Serum', 'Automatic Coffee Machine'],
     color: '#10b981', icon: '🚀',
     description: 'Expand channels & increase creator coverage',
     action: 'Expand to new channels',
   },
   {
-    stage: 'Mature / Optimize', count: 4,
-    skus: ['Portable Blender', 'Classic Notebook', 'Phone Case Pro', 'USB Hub'],
+    stage: 'Mature / Optimize', count: 1,
+    skus: ['Portable Blender'],
     color: '#64748b', icon: '📊',
     description: 'Optimize margins & defend position',
     action: 'Refresh stale content',
   },
   {
-    stage: 'Declining', count: 2,
-    skus: ['Bamboo Cutting Board', 'Basic Earphones'],
+    stage: 'Declining', count: 3,
+    skus: ['Premium Yoga Mat', 'LED Desk Lamp Pro', 'Bamboo Cutting Board Set'],
     color: '#ef4444', icon: '⚠️',
     description: 'Diagnose & decide: fix or sunset',
     action: 'Run diagnosis',
@@ -72,54 +72,7 @@ const lifecycleStages = [
 
 const totalSKUs = lifecycleStages.reduce((s, l) => s + l.count, 0);
 
-const decisionFeed = [
-  {
-    id: 1, urgency: 'urgent', impact: '$2,400/mo',
-    sku: 'Smart Pet Feeder',
-    headline: 'TikTok conversion dropped 34% in 14 days',
-    explanation: 'Conversion fell from 4.2% to 2.8%. Listing score dropped 92→78. Likely cause: TikTok algorithm update changed title length preferences. Your title is 142 chars — new sweet spot is under 80.',
-    primaryAction: 'Optimize Listing', secondaryAction: 'View SKU',
-    path: '/products/SKU-001',
-  },
-  {
-    id: 2, urgency: 'urgent', impact: '$1,800/mo',
-    sku: 'Wireless Earbuds Pro',
-    headline: 'Zero creator coverage on fastest-growing SKU',
-    explanation: 'This SKU grew 45% MoM on Shopify but has zero creators on TikTok. Competitor products average 12 active creators. 5 matched creators ready to invite — avg 3.2% conversion rate.',
-    primaryAction: 'Invite Creators', secondaryAction: 'View Matches',
-    path: '/products/SKU-0042',
-  },
-  {
-    id: 3, urgency: 'review', impact: '$950/mo',
-    sku: 'Hydrating Serum',
-    headline: 'Cross-channel return rate anomaly detected',
-    explanation: 'TikTok return rate is 15.1% vs Shopify 4.2% for the same product. Top return reason: "not as described." TikTok hero image may set unrealistic texture expectations.',
-    primaryAction: 'Compare Listings', secondaryAction: 'Generate New Images',
-    path: '/products/SKU-0118',
-  },
-  {
-    id: 4, urgency: 'review', impact: '$720/mo',
-    sku: 'Portable Blender',
-    headline: 'Content going stale — no updates in 38 days',
-    explanation: 'Listing content unchanged for 38 days across all channels. Top 3 competitors refreshed listings within last 2 weeks. Recent review sentiment suggests "travel size" is an underused selling angle.',
-    primaryAction: 'Generate Content', secondaryAction: 'View Reviews',
-    path: '/products/SKU-0291',
-  },
-  {
-    id: 5, urgency: 'opportunity', impact: '$3,100/mo',
-    sku: 'Smart Watch Ultra',
-    headline: 'Ready for Shopify expansion — TikTok data validates demand',
-    explanation: 'Strong TikTok performance ($8.2K GMV/mo, 4.8% conversion). Not yet listed on Shopify. Creator video "daily wear test" validated key selling points. Cross-channel expansion could add ~$3.1K/mo.',
-    primaryAction: 'Create Shopify Listing', secondaryAction: 'View TikTok Data',
-    path: '/products/SKU-0384',
-  },
-];
-
-const urgencyConfig = {
-  urgent:      { label: 'URGENT',      color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
-  review:      { label: 'REVIEW',      color: '#f59e0b', bg: 'rgba(245,158,11,0.1)' },
-  opportunity: { label: 'OPPORTUNITY', color: '#10b981', bg: 'rgba(16,185,129,0.1)' },
-};
+const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
 
 /* ═══════════════════════════════════════════════
    Helpers
@@ -162,30 +115,37 @@ const ChartTooltip = ({ active, payload, label }) => {
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [dismissed, setDismissed] = useState(new Set());
-  const [undoItem, setUndoItem] = useState(null);
+  const { actions, handleApply, handleSkip } = useActionQueue();
 
-  const handleDismiss = (card) => {
-    setDismissed(prev => new Set([...prev, card.id]));
-    setUndoItem(card);
-    setTimeout(() => setUndoItem(prev => prev?.id === card.id ? null : prev), 5000);
-  };
+  const pendingActions = actions
+    .filter(a => a.status === 'pending' && a.category !== 'learning')
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])
+    .slice(0, 3);
 
-  const handleUndo = () => {
-    if (!undoItem) return;
-    setDismissed(prev => {
-      const next = new Set(prev);
-      next.delete(undoItem.id);
-      return next;
-    });
-    setUndoItem(null);
-  };
-
-  const visibleCards = decisionFeed.filter(d => !dismissed.has(d.id));
+  const totalPending = actions.filter(a => a.status === 'pending' && a.category !== 'learning').length;
   const maxSavings = Math.max(...savingsBreakdown.map(s => s.value));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+      {/* Action Queue banner */}
+      <Link to="/" style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: 'rgba(124,92,252,0.05)',
+        border: '1px solid rgba(124,92,252,0.12)',
+        borderRadius: 10,
+        padding: '10px 16px',
+        textDecoration: 'none',
+        transition: 'background 0.15s',
+      }}>
+        <Zap size={15} style={{ color: 'var(--ai)' }} />
+        <span style={{ fontSize: 13, color: 'var(--text-2)' }}>
+          Looking for today's actions?
+        </span>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ai)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          Go to Action Queue <ArrowRight size={13} />
+        </span>
+      </Link>
 
       {/* ═══════════════════════════════════════════
           Section 1: Agent Impact
@@ -386,14 +346,14 @@ export default function Dashboard() {
       </div>
 
       {/* ═══════════════════════════════════════════
-          Section 3: Today's Priorities (Decision Feed)
+          Section 3: Today's Priorities
           ═══════════════════════════════════════════ */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
           <div>
             <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>Today's Priorities</h2>
             <p style={{ fontSize: 13, color: 'var(--text-3)', marginTop: 2 }}>
-              AI-identified actions ranked by estimated revenue impact · <span style={{ color: 'var(--danger)', fontWeight: 500 }}>2 urgent</span>, <span style={{ color: 'var(--warning)', fontWeight: 500 }}>2 review</span>, <span style={{ color: 'var(--success)', fontWeight: 500 }}>1 opportunity</span>
+              Top {pendingActions.length} of {totalPending} AI-identified actions ranked by estimated revenue impact
             </p>
           </div>
           <span style={{
@@ -405,100 +365,32 @@ export default function Dashboard() {
           </span>
         </div>
 
-        {/* Undo toast */}
-        {undoItem && (
-          <div style={{
-            background: 'var(--text-1)', color: '#fff',
-            padding: '8px 16px', borderRadius: 8, marginBottom: 10,
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            fontSize: 12,
-          }}>
-            <span>Dismissed "{undoItem.sku} — {undoItem.headline}"</span>
-            <button onClick={handleUndo} style={{
-              background: 'none', border: 'none', color: 'rgba(255,255,255,0.8)',
-              fontSize: 12, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline',
-              marginLeft: 12,
-            }}>Undo</button>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {pendingActions.map(action => (
+            <ActionCard
+              key={action.id}
+              action={action}
+              variant="compact"
+              onApply={handleApply}
+              onSkip={handleSkip}
+            />
+          ))}
+        </div>
+
+        {totalPending > 3 && (
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <button
+              onClick={() => navigate('/')}
+              style={{
+                fontSize: 13, fontWeight: 600, color: 'var(--brand)',
+                background: 'none', border: 'none', cursor: 'pointer',
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+              }}
+            >
+              View all {totalPending} actions <ArrowRight size={13} />
+            </button>
           </div>
         )}
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {visibleCards.map(card => {
-            const cfg = urgencyConfig[card.urgency];
-            return (
-              <div key={card.id} className="decision-card">
-                {/* Top row */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 10 }}>
-                  <span style={{
-                    fontSize: 10, fontWeight: 700, letterSpacing: '0.05em',
-                    color: cfg.color, background: cfg.bg,
-                    padding: '3px 8px', borderRadius: 4,
-                  }}>
-                    {cfg.label}
-                  </span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-1)' }}>{card.impact}</span>
-                </div>
-
-                {/* Headline */}
-                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-1)', marginBottom: 6 }}>
-                  {card.sku} — {card.headline}
-                </div>
-
-                {/* Explanation */}
-                <div style={{ fontSize: 12.5, color: 'var(--text-2)', lineHeight: 1.6, marginBottom: 14 }}>
-                  {card.explanation}
-                </div>
-
-                {/* Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <button
-                    onClick={() => navigate(card.path)}
-                    style={{
-                      fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 6,
-                      background: 'var(--brand)', color: '#fff', border: 'none', cursor: 'pointer',
-                    }}
-                  >
-                    {card.primaryAction}
-                  </button>
-                  <button
-                    onClick={() => navigate(card.path)}
-                    style={{
-                      fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 6,
-                      background: 'transparent', color: 'var(--text-1)',
-                      border: '1px solid var(--border)', cursor: 'pointer',
-                    }}
-                  >
-                    {card.secondaryAction}
-                  </button>
-                  <button
-                    onClick={() => handleDismiss(card)}
-                    style={{
-                      fontSize: 12, color: 'var(--text-3)',
-                      background: 'none', border: 'none', cursor: 'pointer', padding: '6px 0',
-                      marginLeft: 'auto',
-                    }}
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom link */}
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <button
-            onClick={() => navigate('/products')}
-            style={{
-              fontSize: 13, fontWeight: 600, color: 'var(--brand)',
-              background: 'none', border: 'none', cursor: 'pointer',
-              display: 'inline-flex', alignItems: 'center', gap: 4,
-            }}
-          >
-            View all recommendations <ArrowRight size={13} />
-          </button>
-        </div>
       </div>
     </div>
   );

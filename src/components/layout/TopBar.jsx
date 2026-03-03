@@ -2,7 +2,8 @@ import { useLocation } from 'react-router-dom';
 import { Search, Bell } from 'lucide-react';
 
 const pageNames = {
-  '/':            'Command Center',
+  '/':            'Action Queue',
+  '/overview':    'Overview',
   '/products':    'Products',
   '/content':     'Digital Assets',
   '/creators':    'Creator Network',
